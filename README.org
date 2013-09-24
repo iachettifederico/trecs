@@ -1,0 +1,13 @@
+* TextCasts
+
+** Just an Idea
+The idea is to create a tool that allows to record text somehow and then reproduce it just as you would reproduce a video.
+
+** Some specifications
+
+- It should have controls (play, pause, ffw, rew, stop, rec)
+- It should have some kind of timestamp, so it can be synchronized with other resources
+- The other resources:
+  + Audio track
+  + Video track
+  + Browser extension (so, if you are recording the development of a web page, you could see in a browser the current snapshot of the page)
