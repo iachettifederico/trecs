@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
+require "trollop"
 
 module TRecs
   class Player
     attr_reader :file_name
+    attr_reader :current_time
 
-    def initialize(file_name)
-      @file_name = file_name
+
+    def initialize(opts={})
+      @file_name    = opts[:file_name]
+      @current_time = opts[:time]
     end
 
     def call
@@ -27,7 +31,7 @@ module TRecs
     def file_to_read
       file_array = []
       file_array << File.dirname(file_name)
-      file_array << "/0_"
+      file_array << "/#{current_time}_"
       file_array << File.basename(file_name)
       file_to_read = file_array.join
     end
@@ -36,5 +40,11 @@ module TRecs
   end
 end
 
-player = TRecs::Player.new(ARGV[1])
+options = Trollop::options do
+  opt :file_name, "File to process", type: String, short: 'f'
+  opt :time,      "Frame at time",   type: String, short: 't', default: "0"
+  opt :quiet,     "Use minimal output", short: 'q' # not used
+end
+
+player = TRecs::Player.new(options)
 player.call
