@@ -1,7 +1,6 @@
 require "spec_helper"
 require "fileutils"
 
-
 describe "T-Recs" do
   include FileUtils
   def create_dir(dir_path)
@@ -23,6 +22,19 @@ describe "T-Recs" do
     end
 
     context "Player" do
+      specify "returns an error whe project doesn't exist" do
+        file_name = "path/to/a/non/existing/file.txt"
+
+        command = []
+        command << exe
+        command << "-f"
+        command << "#{file_name}"
+        output = IO.popen(command)
+
+        output.read.should == "File #{file_name} does not exist.\n"
+
+      end
+
       specify "reads a one frame screencast" do
         file_basename = "file.txt"
         file_name = "#{project_dir}/#{file_basename}"
@@ -38,6 +50,7 @@ describe "T-Recs" do
         output = IO.popen(command)
 
         output.read.should == "0\n"
+
       end
     end
   end

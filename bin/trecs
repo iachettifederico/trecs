@@ -1,10 +1,40 @@
 #!/usr/bin/env ruby
-if file_name = ARGV[1]
-  f = []
-  f << File.dirname(file_name)
-  f << "/0_"
-  f << File.basename(file_name)
-  file_name = f.join
 
-  puts File.read(file_name)
+module TRecs
+  class Player
+    attr_reader :file_name
+
+    def initialize(file_name)
+      @file_name = file_name
+    end
+
+    def call
+      if file_name
+        if !existent_project?
+          puts "File #{file_name} does not exist."
+        else
+          puts File.read(file_to_read)
+        end
+      end
+    end
+
+    private
+
+    def existent_project?
+      File.exist?(File.dirname(@file_name))
+    end
+
+    def file_to_read
+      file_array = []
+      file_array << File.dirname(file_name)
+      file_array << "/0_"
+      file_array << File.basename(file_name)
+      file_to_read = file_array.join
+    end
+
+
+  end
 end
+
+player = TRecs::Player.new(ARGV[1])
+player.call
