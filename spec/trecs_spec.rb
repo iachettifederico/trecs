@@ -4,16 +4,17 @@ require "fileutils"
 
 describe "T-Recs" do
   include FileUtils
-  def let_dir(dir_path)
+  def create_dir(dir_path)
+    rm_rf dir_path
     mkdir_p dir_path
     dir_path
   end
 
   context "trecs command" do
     let(:trecs_root)   { File.expand_path("../..", __FILE__) }
-    let(:bin)          { let_dir("#{trecs_root}/bin")    }
-    let(:temp_dir)     { let_dir("#{trecs_root}/tmp")    }
-    let(:project_dir)  { let_dir("#{temp_dir}/project") }
+    let(:bin)          { "#{trecs_root}/bin"    }
+    let(:temp_dir)     { create_dir("#{trecs_root}/tmp")    }
+    let(:project_dir)  { create_dir("#{temp_dir}/project") }
 
     let(:exe)          { "#{bin}/trecs" }
 

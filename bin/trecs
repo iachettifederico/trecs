@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
-f = []
-f << File.dirname(ARGV[1])
-f << "/0_"
-f << File.basename(ARGV[1])
-file_name = f.join
+if file_name = ARGV[1]
+  f = []
+  f << File.dirname(file_name)
+  f << "/0_"
+  f << File.basename(file_name)
+  file_name = f.join
 
-puts File.read(file_name)
+  puts File.read(file_name)
+end
