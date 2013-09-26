@@ -22,6 +22,11 @@ describe "T-Recs" do
     IO.popen(command)
   end
 
+  def create_frame(file_name: "", content: "", time: 0)
+    File.open("#{project_dir}/#{time}_#{file_name}", File::WRONLY|File::CREAT) do |f|
+      f << content
+    end
+  end
 
   context "trecs command" do
     specify "is in place and executes" do
@@ -41,9 +46,8 @@ describe "T-Recs" do
         file_basename = "file.txt"
         file_name = "#{project_dir}/#{file_basename}"
 
-        File.open("#{project_dir}/0_#{file_basename}", File::WRONLY|File::CREAT) do |f|
-          f << "FIRST FRAME"
-        end
+
+        create_frame(time: 0, file_name: file_basename, content: "FIRST FRAME")
         output = trecs("-f", file_name)
 
         output.read.should == "FIRST FRAME\n"
@@ -54,20 +58,13 @@ describe "T-Recs" do
         file_basename = "file.txt"
         file_name = "#{project_dir}/#{file_basename}"
 
-        File.open("#{project_dir}/0_#{file_basename}", File::WRONLY|File::CREAT) do |f|
-          f << "FIRST FRAME"
-        end
-
-        File.open("#{project_dir}/100_#{file_basename}", File::WRONLY|File::CREAT) do |f|
-          f << "FRAME AT 100"
-        end
+        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
 
         output = trecs("-f", file_name, "-t", 100)
 
         output.read.should == "FRAME AT 100\n"
-
       end
-
     end
   end
 end

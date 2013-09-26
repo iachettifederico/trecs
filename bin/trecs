@@ -12,7 +12,7 @@ module TRecs
       @current_time = opts[:time]
     end
 
-    def call
+    def run
       if file_name
         if !existent_project?
           puts "File #{file_name} does not exist."
@@ -35,8 +35,6 @@ module TRecs
       file_array << File.basename(file_name)
       file_to_read = file_array.join
     end
-
-
   end
 end
 
@@ -47,4 +45,4 @@ options = Trollop::options do
 end
 
 player = TRecs::Player.new(options)
-player.call
+player.run
