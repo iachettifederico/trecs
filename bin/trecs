@@ -10,15 +10,25 @@ module TRecs
     def initialize(opts={})
       @file_name    = opts[:file_name]
       @current_time = opts[:time]
+
+      @timestamps   = opts[:timestamps]
     end
 
     def run
       if file_name
-        if !existent_project?
-          puts "File #{file_name} does not exist."
-        else
+        if existent_project?
           puts File.read(file_to_read)
+        else
+          puts "File #{file_name} does not exist."
         end
+      end
+    end
+
+    def timestamps
+      IO.popen("ls #{File.dirname(file_name)}") do |output|
+        output.each_line.map do |line|
+          line[/(\d++)/, 1].to_i
+        end.sort
       end
     end
 
@@ -31,18 +41,34 @@ module TRecs
     def file_to_read
       file_array = []
       file_array << File.dirname(file_name)
-      file_array << "/#{current_time}_"
+      file_array << "/#{time_at(current_time)}_"
       file_array << File.basename(file_name)
       file_to_read = file_array.join
     end
+
+    def time_at(time)
+      probable = 0
+      exact = nil
+      timestamps.each_cons(2) do |a, b|
+        probable = a
+        exact = b if b == time.to_i
+      end
+      exact || probable
+    end
+
   end
 end
 
 options = Trollop::options do
-  opt :file_name, "File to process", type: String, short: 'f'
-  opt :time,      "Frame at time",   type: String, short: 't', default: "0"
-  opt :quiet,     "Use minimal output", short: 'q' # not used
+  opt :file_name,  "File to process", type: String, short: 'f'
+  opt :time,       "Frame at time",   type: String, short: 't', default: "0"
+  opt :quiet,      "Use minimal output", short: 'q' # not used
+  opt :timestamps, "Returns the list of existinf frame timestamps"
 end
 
 player = TRecs::Player.new(options)
-player.run
+if options[:timestamps]
+  p player.timestamps
+else
+  player.run
+end

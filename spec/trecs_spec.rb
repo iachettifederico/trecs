@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'pty'
 require "fileutils"
 
 describe "T-Recs" do
@@ -17,13 +18,20 @@ describe "T-Recs" do
     dir_path
   end
 
-  def trecs(*args)
-    command = [exe].concat(args.map(&:to_s))
-    IO.popen(command)
+  def trecs(*args, &block)
+    command = [exe].concat(args.map(&:to_s)).join(" ")
+    PTY.spawn( command ) do |stdin, stdout, pid|
+      begin
+        stdin.each { |line| yield line.gsub(/\r\n\Z/, '') }
+      rescue Errno::EIO
+      end
+    end
+  rescue PTY::ChildExited
+    puts "The child process exited!"
   end
 
   def create_frame(file_name: "", content: "", time: 0)
-    File.open("#{project_dir}/#{time}_#{file_name}", File::WRONLY|File::CREAT) do |f|
+    File.open("#{project_dir}/#{time.to_i}_#{file_name}", File::WRONLY|File::CREAT) do |f|
       f << content
     end
   end
@@ -37,21 +45,19 @@ describe "T-Recs" do
       specify "returns an error whe project doesn't exist" do
         file_name = "path/to/a/non/existing/file.txt"
 
-        output = trecs("-f", file_name)
-
-        output.read.should == "File #{file_name} does not exist.\n"
+        trecs("-f", file_name) do |output|
+          output.should == "File #{file_name} does not exist."
+        end
       end
 
       specify "reads a one frame screencast" do
         file_basename = "file.txt"
         file_name = "#{project_dir}/#{file_basename}"
 
-
         create_frame(time: 0, file_name: file_basename, content: "FIRST FRAME")
-        output = trecs("-f", file_name)
-
-        output.read.should == "FIRST FRAME\n"
-
+        trecs("-f", file_name) do |output|
+          output.should == "FIRST FRAME"
+        end
       end
 
       specify "returns the frame at certain time" do
@@ -61,10 +67,42 @@ describe "T-Recs" do
         create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
         create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
 
-        output = trecs("-f", file_name, "-t", 100)
+        trecs("-f", file_name, "-t", 100) do |output|
+          output.should == "FRAME AT 100"
+        end
 
-        output.read.should == "FRAME AT 100\n"
       end
+
+      specify "returns the previous frame if no frame at certain time" do
+        file_basename = "file.txt"
+        file_name = "#{project_dir}/#{file_basename}"
+
+        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+        create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+
+        trecs("-f", file_name, "-t", 111) do |output|
+          output.should == "FRAME AT 100"
+        end
+
+      end
+    end
+
+    describe "Timestamps" do
+      specify "returns all the frame timestamps" do
+        file_basename = "file.txt"
+        file_name = "#{project_dir}/#{file_basename}"
+
+        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+        create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+
+        trecs("-f", file_name, "--timestamps") do |output|
+          output.should == "[0, 100, 200]"
+        end
+
+      end
+
     end
   end
 end
