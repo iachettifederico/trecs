@@ -1,6 +1,15 @@
 require "spec_helper"
 require 'pty'
 require "fileutils"
+require 'rspec/expectations'
+
+RSpec::Matchers.define :have_frames do |expected|
+  match do |actual|
+    actual   = actual.split("\e[H\e[2J\n").select{|f| (/\S/ === f)}.map(&:chomp)
+    expected = Array(expected) #.split("\e[H\e[2J\n")
+    actual == expected
+  end
+end
 
 describe "T-Recs" do
   include FileUtils
@@ -20,14 +29,9 @@ describe "T-Recs" do
 
   def trecs(*args, &block)
     command = [exe].concat(args.map(&:to_s)).join(" ")
-    PTY.spawn( command ) do |stdin, stdout, pid|
-      begin
-        stdin.each { |line| yield line.gsub(/\r\n\Z/, '') }
-      rescue Errno::EIO
-      end
+    IO.popen(command) do |output|
+      yield output.read if block_given?
     end
-  rescue PTY::ChildExited
-    puts "The child process exited!"
   end
 
   def create_frame(file_name: "", content: "", time: 0)
@@ -46,7 +50,15 @@ describe "T-Recs" do
         file_name = "path/to/a/non/existing/file.txt"
 
         trecs("-f", file_name) do |output|
-          output.should == "File #{file_name} does not exist."
+          output.should have_frames "File #{file_name} does not exist."
+        end
+      end
+
+      specify "returns an error whe project doesn't exist" do
+        file_name = "path/to/a/non/existing/file.txt"
+
+        trecs("-f", file_name) do |output|
+          output.should have_frames "File #{file_name} does not exist."
         end
       end
 
@@ -56,7 +68,7 @@ describe "T-Recs" do
 
         create_frame(time: 0, file_name: file_basename, content: "FIRST FRAME")
         trecs("-f", file_name) do |output|
-          output.should == "FIRST FRAME"
+          output.should have_frames "FIRST FRAME"
         end
       end
 
@@ -68,7 +80,7 @@ describe "T-Recs" do
         create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
 
         trecs("-f", file_name, "-t", 100) do |output|
-          output.should == "FRAME AT 100"
+          output.should have_frames "FRAME AT 100"
         end
 
       end
@@ -82,9 +94,56 @@ describe "T-Recs" do
         create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
 
         trecs("-f", file_name, "-t", 111) do |output|
-          output.should == "FRAME AT 100"
+          output.should have_frames "FRAME AT 100"
         end
 
+      end
+
+      specify "returns the last frame if asking for exceeding time" do
+        file_basename = "file.txt"
+        file_name = "#{project_dir}/#{file_basename}"
+
+        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+        create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+
+        trecs("-f", file_name, "-t", 201) do |output|
+          output.should have_frames "FRAME AT 200"
+        end
+
+      end
+
+      xspecify "returns the current time" do
+        file_basename = "file.txt"
+        file_name = "#{project_dir}/#{file_basename}"
+
+        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+
+        trecs("-f", file_name, "-t", 21)
+        trecs("-f", file_name, "-c") do |output|
+          output.should == "21"
+        end
+      end
+
+      describe "multiple frame screencast" do
+        let(:file_basename) { "file.txt" }
+        let(:file_name) { "#{project_dir}/#{file_basename}" }
+
+        before do
+          create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+          create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+          create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+        end
+
+        specify "playing two frames" do
+          trecs("-f", file_name, "--ticks", [0, 100].join(",")) do |output|
+            output.should have_frames [
+                              "FIRST FRAME",
+                              "FRAME AT 100"
+                             ]
+          end
+        end
       end
     end
 
@@ -94,11 +153,11 @@ describe "T-Recs" do
         file_name = "#{project_dir}/#{file_basename}"
 
         create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
-        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
         create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
 
         trecs("-f", file_name, "--timestamps") do |output|
-          output.should == "[0, 100, 200]"
+          output.should have_frames "[0, 100, 200]"
         end
 
       end

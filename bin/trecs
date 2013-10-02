@@ -4,20 +4,28 @@ require "trollop"
 module TRecs
   class Player
     attr_reader :file_name
-    attr_reader :current_time
+    attr_reader :timestamps
+    attr_reader :ticks
 
+
+    attr_accessor :current_time
 
     def initialize(opts={})
       @file_name    = opts[:file_name]
       @current_time = opts[:time]
 
       @timestamps   = opts[:timestamps]
+      @ticks        = opts[:ticks].split(",").map(&:to_i)
     end
 
-    def run
+    def tick
       if file_name
         if existent_project?
-          puts File.read(file_to_read)
+          ticks.each do |time|
+            self.current_time = time
+            puts "\e[H\e[2J"
+            puts File.read(file_to_read)
+          end
         else
           puts "File #{file_name} does not exist."
         end
@@ -47,11 +55,14 @@ module TRecs
     end
 
     def time_at(time)
+      time = time.to_i
+      return timestamps.last if time > timestamps.last
+      return 0 if time == 0
       probable = 0
       exact = nil
       timestamps.each_cons(2) do |a, b|
         probable = a
-        exact = b if b == time.to_i
+        exact = b if b == time
       end
       exact || probable
     end
@@ -60,15 +71,17 @@ module TRecs
 end
 
 options = Trollop::options do
-  opt :file_name,  "File to process", type: String, short: 'f'
-  opt :time,       "Frame at time",   type: String, short: 't', default: "0"
-  opt :quiet,      "Use minimal output", short: 'q' # not used
-  opt :timestamps, "Returns the list of existinf frame timestamps"
+  opt :file_name,    "File to process",                               short: 'f', type: String
+  opt :time,         "Frame at time",                                 short: 't', type: String, default: "0"
+  opt :current_time, "Returns the current playback time",             short: 'c'
+  opt :quiet,        "Use minimal output",                            short: 'q' # not used
+  opt :timestamps,   "Returns the list of existing frame timestamps"
+  opt :ticks,        "External clock marks", type: String
 end
 
 player = TRecs::Player.new(options)
 if options[:timestamps]
   p player.timestamps
 else
-  player.run
+  player.tick
 end
