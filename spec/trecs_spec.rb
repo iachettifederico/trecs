@@ -6,7 +6,7 @@ require 'rspec/expectations'
 RSpec::Matchers.define :have_frames do |expected|
   match do |actual|
     actual   = actual.split("\e[H\e[2J\n").select{|f| (/\S/ === f)}.map(&:chomp)
-    expected = Array(expected) #.split("\e[H\e[2J\n")
+    expected = Array(expected)
     actual == expected
   end
 end
@@ -46,14 +46,6 @@ describe "T-Recs" do
     end
 
     context "Player" do
-      specify "returns an error whe project doesn't exist" do
-        file_name = "path/to/a/non/existing/file.txt"
-
-        trecs("-f", file_name) do |output|
-          output.should have_frames "File #{file_name} does not exist."
-        end
-      end
-
       specify "returns an error whe project doesn't exist" do
         file_name = "path/to/a/non/existing/file.txt"
 
@@ -142,6 +134,28 @@ describe "T-Recs" do
                               "FIRST FRAME",
                               "FRAME AT 100"
                              ]
+          end
+        end
+
+        specify "playing all the frames frames" do
+          trecs("-f", file_name, "--ticks", [0, 100, 200].join(",")) do |output|
+            output.should have_frames [
+                                       "FIRST FRAME",
+                                       "FRAME AT 100",
+                                       "FRAME AT 200"
+                                      ]
+          end
+        end
+
+        specify "playing a recording" do
+          trecs("-f", file_name, "--ticks", [1, 51, 101, 151, 201].join(",")) do |output|
+            output.should have_frames [
+                                       "FIRST FRAME",
+                                       "FIRST FRAME",
+                                       "FRAME AT 100",
+                                       "FRAME AT 100",
+                                       "FRAME AT 200",
+                                      ]
           end
         end
       end

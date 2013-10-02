@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
+$:.unshift(File.expand_path("../../lib", __FILE__))
+
 require "trollop"
+require "timestamps"
 
 module TRecs
   class Player
@@ -15,7 +18,14 @@ module TRecs
       @current_time = opts[:time]
 
       @timestamps   = opts[:timestamps]
-      @ticks        = opts[:ticks].split(",").map(&:to_i)
+      @ticks = if opts[:ticks]
+                 # Make ticks correctly
+                 opts[:ticks].split(",").map(&:to_i)
+               elsif opts[:time]
+                 Array(opts[:time].to_i)
+               else
+                 [0]
+               end
     end
 
     def tick
@@ -55,16 +65,7 @@ module TRecs
     end
 
     def time_at(time)
-      time = time.to_i
-      return timestamps.last if time > timestamps.last
-      return 0 if time == 0
-      probable = 0
-      exact = nil
-      timestamps.each_cons(2) do |a, b|
-        probable = a
-        exact = b if b == time
-      end
-      exact || probable
+      Timestamps.new(timestamps).time_at(time)
     end
 
   end
