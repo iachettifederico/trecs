@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 $:.unshift(File.expand_path("../../lib", __FILE__))
 
 require "trollop"
@@ -7,53 +8,53 @@ require "timestamps"
 module TRecs
   class Player
     attr_reader :file_name
-    attr_reader :timestamps
-    attr_reader :ticks
-
 
     attr_accessor :current_time
+
 
     def initialize(opts={})
       @file_name    = opts[:file_name]
       @current_time = opts[:time]
 
-      @timestamps   = opts[:timestamps]
-      @ticks = if opts[:ticks]
-                 # Make ticks correctly
-                 opts[:ticks].split(",").map(&:to_i)
-               elsif opts[:time]
-                 Array(opts[:time].to_i)
+      @ticks = if !opts[:time]
+                 ticks
                else
-                 [0]
+                 Array(opts[:time].to_i)
                end
     end
 
-    def tick
-      if file_name
-        if existent_project?
-          ticks.each do |time|
-            self.current_time = time
-            puts "\e[H\e[2J"
-            puts File.read(file_to_read)
-          end
-        else
-          puts "File #{file_name} does not exist."
-        end
-      end
+    def tick(time)
+      self.current_time = time
+      File.read(file_to_read)
     end
 
     def timestamps
-      IO.popen("ls #{File.dirname(file_name)}") do |output|
+      return [] unless file_name
+      @timestamps ||= IO.popen("ls #{File.dirname(file_name)}") do |output|
         output.each_line.map do |line|
           line[/(\d++)/, 1].to_i
         end.sort
       end
     end
 
+    def ticks
+      if @ticks
+        return @ticks
+      else
+        @ticks = [0]
+        curr   = 0
+        while(curr < timestamps.last.to_i)
+          curr += 100
+          @ticks << curr
+        end
+        @ticks
+      end
+    end
+
     private
 
-    def existent_project?
-      File.exist?(File.dirname(@file_name))
+    def testing?
+      @testing
     end
 
     def file_to_read
@@ -67,22 +68,33 @@ module TRecs
     def time_at(time)
       Timestamps.new(timestamps).time_at(time)
     end
-
   end
 end
 
 options = Trollop::options do
-  opt :file_name,    "File to process",                               short: 'f', type: String
-  opt :time,         "Frame at time",                                 short: 't', type: String, default: "0"
-  opt :current_time, "Returns the current playback time",             short: 'c'
-  opt :quiet,        "Use minimal output",                            short: 'q' # not used
+  opt :file_name,    "File to process",                   short: 'f', type: String
+  opt :time,         "Frame at time",                     short: 't', type: String
+  opt :current_time, "Returns the current playback time", short: 'c'
+
   opt :timestamps,   "Returns the list of existing frame timestamps"
-  opt :ticks,        "External clock marks", type: String
+
+  opt :testing,      "Ticks without waiting. Use this option only for testing purpuses"
 end
 
-player = TRecs::Player.new(options)
-if options[:timestamps]
-  p player.timestamps
-else
-  player.tick
+file_name = options[:file_name]
+if file_name
+  if File.exist?(File.dirname(file_name))
+    player = TRecs::Player.new(options)
+    if options[:timestamps]
+      p player.timestamps
+    else
+      player.ticks.each do |time|
+        puts "\e[H\e[2J"
+        puts player.tick(time)
+        sleep(0.8) unless options[:testing]
+      end
+    end
+  else
+    puts "File #{file_name} does not exist."
+  end
 end

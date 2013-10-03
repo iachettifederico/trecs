@@ -28,7 +28,7 @@ describe "T-Recs" do
   end
 
   def trecs(*args, &block)
-    command = [exe].concat(args.map(&:to_s)).join(" ")
+    command = [exe].concat(args.map(&:to_s)).concat(["--testing"]).join(" ")
     IO.popen(command) do |output|
       yield output.read if block_given?
     end
@@ -105,31 +105,14 @@ describe "T-Recs" do
 
       end
 
-      xspecify "returns the current time" do
-        file_basename = "file.txt"
-        file_name = "#{project_dir}/#{file_basename}"
-
-        create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
-        create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
-
-        trecs("-f", file_name, "-t", 21)
-        trecs("-f", file_name, "-c") do |output|
-          output.should == "21"
-        end
-      end
-
       describe "multiple frame screencast" do
         let(:file_basename) { "file.txt" }
         let(:file_name) { "#{project_dir}/#{file_basename}" }
 
-        before do
+        specify "playing two frames" do
           create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
           create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
-          create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
-        end
-
-        specify "playing two frames" do
-          trecs("-f", file_name, "--ticks", [0, 100].join(",")) do |output|
+          trecs("-f", file_name) do |output|
             output.should have_frames [
                               "FIRST FRAME",
                               "FRAME AT 100"
@@ -138,7 +121,10 @@ describe "T-Recs" do
         end
 
         specify "playing all the frames frames" do
-          trecs("-f", file_name, "--ticks", [0, 100, 200].join(",")) do |output|
+          create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+          create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+          create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+          trecs("-f", file_name) do |output|
             output.should have_frames [
                                        "FIRST FRAME",
                                        "FRAME AT 100",
@@ -148,14 +134,22 @@ describe "T-Recs" do
         end
 
         specify "playing a recording" do
-          trecs("-f", file_name, "--ticks", [1, 51, 101, 151, 201].join(",")) do |output|
+          create_frame(time: 0,   file_name: file_basename, content: "FIRST FRAME")
+          create_frame(time: 100, file_name: file_basename, content: "FRAME AT 100")
+          create_frame(time: 200, file_name: file_basename, content: "FRAME AT 200")
+          create_frame(time: 301, file_name: file_basename, content: "FRAME AT 301")
+          create_frame(time: 499, file_name: file_basename, content: "FRAME AT 499")
+          create_frame(time: 599, file_name: file_basename, content: "FRAME AT 599")
+          trecs("-f", file_name) do |output|
             output.should have_frames [
                                        "FIRST FRAME",
-                                       "FIRST FRAME",
-                                       "FRAME AT 100",
                                        "FRAME AT 100",
                                        "FRAME AT 200",
-                                      ]
+                                       "FRAME AT 200",
+                                       "FRAME AT 301",
+                                       "FRAME AT 499",
+                                       "FRAME AT 599",
+                                     ]
           end
         end
       end
