@@ -8,9 +8,7 @@ require "timestamps"
 module TRecs
   class Player
     attr_reader :file_name
-
     attr_accessor :current_time
-
 
     def initialize(opts={})
       @file_name    = opts[:file_name]
@@ -23,9 +21,11 @@ module TRecs
                end
     end
 
-    def tick(time)
+    def tick(time=current_time)
       self.current_time = time
-      File.read(file_to_read)
+      frame = File.read(file_to_read)
+      yield frame if block_given?
+      frame
     end
 
     def timestamps
@@ -52,6 +52,8 @@ module TRecs
     end
 
     private
+    attr_reader :file_name
+    attr_accessor :current_time
 
     def testing?
       @testing
