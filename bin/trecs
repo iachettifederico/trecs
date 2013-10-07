@@ -14,6 +14,8 @@ module TRecs
       @file_name    = opts[:file_name]
       @current_time = opts[:time]
 
+      @step = opts[:step]
+
       @ticks = if !opts[:time]
                  ticks
                else
@@ -44,7 +46,7 @@ module TRecs
         @ticks = [0]
         curr   = 0
         while(curr < timestamps.last.to_i)
-          curr += 100
+          curr += @step
           @ticks << curr
         end
         @ticks
@@ -77,11 +79,14 @@ options = Trollop::options do
   opt :file_name,    "File to process",                   short: 'f', type: String
   opt :time,         "Frame at time",                     short: 't', type: String
   opt :current_time, "Returns the current playback time", short: 'c'
+  opt :step, "Time im ms between frames", short: 's', type: String
 
   opt :timestamps,   "Returns the list of existing frame timestamps"
 
   opt :testing,      "Ticks without waiting. Use this option only for testing purpuses"
 end
+
+options[:step] = options[:step] ? options[:step].to_i : 100
 
 file_name = options[:file_name]
 if file_name
@@ -90,10 +95,12 @@ if file_name
     if options[:timestamps]
       p player.timestamps
     else
+      # TODO: Fix this to use the current time
+      step = (options[:step]/1000.0)*0.8
       player.ticks.each do |time|
         puts "\e[H\e[2J"
         puts player.tick(time)
-        sleep(0.8) unless options[:testing]
+        sleep(step) unless options[:testing]
       end
     end
   else
