@@ -18,12 +18,11 @@ describe "T-Recs" do
   let(:bin)          { "#{trecs_root}/bin"    }
   let(:exe)          { "#{bin}/trecs" }
 
-  let(:temp_dir)     { create_dir("#{trecs_root}/tmp")    }
-  let(:project_dir)  { create_dir("#{temp_dir}/project") }
+  let(:project_dir)     { create_dir("#{trecs_root}/tmp")    }
 
   def create_dir(dir_path)
-    rm_rf dir_path
-    mkdir_p dir_path
+    # rm_rf dir_path
+    mkdir_p dir_path unless File.exist?(dir_path)
     dir_path
   end
 
@@ -35,22 +34,24 @@ describe "T-Recs" do
   end
 
   def create_recording(file_name: "")
-    recording_dir = "#{File.dirname(file_name)}/frames"
-    rm_rf recording_dir
-    mkdir_p recording_dir
-    rm file_name if File.exists? file_name
+    unless File.exist?(file_name)
+      recording_dir = "#{File.dirname(file_name)}/frames"
+      rm_rf recording_dir
+      mkdir_p recording_dir
+      rm file_name if File.exists? file_name
 
-    yield recording_dir
+      yield recording_dir
 
-    files_to_record = Dir.glob("#{recording_dir}/*")
+      files_to_record = Dir.glob("#{recording_dir}/*")
 
-    Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
-      files_to_record.each do |file_to_rec|
-        dest_file_name = File.basename(file_to_rec)
-        trecs_file.add(dest_file_name, file_to_rec)
+      Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
+        files_to_record.each do |file_to_rec|
+          dest_file_name = File.basename(file_to_rec)
+          trecs_file.add(dest_file_name, file_to_rec)
+        end
       end
+      rm_rf Dir.glob("#{recording_dir}")
     end
-    rm_rf Dir.glob("#{recording_dir}")
   end
 
   def create_frame(file_name: "", content: "", time: 0)
