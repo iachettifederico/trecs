@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require "./create_recording"
+require_relative "./create_recording"
 require "trollop"
 
 def com(c)
