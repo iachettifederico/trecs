@@ -21,7 +21,6 @@ describe "T-Recs" do
   let(:project_dir)     { create_dir("#{trecs_root}/tmp")    }
 
   def create_dir(dir_path)
-    # rm_rf dir_path
     mkdir_p dir_path unless File.exist?(dir_path)
     dir_path
   end

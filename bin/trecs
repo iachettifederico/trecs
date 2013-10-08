@@ -8,12 +8,7 @@ require "zip"
 
 module TRecs
   class Player
-<<<<<<< HEAD
-    attr_reader :file_name
-    attr_accessor :current_time
-=======
     include FileUtils
->>>>>>> Changed format of T-Recs file to use a zip file
 
     def initialize(opts={})
       @file_name = opts[:file_name]
