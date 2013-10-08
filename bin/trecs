@@ -4,14 +4,28 @@ $:.unshift(File.expand_path("../../lib", __FILE__))
 
 require "trollop"
 require "timestamps"
+require "zip"
 
 module TRecs
   class Player
+<<<<<<< HEAD
     attr_reader :file_name
     attr_accessor :current_time
+=======
+    include FileUtils
+>>>>>>> Changed format of T-Recs file to use a zip file
 
     def initialize(opts={})
-      @file_name    = opts[:file_name]
+      @file_name = opts[:file_name]
+
+      @dir = Dir.mktmpdir(@filename)
+      Zip::File.open(@file_name) do |file|
+        file.each do |f|
+          f.extract "#{@dir}/#{f.name}"
+        end
+      end
+
+
       @current_time = opts[:time]
 
       @step = opts[:step]
@@ -32,11 +46,9 @@ module TRecs
 
     def timestamps
       return [] unless file_name
-      @timestamps ||= IO.popen("ls #{File.dirname(file_name)}") do |output|
-        output.each_line.map do |line|
-          line[/(\d++)/, 1].to_i
-        end.sort
-      end
+      @timestamps ||=  Dir.glob("#{@dir}/*").each.map do |line|
+        line[/\/(\d++)\Z/, 1].to_i
+      end.sort
     end
 
     def ticks
@@ -63,9 +75,9 @@ module TRecs
 
     def file_to_read
       file_array = []
-      file_array << File.dirname(file_name)
-      file_array << "/#{time_at(current_time)}_"
-      file_array << File.basename(file_name)
+      file_array << @dir
+      file_array << "/"
+      file_array << time_at(current_time)
       file_to_read = file_array.join
     end
 
@@ -90,7 +102,7 @@ options[:step] = options[:step] ? options[:step].to_i : 100
 
 file_name = options[:file_name]
 if file_name
-  if File.exist?(File.dirname(file_name))
+  if File.exist?(file_name)
     player = TRecs::Player.new(options)
     if options[:timestamps]
       p player.timestamps
