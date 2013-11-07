@@ -5,7 +5,9 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define :have_frames do |expected|
   match do |actual|
-    actual   = actual.split("\e[H\e[2J\n").select{|f| (/\S/ === f)}.map(&:chomp)
+    actual   = actual.split("\e[H\e[2J\n").select { |f|
+      (/\S/ === f)
+    }.map(&:chomp)
     expected = Array(expected)
     actual == expected
   end
@@ -15,10 +17,10 @@ describe "T-Recs" do
   include FileUtils
 
   let(:trecs_root)   { File.expand_path("../..", __FILE__) }
-  let(:bin)          { "#{trecs_root}/bin"    }
+  let(:bin)          { "#{trecs_root}/bin" }
   let(:exe)          { "#{bin}/trecs" }
 
-  let(:project_dir)     { create_dir("#{trecs_root}/tmp")    }
+  let(:project_dir)  { create_dir("#{trecs_root}/tmp") }
 
   def create_dir(dir_path)
     mkdir_p dir_path unless File.exist?(dir_path)
@@ -26,7 +28,10 @@ describe "T-Recs" do
   end
 
   def trecs(*args, &block)
-    command = [exe].concat(args.map(&:to_s)).concat(["--testing"]).join(" ")
+    command = [exe]
+      .concat(args.map(&:to_s))
+      .concat(["--testing"])
+      .join(" ")
     IO.popen(command) do |output|
       yield output.read if block_given?
     end
@@ -59,23 +64,31 @@ describe "T-Recs" do
     end
   end
 
+  def file_name(string=nil)
+    if string
+      file_basename = "one_frame.trecs"
+      @file_name = "#{project_dir}/#{string}.trecs"
+    else
+      @file_name
+    end
+  end
+
   context "trecs command" do
     specify "is in place and executes" do
       expect { trecs }.not_to raise_exception
     end
 
-    context "Player" do
-      specify "returns an error whe project doesn't exist" do
-        non_existent = "path/to/a/non/existing/file.trecs"
+    specify "returns an error whe project doesn't exist" do
+      non_existent = "path/to/a/non/existing/file.trecs"
 
-        trecs("-f", non_existent) do |output|
-          output.should have_frames "File #{non_existent} does not exist."
-        end
+      trecs("-f", non_existent) do |output|
+        output.should have_frames "File #{non_existent} does not exist."
       end
+    end
 
+    context "Player" do
       specify "reads a one frame screencast" do
-        file_basename = "one_frame.trecs"
-        file_name = "#{project_dir}/#{file_basename}"
+        file_name "one_frame"
 
         create_recording(file_name: file_name) do
           create_frame(time: 0,  content: "FIRST FRAME")
@@ -87,8 +100,7 @@ describe "T-Recs" do
       end
 
       specify "returns the frame at certain time" do
-        file_basename = "two_frames.trecs"
-        file_name = "#{project_dir}/#{file_basename}"
+        file_name "two_frames"
 
         create_recording(file_name: file_name) do
           create_frame(time: 0,   content: "FIRST FRAME")
@@ -102,8 +114,7 @@ describe "T-Recs" do
       end
 
       specify "returns the previous frame if no frame at certain time" do
-        file_basename = "three_frames.trecs"
-        file_name = "#{project_dir}/#{file_basename}"
+        file_name "three_frames"
 
         create_recording(file_name: file_name) do
           create_frame(time: 0,   content: "FIRST FRAME")
@@ -118,8 +129,7 @@ describe "T-Recs" do
       end
 
       specify "returns the last frame if asking for exceeding time" do
-        file_basename = "three_frames.trecs"
-        file_name = "#{project_dir}/#{file_basename}"
+        file_name "three_frames"
 
         create_recording(file_name: file_name) do
           create_frame(time: 0,   content: "FIRST FRAME")
@@ -135,8 +145,7 @@ describe "T-Recs" do
 
       describe "multiple frame screencast" do
         specify "playing two frames" do
-          file_basename = "two_frames.trecs"
-          file_name     = "#{project_dir}/#{file_basename}"
+          file_name "two_frames"
 
           create_recording(file_name: file_name) do
             create_frame(time: 0,   content: "FIRST FRAME")
@@ -145,15 +154,14 @@ describe "T-Recs" do
 
           trecs("-f", file_name) do |output|
             output.should have_frames [
-                              "FIRST FRAME",
-                              "FRAME AT 100"
-                             ]
+                                       "FIRST FRAME",
+                                       "FRAME AT 100"
+                                      ]
           end
         end
 
         specify "playing all the frames frames" do
-          file_basename = "three_frames.trecs"
-          file_name     = "#{project_dir}/#{file_basename}"
+          file_name "three_frames"
 
           create_recording(file_name: file_name) do
             create_frame(time: 0,   content: "FIRST FRAME")
@@ -171,8 +179,7 @@ describe "T-Recs" do
         end
 
         specify "playing a recording" do
-          file_basename = "multiple_frames.trecs"
-          file_name     = "#{project_dir}/#{file_basename}"
+          file_name "multiple_frames"
 
           create_recording(file_name: file_name) do
             create_frame(time: 0,   content: "FIRST FRAME")
@@ -192,7 +199,7 @@ describe "T-Recs" do
                                        "FRAME AT 301",
                                        "FRAME AT 499",
                                        "FRAME AT 599",
-                                     ]
+                                      ]
           end
         end
       end
@@ -200,8 +207,7 @@ describe "T-Recs" do
 
     describe "Timestamps" do
       specify "returns all the frame timestamps" do
-        file_basename = "three_frames.trecs"
-        file_name     = "#{project_dir}/#{file_basename}"
+        file_name "three_frames"
 
         create_recording(file_name: file_name) do
           create_frame(time: 0,   content: "FIRST FRAME")
