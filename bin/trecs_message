@@ -8,7 +8,50 @@ require "zip"
 
 module TRecs
   class MessageRecorder
+    include FileUtils
 
+    def initialize(options={})
+      @file_name = options.fetch(:file_name)
+      @message   = options.fetch(:message)
+
+      delete_file
+    end
+
+    def record
+      create_recording(file_name) do |trecs_file|
+        message.each_char.each_with_object("") do |current_char, current_msg|
+          current_msg << current_char
+          create_frame(current_msg,
+                       generate_timestamp_for(current_msg),
+                       trecs_file)
+
+        end
+      end
+    end
+
+    private
+    attr_reader :file_name, :message
+
+    def delete_file
+      rm file_name if File.exists? file_name
+    end
+
+    def create_recording(file_name)
+      Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
+        yield trecs_file
+      end
+    end
+
+    def generate_timestamp_for(message)
+      ((message.size - 1) * 100).to_s
+    end
+
+    def create_frame(current_message, timestamp, trecs_file)
+      Tempfile.open(timestamp) do |temp_file|
+        temp_file.write(current_message)
+        trecs_file.add(timestamp, temp_file)
+      end
+    end
   end
 end
 #-------------------------
@@ -18,21 +61,9 @@ options = Trollop::options do
   opt :message,   "Message to record", short: 'm', type: String
 end
 
-include FileUtils
-file_name = options[:file_name]
-message   = options[:message]
-if file_name
-  rm file_name if File.exists? file_name
-  Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
-    message.each_char.each_with_object("") do |current_char, current_message|
-      current_message << current_char
-      t = ((current_message.size - 1) * 100).to_s
-      Tempfile.open(t) do |temp_file|
-        temp_file.write(current_message)
-        trecs_file.add(t, temp_file)
-      end
-    end
-  end
+if options[:file_name]
+  recorder = TRecs::MessageRecorder.new(options)
+  recorder.record
 else
   puts "Please give a file name"
 end
