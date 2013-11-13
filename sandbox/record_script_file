@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require_relative "./create_recording"
+require "trollop"
+
+options = Trollop::options do
+  opt :file,       "File name",  short: 'f', type: String
+  opt :input_file, "Input File", short: 'i', type: String
+  opt :times_file, "Times File", short: 't', type: String
+end
+
+
+Timing = Struct.new(:time, :chars)
+
+timings = [Timing.new(0, 46)].concat(File.open(options[:times_file]).each_line.map { |l|
+  ll = l.split(" ")
+  Timing.new(ll[0].to_f, ll[1].to_i)
+}.sort_by{|t|t.time}
+)
+
+@start = 0
+@end = 0
+file = File.open(options[:input_file]) do |f|
+  timings.each_cons(2) do |now, next_frame|
+    now.chars.times do
+      print f.getc
+    end
+    sleep (next_frame.time - now.time)*2
+  end
+end
+
+#[46, 33].each do |t|
+#    t.times do
+#    print file.gets
+#  end
+#end
+#frames = []
+#
+#create_recording(file_name: options[:file]) do
+#  frames.each_with_index do |frame, i|
+#    create_frame time: i*step, content: frame
+#  end
+#end
+#
+#puts "Recorded to: #{options[:file]}"

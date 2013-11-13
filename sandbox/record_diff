@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require_relative "./create_recording"
+require "trollop"
+
+def run_cmd(cmd="")
+  IO.popen(cmd).read
+end
+
+options = Trollop::options do
+  opt :start, "Starting file", short: 's', type: String
+  opt :end,   "End file",      short: 'e', type: String
+end
+
+start_file = options[:start]
+end_file   = options[:end]
+
+number_of_lines = 100
+
+cmd = %W[diff #{start_file} #{end_file}]
+
+diff = run_cmd(cmd).split("\n")
+
+
+
+puts diff.inspect
