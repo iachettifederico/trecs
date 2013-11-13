@@ -82,14 +82,13 @@ options = Trollop::options do
   opt :file_name,    "File to process",                   short: 'f', type: String
   opt :time,         "Frame at time",                     short: 't', type: String
   opt :current_time, "Returns the current playback time", short: 'c'
-  opt :step, "Time im ms between frames", short: 's', type: String
+  opt :step,         "Time im ms between frames",         short: 's', default: 100
 
   opt :timestamps,   "Returns the list of existing frame timestamps"
 
   opt :testing,      "Ticks without waiting. Use this option only for testing purpuses"
 end
 
-options[:step] = options[:step] ? options[:step].to_i : 100
 
 def clear_screen
   puts "\e[H\e[2J"

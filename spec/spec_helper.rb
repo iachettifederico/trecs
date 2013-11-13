@@ -32,3 +32,11 @@ def create_dir(dir_path)
   mkdir_p dir_path unless File.exist?(dir_path)
   dir_path
 end
+
+def file_name(string=nil)
+  if string
+    @file_name = "#{project_dir}/#{string}.trecs"
+  else
+    @file_name
+  end
+end

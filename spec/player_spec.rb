@@ -4,6 +4,10 @@ require 'zip'
 require 'rspec/expectations'
 
 describe "T-Recs" do
+  after do
+    rm file_name if file_name
+  end
+
   include FileUtils
 
   let(:trecs_root)   { File.expand_path("../..", __FILE__) }
@@ -49,25 +53,12 @@ describe "T-Recs" do
     end
   end
 
-  def file_name(string=nil)
-    if string
-      file_basename = "one_frame.trecs"
-      @file_name = "#{project_dir}/#{string}.trecs"
-    else
-      @file_name
-    end
-  end
-
   context "trecs command" do
-    after do
-      rm file_name if file_name
-    end
-
-    specify "is in place and executes" do
+    it "is in place and executes" do
       expect { trecs }.not_to raise_exception
     end
 
-    specify "returns an error whe project doesn't exist" do
+    it "returns an error whe project doesn't exist" do
       non_existent = "path/to/a/non/existing/file.trecs"
 
       trecs("-f", non_existent) do |output|
@@ -76,7 +67,7 @@ describe "T-Recs" do
     end
 
     context "Player" do
-      specify "reads a one frame screencast" do
+      it "reads a one frame screencast" do
         file_name "one_frame"
 
         create_recording(file_name: file_name) do
@@ -88,7 +79,7 @@ describe "T-Recs" do
         end
       end
 
-      specify "returns the frame at certain time" do
+      it "returns the frame at certain time" do
         file_name "two_frames"
 
         create_recording(file_name: file_name) do
@@ -102,7 +93,7 @@ describe "T-Recs" do
 
       end
 
-      specify "returns the previous frame if no frame at certain time" do
+      it "returns the previous frame if no frame at certain time" do
         file_name "three_frames"
 
         create_recording(file_name: file_name) do
@@ -114,10 +105,9 @@ describe "T-Recs" do
         trecs("-f", file_name, "-t", 111) do |output|
           output.should have_frames "FRAME AT 100"
         end
-
       end
 
-      specify "returns the last frame if asking for exceeding time" do
+      it "returns the last frame if asking for exceeding time" do
         file_name "three_frames"
 
         create_recording(file_name: file_name) do
@@ -133,7 +123,8 @@ describe "T-Recs" do
       end
 
       describe "multiple frame screencast" do
-        specify "playing two frames" do
+
+        it "playing two frames" do
           file_name "two_frames"
 
           create_recording(file_name: file_name) do
@@ -149,7 +140,7 @@ describe "T-Recs" do
           end
         end
 
-        specify "playing all the frames frames" do
+        it "playing all the frames" do
           file_name "three_frames"
 
           create_recording(file_name: file_name) do
@@ -167,7 +158,7 @@ describe "T-Recs" do
           end
         end
 
-        specify "playing a recording" do
+        it "playing a recording" do
           file_name "multiple_frames"
 
           create_recording(file_name: file_name) do
@@ -195,7 +186,7 @@ describe "T-Recs" do
     end
 
     describe "Timestamps" do
-      specify "returns all the frame timestamps" do
+      it "returns all the frame timestamps" do
         file_name "three_frames"
 
         create_recording(file_name: file_name) do
