@@ -12,53 +12,60 @@ module TRecs
 
     def initialize(options={})
       @file_name = options.fetch(:file_name)
-      @message   = options.fetch(:message)
-
       delete_file
+
+      @message   = options.fetch(:message)
+      @step      = options.fetch(:step) { 100 }
     end
 
     def record
-      create_recording(file_name) do |trecs_file|
-        message.each_char.each_with_object("") do |current_char, current_msg|
-          current_msg << current_char
-          create_frame(current_msg,
-                       generate_timestamp_for(current_msg),
-                       trecs_file)
+      start_recording
 
-        end
+      message.each_char.each_with_object("") do |current_char, current_msg|
+        current_msg << current_char
+        create_frame(current_msg.dup, timestamp_for(current_msg))
       end
+
+      finish_recording
+    end
+
+    def create_frame(content, timestamp)
+      frames[timestamp] = content
     end
 
     private
-    attr_reader :file_name, :message
+    attr_reader :file_name, :message, :frames, :step
+
+    def start_recording
+      @frames = {}
+    end
+
+    def finish_recording
+      Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
+        frames.each do |timestamp, content|
+          Tempfile.open(timestamp.to_s) do |temp_file|
+            temp_file.write(content)
+            trecs_file.add(timestamp.to_s, temp_file)
+          end
+        end
+      end
+    end
 
     def delete_file
       rm file_name if File.exists? file_name
     end
 
-    def create_recording(file_name)
-      Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
-        yield trecs_file
-      end
-    end
-
-    def generate_timestamp_for(message)
-      ((message.size - 1) * 100).to_s
-    end
-
-    def create_frame(current_message, timestamp, trecs_file)
-      Tempfile.open(timestamp) do |temp_file|
-        temp_file.write(current_message)
-        trecs_file.add(timestamp, temp_file)
-      end
+    def timestamp_for(message)
+      (message.size - 1) * step
     end
   end
 end
 #-------------------------
 
 options = Trollop::options do
-  opt :file_name, "File to process",   short: 'f', type: String
-  opt :message,   "Message to record", short: 'm', type: String
+  opt :file_name, "File to process",                     short: 'f', type: String
+  opt :message,   "Message to record",                   short: 'm', type: String
+  opt :step,      "Time between frames in milliseconds", short: 's', default: 100
 end
 
 if options[:file_name]

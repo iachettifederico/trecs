@@ -34,15 +34,6 @@ describe "T-Recs" do
     end
   end
 
-  def file_name(string=nil)
-    if string
-      file_basename = "one_frame.trecs"
-      @file_name = "#{project_dir}/#{string}.trecs"
-    else
-      @file_name
-    end
-  end
-
   context "trecs_message command" do
     after do
       rm file_name if file_name
@@ -97,6 +88,28 @@ describe "T-Recs" do
 
         play("-f", file_name) do |output|
           output.should have_frames ["a", "ab", "abc"]
+        end
+      end
+    end
+
+    context "timestamps" do
+      it "uses 100 ms by default" do
+        file_name "abcd"
+
+        trecs("-f", file_name, "-m", "abcd")
+
+        play("-f", file_name, "--timestamps") do |output|
+          output.should have_frames "[0, 100, 200, 300]"
+        end
+      end
+
+      it "accepts a step parameter" do
+        file_name "abc"
+
+        trecs("-f", file_name, "-m", "abcd", "-s", "250")
+
+        play("-f", file_name, "--timestamps") do |output|
+          output.should have_frames "[0, 250, 500, 750]"
         end
       end
     end
