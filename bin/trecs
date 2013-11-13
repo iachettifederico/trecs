@@ -20,7 +20,6 @@ module TRecs
         end
       end
 
-
       @current_time = opts[:time]
 
       @step = opts[:step]
@@ -64,10 +63,6 @@ module TRecs
     attr_reader :file_name
     attr_accessor :current_time
 
-    def testing?
-      @testing
-    end
-
     def file_to_read
       file_array = []
       file_array << @dir
@@ -81,6 +76,7 @@ module TRecs
     end
   end
 end
+#-------------------------
 
 options = Trollop::options do
   opt :file_name,    "File to process",                   short: 'f', type: String
@@ -95,6 +91,17 @@ end
 
 options[:step] = options[:step] ? options[:step].to_i : 100
 
+def clear_screen
+  puts "\e[H\e[2J"
+end
+
+
+def play_frame(player, time)
+  clear_screen
+  puts player.tick(time)
+end
+
+
 file_name = options[:file_name]
 if file_name
   if File.exist?(file_name)
@@ -105,8 +112,7 @@ if file_name
       # TODO: Fix this to use the current time
       step = (options[:step]/1000.0)*0.8
       player.ticks.each do |time|
-        puts "\e[H\e[2J"
-        puts player.tick(time)
+        play_frame(player, time)
         sleep(step) unless options[:testing]
       end
     end
