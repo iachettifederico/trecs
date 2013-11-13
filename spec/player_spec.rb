@@ -59,6 +59,10 @@ describe "T-Recs" do
   end
 
   context "trecs command" do
+    after do
+      rm file_name if file_name
+    end
+
     specify "is in place and executes" do
       expect { trecs }.not_to raise_exception
     end
