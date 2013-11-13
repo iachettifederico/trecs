@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+
+require "trollop"
+require "timestamps"
+require "zip"
+
+module TRecs
+  class MessageRecorder
+
+  end
+end
+#-------------------------
+
+options = Trollop::options do
+  opt :file_name, "File to process",   short: 'f', type: String
+  opt :message,   "Message to record", short: 'm', type: String
+end
+
+include FileUtils
+file_name = options[:file_name]
+message   = options[:message]
+if file_name
+  rm file_name if File.exists? file_name
+  Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
+    message.each_char.each_with_object("") do |current_char, current_message|
+      current_message << current_char
+      t = ((current_message.size - 1) * 100).to_s
+      Tempfile.open(t) do |temp_file|
+        temp_file.write(current_message)
+        trecs_file.add(t, temp_file)
+      end
+    end
+  end
+else
+  puts "Please give a file name"
+end
+#recorder = TRecs::MessageRecorder.new(options)
