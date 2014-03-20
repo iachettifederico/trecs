@@ -1,0 +1,28 @@
+#+TITLE:     spets.org
+#+AUTHOR:    Federico M. Iachetti
+#+EMAIL:     fedex@lily
+#+DATE:      2014-03-20 jue
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+
+* Crear el binario trecs
+Ésto es para poder comenzar a testear con código que funcione de una
+trecs reproduce un archivo *.trecs conformado por un zip y una serie de archivos que representan los frames
+
+* Extraer Player en su propia clase
+Hacer que el binario llame directamente a la clase
+
+* Extraer todo lo relacionado con el formato en particular a una nueva clase
+Extraer todo lo relacionado con el formato en particular a una nueva clase, dejando sólo lo relacionado con reproducir frames, timestamps en Player
+
+* Crear clase Screen
+Screen sería el lugar sonde va a ir a parar el frame para ser visualizado.
