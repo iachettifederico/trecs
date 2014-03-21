@@ -45,7 +45,11 @@ module TRecs
 
     def play_frame(time)
       output.clear_screen
-      output.puts tick(time)
+      output.puts tick(time_at(time))
+    end
+
+    def time_at(time)
+      Timestamps.new(timestamps).time_at(time)
     end
 
     private
@@ -53,12 +57,14 @@ module TRecs
     attr_reader   :step
     attr_reader   :testing
 
-    def time_at(time)
-      Timestamps.new(timestamps).time_at(time)
-    end
+
 
     def get_timestamps
       []
+    end
+
+    def get_frame(time)
+      ""
     end
 
     def sleep_time

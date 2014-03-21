@@ -15,7 +15,7 @@ module TRecs
     end
 
     def get_frame(time)
-      File.read(file_to_read)
+      File.read(file_to_read(time))
     end
 
     def get_timestamps
@@ -29,11 +29,11 @@ module TRecs
     attr_reader   :file_name
     attr_reader   :dir
 
-    def file_to_read
+    def file_to_read(time)
       file_array = []
       file_array << @dir
       file_array << "/"
-      file_array << time_at(current_time)
+      file_array << time
       file_to_read = file_array.join
     end
 

@@ -6,6 +6,16 @@ require 'rspec/expectations'
 describe "T-Recs" do
   include FileUtils
 
+  define :have_frames do |expected|
+    match do |actual|
+      actual   = actual.split("\e[H\e[2J\n").select { |f|
+        (/\S/ === f)
+      }.map(&:chomp)
+      expected = Array(expected)
+      actual == expected
+    end
+  end
+
   let(:trecs_root)   { File.expand_path("../..", __FILE__) }
   let(:bin)          { "#{trecs_root}/bin" }
   let(:exe)          { "#{bin}/trecs_message" }

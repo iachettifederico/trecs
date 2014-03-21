@@ -18,16 +18,6 @@ end
 
 $:.unshift(File.expand_path("../lib", __FILE__))
 
-RSpec::Matchers.define :have_frames do |expected|
-  match do |actual|
-    actual   = actual.split("\e[H\e[2J\n").select { |f|
-      (/\S/ === f)
-    }.map(&:chomp)
-    expected = Array(expected)
-    actual == expected
-  end
-end
-
 def create_dir(dir_path)
   mkdir_p dir_path unless File.exist?(dir_path)
   dir_path

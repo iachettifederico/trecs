@@ -4,6 +4,16 @@ require 'zip'
 require 'rspec/expectations'
 
 describe "T-Recs" do
+  define :have_frames do |expected|
+    match do |actual|
+      actual   = actual.split("\e[H\e[2J\n").select { |f|
+        (/\S/ === f)
+      }.map(&:chomp)
+      expected = Array(expected)
+      actual == expected
+    end
+  end
+
   after do
     rm file_name if file_name
   end
@@ -134,9 +144,9 @@ describe "T-Recs" do
 
           trecs("-f", file_name) do |output|
             output.should have_frames [
-                                       "FIRST FRAME",
-                                       "FRAME AT 100"
-                                      ]
+              "FIRST FRAME",
+              "FRAME AT 100"
+            ]
           end
         end
 
@@ -151,10 +161,10 @@ describe "T-Recs" do
 
           trecs("-f", file_name) do |output|
             output.should have_frames [
-                                       "FIRST FRAME",
-                                       "FRAME AT 100",
-                                       "FRAME AT 200"
-                                      ]
+              "FIRST FRAME",
+              "FRAME AT 100",
+              "FRAME AT 200"
+            ]
           end
         end
 
@@ -172,14 +182,14 @@ describe "T-Recs" do
 
           trecs("-f", file_name) do |output|
             output.should have_frames [
-                                       "FIRST FRAME",
-                                       "FRAME AT 100",
-                                       "FRAME AT 200",
-                                       "FRAME AT 200",
-                                       "FRAME AT 301",
-                                       "FRAME AT 499",
-                                       "FRAME AT 599",
-                                      ]
+              "FIRST FRAME",
+              "FRAME AT 100",
+              "FRAME AT 200",
+              "FRAME AT 200",
+              "FRAME AT 301",
+              "FRAME AT 499",
+              "FRAME AT 599",
+            ]
           end
         end
       end
