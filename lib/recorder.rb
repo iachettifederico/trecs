@@ -4,11 +4,12 @@ module TRecs
 
     def initialize(step: 100, **options)
       @step         = step
-      @current_time = 0
+
     end
 
     def next_timestamp
-      self.current_time += step
+      @current_time = -step unless @current_time
+      @current_time += step
     end
 
     def current_time(time=nil)
@@ -43,7 +44,7 @@ module TRecs
     attr_accessor :recording
 
     def start
-      self.current_time = 0
+      self.current_time = nil
       self.recording = true
       start_recording
     end

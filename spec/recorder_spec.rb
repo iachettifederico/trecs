@@ -7,21 +7,21 @@ module TRecs
     class DummyRecorder < Recorder
       attr_reader :result
 
-      def initialize(frames:, **options)
-        @frames = frames #.is_a?(Hash) ? frames : Array(frames)
+      def initialize(frames: nil, **options)
+        @frames = frames.is_a?(Hash) ? frames : Array(frames)
         super(**options)
       end
 
       def perform_recording
-        #if @frames.is_a?(Hash)
+        if @frames.is_a?(Hash)
           @frames.each do |time, content|
             current_frame(time: time, content: content)
           end
-        #else
-        #  @frames.each do |content|
-        #    current_frame(content: content)
-        #  end
-        #end
+        else
+          @frames.each do |content|
+            current_frame(content: content)
+          end
+        end
       end
 
       def create_frame
@@ -39,7 +39,6 @@ module TRecs
 
     context "recording" do
       context "with custom timestamps" do
-
         it "records a one frame trecs" do
           rec = DummyRecorder.new frames: {0 => "a"}
           rec.record
@@ -74,6 +73,62 @@ module TRecs
             150 => "c"
           }
         end
+
+        it "calls start_recording" do
+          rec = DummyRecorder.new
+          rec.should_receive(:start_recording)
+
+          rec.record
+        end
+
+        it "calls finish_recording" do
+          rec = DummyRecorder.new
+          rec.should_receive(:finish_recording)
+
+          rec.record
+        end
+
+      end
+
+      context "with custom timestamps" do
+        it "records a one frame trecs" do
+          rec = DummyRecorder.new frames: ["a"]
+          rec.record
+
+          rec.result.should == {0 => "a"}
+        end
+
+        it "records a two frames trecs" do
+          rec = DummyRecorder.new frames: ["a", "b"]
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            100 => "b"
+          }
+        end
+
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: ["a", "b", "c"]
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            100 => "b",
+            200 => "c"
+          }
+        end
+
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: ["a", "b", "c"], step: 75
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            75  => "b",
+            150 => "c"
+          }
+        end
       end
     end
 
@@ -82,22 +137,22 @@ module TRecs
       it "starts with 0 as the current time" do
         rec = Recorder.new
 
-        rec.current_time.should == 0
+        rec.current_time.should == nil
       end
 
       it "calculates the next timestamp" do
         rec = Recorder.new(step: 100)
 
-        rec.next_timestamp.should == 100
-        rec.current_time.should   == 100
+        rec.next_timestamp.should == 0
+        rec.current_time.should   == 0
       end
 
       it "calculates the second next timestamp" do
         rec = Recorder.new(step: 100)
 
         rec.next_timestamp
-        rec.next_timestamp.should == 200
-        rec.current_time.should   == 200
+        rec.next_timestamp.should == 100
+        rec.current_time.should   == 100
       end
     end
 
