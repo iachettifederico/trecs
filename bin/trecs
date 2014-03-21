@@ -18,14 +18,7 @@ options = Trollop::options do
   opt :testing,      "Ticks without waiting. Use this option only for testing purpuses"
 end
 
-def clear_screen
-  puts "\e[H\e[2J"
-end
 
-def play_frame(player, time)
-  clear_screen
-  puts player.tick(time)
-end
 
 file_name = options[:file_name]
 if file_name
@@ -34,12 +27,7 @@ if file_name
     if options[:timestamps]
       p player.timestamps
     else
-      # TODO: Fix this to use the current time
-      step = (options[:step]/1000.0)*0.8
-      player.ticks.each do |time|
-        play_frame(player, time)
-        sleep(step) unless options[:testing]
-      end
+      player.play
     end
   else
     puts "File #{file_name} does not exist."

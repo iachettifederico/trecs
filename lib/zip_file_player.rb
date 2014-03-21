@@ -8,12 +8,8 @@ module TRecs
     def initialize(file_name: "", **options)
       @file_name = file_name
 
-      @dir = Dir.mktmpdir
-      Zip::File.open(@file_name) do |file|
-        file.each do |f|
-          f.extract "#{dir}/#{f.name}"
-        end
-      end
+      create_directory
+      extract_file
 
       super(**options)
     end
@@ -40,6 +36,19 @@ module TRecs
       file_array << time_at(current_time)
       file_to_read = file_array.join
     end
+
+    def create_directory
+      @dir = Dir.mktmpdir
+    end
+
+    def extract_file
+      Zip::File.open(file_name) do |file|
+        file.each do |f|
+          f.extract "#{dir}/#{f.name}"
+        end
+      end
+    end
+
   end
 
 end

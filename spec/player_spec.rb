@@ -1,6 +1,7 @@
 require "spec_helper"
 
 require "player"
+require "terminal_screen"
 
 module TRecs
   describe Player do
@@ -11,12 +12,14 @@ module TRecs
         player.output.should == :output
       end
 
-      it "defaults to the standard output" do
+      it "defaults to the Terminal Screen" do
         player = Player.new
 
-        player.output.should == $stdout
+        player.output.class.should == TerminalScreen
       end
 
+      context "message ... puts ... print" do
+      end
     end
   end
 
