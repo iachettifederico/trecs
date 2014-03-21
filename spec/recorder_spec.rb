@@ -4,6 +4,80 @@ require "message_recorder"
 
 module TRecs
   describe Recorder do
+    class DummyRecorder < Recorder
+      attr_reader :result
+
+      def initialize(frames:, **options)
+        @frames = frames #.is_a?(Hash) ? frames : Array(frames)
+        super(**options)
+      end
+
+      def perform_recording
+        #if @frames.is_a?(Hash)
+          @frames.each do |time, content|
+            current_frame(time: time, content: content)
+          end
+        #else
+        #  @frames.each do |content|
+        #    current_frame(content: content)
+        #  end
+        #end
+      end
+
+      def create_frame
+        @result[current_time] = current_content
+      end
+
+      def start_recording
+        @result = {}
+      end
+
+      def finish_recording
+        # no-op
+      end
+    end
+
+    context "recording" do
+      context "with custom timestamps" do
+
+        it "records a one frame trecs" do
+          rec = DummyRecorder.new frames: {0 => "a"}
+          rec.record
+
+          rec.result.should == {0 => "a"}
+        end
+
+        it "records a two frames trecs" do
+          rec = DummyRecorder.new frames: {
+            0 => "a",
+            100 => "b"
+          }
+          rec.record
+
+          rec.result.should == {
+            0 => "a",
+            100 => "b"
+          }
+        end
+
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: {
+            0   => "a",
+            100 => "b",
+            150 => "c"
+          }
+          rec.record
+
+          rec.result.should == {
+            0 => "a",
+            100 => "b",
+            150 => "c"
+          }
+        end
+      end
+    end
+
+
     context "timestamps" do
       it "starts with 0 as the current time" do
         rec = Recorder.new

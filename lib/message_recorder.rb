@@ -40,10 +40,12 @@ module TRecs
     attr_reader :message
     attr_reader :frames
 
+    # this
     def start_recording
       @frames = {}
     end
 
+    # this
     def finish_recording
       Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
         frames.each do |timestamp, content|
