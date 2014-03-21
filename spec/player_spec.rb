@@ -161,6 +161,19 @@ module TRecs
       end
     end
 
+    context "Timestamps" do
+      it "returns all the frame timestamps" do
+        player = create_recording do |frames|
+          frames[0]   = "FIRST FRAME"
+          frames[100] = "FRAME AT 100"
+          frames[200] = "FRAME AT 200"
+        end
+
+        player.timestamps.should == [0, 100, 200]
+
+      end
+
+    end
 
     context "output" do
       it "receives a Screen object to manage output" do

@@ -77,98 +77,10 @@ describe "T-Recs" do
     end
 
     context "Player" do
-      it "reads a one frame screencast" do
-        file_name "one_frame"
 
-        create_recording(file_name: file_name) do
-          create_frame(time: 0,  content: "FIRST FRAME")
-        end
+      context "playing a recording" do
 
-        trecs("-f", file_name) do |output|
-          output.should have_frames "FIRST FRAME"
-        end
-      end
-
-      it "returns the frame at certain time" do
-        file_name "two_frames"
-
-        create_recording(file_name: file_name) do
-          create_frame(time: 0,   content: "FIRST FRAME")
-          create_frame(time: 100, content: "FRAME AT 100")
-        end
-
-        trecs("-f", file_name, "-t", 100) do |output|
-          output.should have_frames "FRAME AT 100"
-        end
-
-      end
-
-      it "returns the previous frame if no frame at certain time" do
-        file_name "three_frames"
-
-        create_recording(file_name: file_name) do
-          create_frame(time: 0,   content: "FIRST FRAME")
-          create_frame(time: 100, content: "FRAME AT 100")
-          create_frame(time: 200, content: "FRAME AT 200")
-        end
-
-        trecs("-f", file_name, "-t", 111) do |output|
-          output.should have_frames "FRAME AT 100"
-        end
-      end
-
-      it "returns the last frame if asking for exceeding time" do
-        file_name "three_frames"
-
-        create_recording(file_name: file_name) do
-          create_frame(time: 0,   content: "FIRST FRAME")
-          create_frame(time: 100, content: "FRAME AT 100")
-          create_frame(time: 200, content: "FRAME AT 200")
-        end
-
-        trecs("-f", file_name, "-t", 201) do |output|
-          output.should have_frames "FRAME AT 200"
-        end
-
-      end
-
-      describe "multiple frame screencast" do
-
-        it "playing two frames" do
-          file_name "two_frames"
-
-          create_recording(file_name: file_name) do
-            create_frame(time: 0,   content: "FIRST FRAME")
-            create_frame(time: 100, content: "FRAME AT 100")
-          end
-
-          trecs("-f", file_name) do |output|
-            output.should have_frames [
-              "FIRST FRAME",
-              "FRAME AT 100"
-            ]
-          end
-        end
-
-        it "playing all the frames" do
-          file_name "three_frames"
-
-          create_recording(file_name: file_name) do
-            create_frame(time: 0,   content: "FIRST FRAME")
-            create_frame(time: 100, content: "FRAME AT 100")
-            create_frame(time: 200, content: "FRAME AT 200")
-          end
-
-          trecs("-f", file_name) do |output|
-            output.should have_frames [
-              "FIRST FRAME",
-              "FRAME AT 100",
-              "FRAME AT 200"
-            ]
-          end
-        end
-
-        it "playing a recording" do
+        it "plays a recording" do
           file_name "multiple_frames"
 
           create_recording(file_name: file_name) do
@@ -193,24 +105,6 @@ describe "T-Recs" do
           end
         end
       end
-    end
-
-    describe "Timestamps" do
-      it "returns all the frame timestamps" do
-        file_name "three_frames"
-
-        create_recording(file_name: file_name) do
-          create_frame(time: 0,   content: "FIRST FRAME")
-          create_frame(time: 100, content: "FRAME AT 100")
-          create_frame(time: 200, content: "FRAME AT 200")
-        end
-
-        trecs("-f", file_name, "--timestamps") do |output|
-          output.should have_frames "[0, 100, 200]"
-        end
-
-      end
-
     end
   end
 end
