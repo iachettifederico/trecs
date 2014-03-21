@@ -14,10 +14,12 @@ module TRecs
       super(**options)
     end
 
+    # this
     def get_frame(time)
       File.read(file_to_read(time))
     end
 
+    # this
     def get_timestamps
       return [] unless file_name
       Dir.glob("#{dir}/*").each.map do |line|
