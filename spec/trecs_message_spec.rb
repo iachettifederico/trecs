@@ -22,7 +22,6 @@ describe "T-Recs" do
 
   let(:project_dir)  { create_dir("#{trecs_root}/tmp") }
 
-
   def trecs(*args, &block)
     command = [exe]
       .concat(args.map(&:to_s))
