@@ -30,7 +30,10 @@ module TRecs
       current_time(time)
       current_content(content)
 
-      create_frame
+      if previous_content != content
+        create_frame
+        self.previous_content = content
+      end
     end
 
     def record
@@ -42,6 +45,7 @@ module TRecs
     private
     attr_reader :step
     attr_accessor :recording
+    attr_accessor :previous_content
 
     def start
       self.current_time = nil

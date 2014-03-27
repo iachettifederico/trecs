@@ -68,7 +68,7 @@ module TRecs
           rec.record
 
           rec.result.should == {
-            0 => "a",
+            0   => "a",
             100 => "b",
             150 => "c"
           }
@@ -129,6 +129,57 @@ module TRecs
             150 => "c"
           }
         end
+      end
+
+      context "sanitizing the recording" do
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: {
+            0   => "a",
+            50  => "b",
+            100 => "b",
+            150 => "c",
+          }
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            50  => "b",
+            150 => "c",
+          }
+        end
+
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: {
+            0   => "a",
+            50  => "a",
+            100 => "b",
+            150 => "c",
+          }
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            100 => "b",
+            150 => "c",
+          }
+        end
+
+        it "records a three frames trecs" do
+          rec = DummyRecorder.new frames: {
+            0   => "a",
+            50  => "b",
+            100 => "c",
+            150 => "c",
+          }
+          rec.record
+
+          rec.result.should == {
+            0   => "a",
+            50  => "b",
+            100 => "c",
+          }
+        end
+
       end
     end
 
