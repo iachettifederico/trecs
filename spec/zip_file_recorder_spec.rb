@@ -19,7 +19,7 @@ module TRecs
     end
 
     it "generates a .trecs compressed file" do
-      file_name = "i_should_exist.trecs"
+      file_name = "tmp/i_should_exist.trecs"
       recorder  = ZipFileRecorder.new(file_name: file_name)
 
       recorder.record
@@ -29,7 +29,7 @@ module TRecs
     end
 
     it "has the correct frames" do
-      file_name = "zero_one_two.trecs"
+      file_name = "tmp/zero_one_two.trecs"
       recorder  = DummyZipFileRecorder.new(file_name: file_name)
 
       recorder.record
