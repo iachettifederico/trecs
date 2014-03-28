@@ -28,7 +28,7 @@ module TRecs
       @output << str.to_s
     end
 
-    def clear_screen
+    def clear
       @output << :clear_screen
     end
 

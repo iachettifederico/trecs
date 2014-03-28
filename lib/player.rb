@@ -44,7 +44,7 @@ module TRecs
     end
 
     def play_frame(time)
-      output.clear_screen
+      output.clear
       output.puts tick(time_at(time))
     end
 

@@ -2,7 +2,7 @@ require "delegate"
 
 module TRecs
   class TerminalScreen < SimpleDelegator
-    def clear_screen
+    def clear
       puts "\e[H\e[2J"
     end
 
