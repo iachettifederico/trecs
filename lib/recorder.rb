@@ -50,11 +50,11 @@ module TRecs
     def start
       self.current_time = nil
       self.recording = true
-      start_recording
+      setup
     end
 
     def finish
-      finish_recording
+      render
       self.recording = false
     end
 

@@ -15,11 +15,11 @@ module TRecs
     attr_reader :frames
 
     # this
-    def start_recording
+    def setup
       @frames = {}
     end
 
-    def finish_recording
+    def render
       Zip::File.open(file_name, Zip::File::CREATE) do |trecs_file|
         frames.each do |timestamp, content|
           Tempfile.open(timestamp.to_s) do |temp_file|

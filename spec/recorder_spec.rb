@@ -28,11 +28,11 @@ module TRecs
         @result[current_time] = current_content
       end
 
-      def start_recording
+      def setup
         @result = {}
       end
 
-      def finish_recording
+      def render
         # no-op
       end
     end
@@ -76,14 +76,14 @@ module TRecs
 
         it "calls start_recording" do
           rec = DummyRecorder.new
-          rec.should_receive(:start_recording)
+          rec.should_receive(:setup)
 
           rec.record
         end
 
         it "calls finish_recording" do
           rec = DummyRecorder.new
-          rec.should_receive(:finish_recording)
+          rec.should_receive(:render)
 
           rec.record
         end
