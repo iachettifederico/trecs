@@ -1,7 +1,7 @@
 require "timestamps"
 
 require "recorders/zip_file_recorder"
-require "incremental_recording_strategy"
+require "recording_strategies/incremental_recording_strategy"
 
 
 module TRecs
