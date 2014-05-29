@@ -1,7 +1,7 @@
 require "spec_helper"
 
 require "player"
-require "terminal_screen"
+require "screens/terminal_screen"
 
 module TRecs
   class DummyPlayer < Player

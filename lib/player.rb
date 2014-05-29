@@ -1,5 +1,5 @@
 require "timestamps"
-require "terminal_screen"
+require "screens/terminal_screen"
 
 module TRecs
   class Player
