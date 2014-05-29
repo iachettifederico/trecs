@@ -1,8 +1,8 @@
 require "spec_helper"
 require "zip"
 
-require "zip_file_recorder"
-require "zip_file_player"
+require "recorders/zip_file_recorder"
+require "players/zip_file_player"
 
 module TRecs
   describe ZipFileRecorder do

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-require "message_recorder"
+require "recorders/message_recorder"
 
 module TRecs
   describe Recorder do

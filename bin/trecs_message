@@ -4,7 +4,7 @@ $:.unshift(File.expand_path("../../lib", __FILE__))
 
 require "trollop"
 
-require "message_recorder"
+require "recorders/message_recorder"
 
 options = Trollop::options do
   opt :file_name, "File to process",                     short: 'f', type: String

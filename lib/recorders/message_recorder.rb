@@ -1,6 +1,6 @@
 require "timestamps"
 
-require "zip_file_recorder"
+require "recorders/zip_file_recorder"
 require "incremental_recording_strategy"
 
 
