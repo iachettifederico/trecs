@@ -6,11 +6,23 @@ require "zip_file_player"
 
 module TRecs
   describe ZipFileRecorder do
+    class DummyRecordingStrategy
+      attr_reader :recorder
+
+      def initialize(recorder:)
+        @recorder = recorder
+      end
+      def perform
+        recorder.current_frame(time: 0, content: "zero")
+        recorder.current_frame(time: 1, content: "one")
+        recorder.current_frame(time: 2, content: "two")
+      end
+    end
+
     class DummyZipFileRecorder < ZipFileRecorder
-      def perform_recording
-        current_frame(time: 0, content: "zero")
-        current_frame(time: 1, content: "one")
-        current_frame(time: 2, content: "two")
+      def initialize(**options)
+        @recording_strategy = DummyRecordingStrategy.new(recorder: self)
+        super(**options)
       end
     end
 
@@ -20,7 +32,7 @@ module TRecs
 
     it "generates a .trecs compressed file" do
       file_name = "tmp/i_should_exist.trecs"
-      recorder  = ZipFileRecorder.new(file_name: file_name)
+      recorder  = DummyZipFileRecorder.new(file_name: file_name)
 
       recorder.record
 

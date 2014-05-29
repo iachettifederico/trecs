@@ -1,10 +1,10 @@
 module TRecs
   class Recorder
     attr_writer :current_time
+    attr_reader :step
 
     def initialize(step: 100, **options)
-      @step         = step
-
+      @step = step
     end
 
     def next_timestamp
@@ -43,9 +43,9 @@ module TRecs
     end
 
     private
-    attr_reader :step
     attr_accessor :recording
     attr_accessor :previous_content
+    attr_reader :recording_strategy
 
     def start
       self.current_time = nil
@@ -62,6 +62,7 @@ module TRecs
     end
 
     def perform_recording
+      recording_strategy.perform
     end
   end
 end
