@@ -4,7 +4,7 @@ module TRecs
     def initialize(file:, height: 24, width: 80, **options)
       @file = File.new(file)
       @frames = []
-      @data = ""
+      @full_output = ""
       @height = height
       @width = width
       super
@@ -13,19 +13,17 @@ module TRecs
     def perform
       while !@file.eof?
         sec, usec, len = @file.read(12).unpack('VVV')
-        @data << @file.read(len)
+        @full_output << @file.read(len)
 
-        data_array = @data.each_line.to_a
+        data_array = @full_output.each_line.to_a
         height     = data_array.size > @height ? @height : 0
-        data       = data_array[-height..-1].join
+        frame       = data_array[-height..-1].join
 
         prev_timestamp ||= [ sec, usec ].join('.').to_f
         curr_timestamp   = [ sec, usec ].join('.').to_f
         offset = ((curr_timestamp - prev_timestamp)*1000).to_i
 
-        if offset > 0
-          recorder.current_frame(time: offset, content: data)
-        end
+        recorder.current_frame(time: offset, content: frame)
       end
     end
   end
