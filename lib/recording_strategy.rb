@@ -1,6 +1,6 @@
 module TRecs
   class RecordingStrategy
-    def initialize(recorder:)
+    def initialize(recorder:, **optionsx)
       @recorder = recorder
     end
 
