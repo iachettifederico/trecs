@@ -7,13 +7,18 @@ require "trollop"
 require "recorders/ttyrec_recorder"
 
 options = Trollop::options do
-  opt :input_file,  "File to process", short: 'i', type: String
+  # opt :input_file,  "File to process", short: 'i', type: String
   opt :output_file, "Output file",     short: 'o', type: String
 end
 
-if options[:input_file] && options[:input_file]
+options[:input_file] ||= "/tmp/ttyrecord"
+
+if options[:output_file] # && options[:input_file]
+  puts "Recording ..."
+  system "ttyrec #{options[:input_file]}"
   recorder = TRecs::TtyrecRecorder.new(options)
   recorder.record
+  puts "Finish Recording ..."
 else
   puts "Please give an input and an output file file name"
 end
