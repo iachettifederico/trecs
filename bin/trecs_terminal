@@ -15,6 +15,7 @@ options[:input_file] ||= "/tmp/ttyrecord"
 
 if options[:output_file] # && options[:input_file]
   puts "Recording ..."
+  options[:height], options[:width] = `stty size`.split(" ").map(&:to_i)
   system "ttyrec #{options[:input_file]}"
   recorder = TRecs::TtyrecRecorder.new(options)
   recorder.record
