@@ -1,4 +1,35 @@
+#+TITLE:     README.org
+#+AUTHOR:    Federico Martín Iachetti
+#+EMAIL:     iachetti.federico@gmail.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+#+BEGIN_EXAMPLE
+                __________
+               /  o       \
+               |      ____|
+               |     |___
+               |    ____/
+              _|   |
+            _|     |===E
+   /\     _|       ===E
+   \ \___|         |
+    \___          /
+ _____ ____     _/              
+|_   _|  _ \ ___  ___ ___ 
+  | | | |_) / _ \/ __/ __|
+  | | |  _ <  __/ (__\__ \
+  |_| |_| \_\___|\___|___/
+
+#+END_EXAMPLE
 * T-Recs
+Text Recordings.
+
+Record screencasts in plain text.
 
 ** Just an Idea
 The idea is to create a tool that allows to record text somehow and then reproduce it just as you would reproduce a video.
