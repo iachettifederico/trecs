@@ -64,8 +64,8 @@ describe "T-Recs" do
       file_name "i_should_exist"
       trecs("-f", file_name, "--message", "a")
 
-      File.exists?(file_name).should be_true
-      expect { Zip::File.open(file_name) }.not_to raise_error(Zip::ZipError)
+      File.exists?(file_name).should be_truthy
+      expect { Zip::File.open(file_name) }.not_to raise_error
     end
 
     context "recording" do

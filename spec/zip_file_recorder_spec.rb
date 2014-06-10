@@ -36,8 +36,8 @@ module TRecs
 
       recorder.record
 
-      File.exists?(file_name).should be_true
-      expect { Zip::File.open(file_name) }.not_to raise_error(Zip::ZipError)
+      File.exists?(file_name).should be_truthy
+      expect { Zip::File.open(file_name) }.not_to raise_error
     end
 
     it "has the correct frames" do

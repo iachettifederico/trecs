@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib", "bin"]
 
   # Dependencies
-  spec.add_dependency "rubyzip", "~> 1.0.0"
+  spec.add_dependency "rubyzip", "~> 1.1.4"
   spec.add_dependency "trollop", "~> 2.0"
 
   # Development dependencies
