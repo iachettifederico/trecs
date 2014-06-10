@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+
+require "trollop"
+
+require "recorders/raw_file_recorder"
+
+options = Trollop::options do
+  opt :input_file,  "File to process", short: 'i', type: String
+  opt :output_file, "Output file",     short: 'o', type: String,  default: "/tmp/output.txt"
+  opt :step,        "Step",            short: 's', type: Integer, default: 100
+end
+
+unless options[:output_file]
+  puts "Please give an input and an output file file name"
+  exit(1)
+end
+
+RECORDER = TRecs::RawFileRecorder.new(options)
+
+trap "SIGINT" do
+  RECORDER.stop
+end
+
+puts "Recording ..."
+RECORDER.record
+puts "Finish Recording ..."

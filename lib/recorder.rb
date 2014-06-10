@@ -42,6 +42,10 @@ module TRecs
       finish
     end
 
+    def stop
+      recording_strategy.stop
+    end
+    
     private
     attr_accessor :recording
     attr_accessor :previous_content
