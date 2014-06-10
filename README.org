@@ -1,4 +1,7 @@
 * T-Recs
+  
+[[https://travis-ci.org/iachettifederico/trecs][Build State]] [[https://travis-ci.org/iachettifederico/trecs.svg]]
+
 #+BEGIN_EXAMPLE
                 __________
                /  o       \
