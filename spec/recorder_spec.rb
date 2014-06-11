@@ -7,9 +7,10 @@ module TRecs
     class DummyRecorder < Recorder
       attr_reader :result
 
-      def initialize(frames: nil, **options)
+      def initialize(options={})
+        frames = options.fetch(:frames) { nil }
         @frames = frames.is_a?(Hash) ? frames : Array(frames)
-        super(**options)
+        super(options)
       end
 
       def perform_recording
