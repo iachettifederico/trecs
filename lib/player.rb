@@ -5,12 +5,13 @@ module TRecs
   class Player
     attr_reader :output
 
-    def initialize(time: nil, step: 100, output: TerminalScreen.new, testing: false, **options)
+    def initialize(options={})
+      time = options.fetch(:time) { nil }
       @current_time = time
-      @step         = step
+      @step         = options.fetch(:step) { 100 }
+      @output       = options.fetch(:output) { TerminalScreen.new }
+      @testing      = options.fetch(:testing) { false }
       @ticks        = time ? Array(time.to_i) : ticks
-      @output       = output
-      @testing      = testing
     end
 
     def play

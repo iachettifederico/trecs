@@ -9,8 +9,8 @@ module TRecs
     class DummyRecordingStrategy
       attr_reader :recorder
 
-      def initialize(recorder:)
-        @recorder = recorder
+      def initialize(options={})
+        @recorder = options.fetch(:recorder)
       end
       def perform
         recorder.current_frame(time: 0, content: "zero")
@@ -20,9 +20,9 @@ module TRecs
     end
 
     class DummyZipFileRecorder < ZipFileRecorder
-      def initialize(**options)
+      def initialize(options)
         @recording_strategy = DummyRecordingStrategy.new(recorder: self)
-        super(**options)
+        super
       end
     end
 

@@ -1,9 +1,9 @@
 require "recording_strategy"
 module TRecs
   class IncrementalRecordingStrategy < RecordingStrategy
-    def initialize(message:, **options)
-      @message = message
-      super(**options)
+    def initialize(options={})
+      @message = options.fetch(:message)
+      super(options)
     end
 
     def perform

@@ -10,7 +10,7 @@ module TRecs
       def initialize(options={})
         frames = options.fetch(:frames) { nil }
         @frames = frames.is_a?(Hash) ? frames : Array(frames)
-        super(options)
+        super
       end
 
       def perform_recording

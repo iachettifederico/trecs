@@ -36,7 +36,8 @@ describe "T-Recs" do
     end
   end
 
-  def create_recording(file_name: "")
+  def create_recording(options={})
+    file_name = options.fetch(:file_name) { "" }
     unless File.exist?(file_name)
       recording_dir = "#{File.dirname(file_name)}/frames"
       rm_rf recording_dir
@@ -57,7 +58,11 @@ describe "T-Recs" do
     end
   end
 
-  def create_frame(file_name: "", content: "", time: 0)
+  def create_frame(options={})
+    file_name = options.fetch(:file_name) { "" }
+    content   = options.fetch(:content)   { "" }
+    time      = options.fetch(:time)      { 0 }
+    
     File.open("#{project_dir}/frames/#{time.to_i}", File::WRONLY|File::CREAT) do |f|
       f << content
     end

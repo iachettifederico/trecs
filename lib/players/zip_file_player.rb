@@ -5,13 +5,13 @@ module TRecs
   class ZipFilePlayer < Player
     include FileUtils
 
-    def initialize(file_name: "", **options)
-      @file_name = file_name
+    def initialize(options={})
+      @file_name = options.fetch(:file_name)
 
       create_directory
       extract_file
 
-      super(**options)
+      super
     end
 
     # this

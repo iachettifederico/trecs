@@ -1,10 +1,15 @@
 require "recording_strategy"
 module TRecs
   class RawFileRecordingStrategy < RecordingStrategy
-    def initialize(file:, height: 24, width: 80, step: 100, **options)
+    def initialize(options)
+      file = options.fetch(:file) 
       raise "File does not exist: #{file}" unless File.exist?(file)
       @file = File.new(file)
-      @step = step
+      
+      @height = options.fetch(:height) { 24  }
+      @width  = options.fetch(:width)  { 80  }
+      @step   = options.fetch(:step)   { 100 }
+
       super
     end
 

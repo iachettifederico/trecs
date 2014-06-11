@@ -26,7 +26,9 @@ module TRecs
       @current_content
     end
 
-    def current_frame(time: next_timestamp, content:)
+    def current_frame(options={})
+      time = options.fetch(:time) { next_timestamp }
+      content = options.fetch(:content)
       current_time(time)
       current_content(content)
 

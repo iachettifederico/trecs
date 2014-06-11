@@ -1,7 +1,7 @@
 module TRecs
   class RecordingStrategy
-    def initialize(recorder:, **optionsx)
-      @recorder = recorder
+    def initialize(options={})
+      @recorder = options.fetch(:recorder)
     end
 
     private

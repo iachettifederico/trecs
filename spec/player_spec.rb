@@ -5,10 +5,12 @@ require "screens/terminal_screen"
 
 module TRecs
   class DummyPlayer < Player
-    def initialize(frames:, **options)
-      @frames = frames
-      super
-    end
+      def initialize(options={})
+        frames = options.fetch(:frames) { nil }
+        @frames = frames.is_a?(Hash) ? frames : Array(frames)
+        super
+      end
+
 
     def get_timestamps
       @frames.keys

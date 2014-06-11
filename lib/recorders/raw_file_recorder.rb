@@ -8,8 +8,12 @@ module TRecs
     def initialize(options={})
       input_file = options.fetch(:input_file)
       output_file = options.fetch(:output_file)
-      @recording_strategy = RawFileRecordingStrategy.new(recorder: self, file: input_file, **options)
-      options[:file_name] = output_file
+
+      options[:recorder] = self
+      options[:file]     = input_file
+      @recording_strategy = RawFileRecordingStrategy.new(options)
+
+       options[:file_name] = output_file
       super(options)
     end
   end
