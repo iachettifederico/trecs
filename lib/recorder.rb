@@ -3,8 +3,8 @@ module TRecs
     attr_writer :current_time
     attr_reader :step
 
-    def initialize(step: 100, **options)
-      @step = step
+    def initialize(options={})
+      @step = options.fetch(:step) { 100 }
     end
 
     def next_timestamp

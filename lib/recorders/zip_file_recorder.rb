@@ -4,9 +4,9 @@ require "recorder"
 module TRecs
   class ZipFileRecorder < Recorder
     include FileUtils
-    def initialize(file_name:, **options)
-      super(**options)
-      @file_name = file_name
+    def initialize(options={})
+      super(options)
+      @file_name = options.fetch(:file_name)
       delete_file
     end
 

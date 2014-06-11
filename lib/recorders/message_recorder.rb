@@ -8,10 +8,10 @@ module TRecs
   class MessageRecorder < ZipFileRecorder
     attr_reader :message
 
-    def initialize(message:, **options)
-      @message = message
+    def initialize(options={})
+      @message = options.fetch(:message)
       @recording_strategy = IncrementalRecordingStrategy.new(recorder: self, message: message)
-      super(**options)
+      super(options)
     end
 
   end

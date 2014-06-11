@@ -5,9 +5,12 @@ require "recording_strategies/raw_file_recording_strategy"
 
 module TRecs
   class RawFileRecorder < ZipFileRecorder
-    def initialize(input_file:, output_file:, **options)
+    def initialize(options={})
+      input_file = options.fetch(:input_file)
+      output_file = options.fetch(:output_file)
       @recording_strategy = RawFileRecordingStrategy.new(recorder: self, file: input_file, **options)
-      super(file_name: output_file, **options)
+      options[:file_name] = output_file
+      super(options)
     end
   end
 end
