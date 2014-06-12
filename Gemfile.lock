@@ -28,6 +28,7 @@ GEM
     trollop (2.0)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
