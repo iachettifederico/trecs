@@ -8,9 +8,17 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    coderay (1.1.0)
     diff-lcs (1.2.5)
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
+    method_source (0.8.2)
+    pry (0.9.12.6)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-nav (0.2.3)
+      pry (~> 0.9.10)
     rake (10.3.2)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
@@ -24,6 +32,7 @@ GEM
       rspec (>= 2.12)
     rspec-mocks (2.99.0)
     rubyzip (1.1.4)
+    slop (3.5.0)
     sorcerer (1.0.2)
     trollop (2.0)
 
@@ -33,6 +42,8 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.6)
+  pry
+  pry-nav
   rake
   rspec (~> 2.12)
   rspec-given (~> 3.5.4)

@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib", "bin"]
+  spec.require_paths = ["lib", "lib/trecs", "bin"]
 
   # Dependencies
   spec.add_dependency "rubyzip", "~> 1.1.4"
@@ -28,4 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec",       "~> 2.12"
   spec.add_development_dependency "rspec-given", "~> 3.5.4"
+
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry-nav"
 end
