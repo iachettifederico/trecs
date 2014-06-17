@@ -72,5 +72,26 @@ module TRecs
         Then { screen.calls.size == 4 }
       end
     end
+
+    context "content at time" do
+      Given(:screen) { OpenStruct.new }
+      Given(:ticker) { OpenStruct.new }
+      Given(:reader) { CustomReader.new(0 => "a", 100 => "b", 200 => "c") }
+
+      Given(:player) {
+        Player.new(reader: reader, ticker: ticker, screen: screen)
+      }
+
+      #When { player.play }
+
+      Then { player.timestamps == [0, 100, 200] }
+      Then { player.time_to_play(nil)   == 0 }
+      Then { player.time_to_play(0)   == 0 }
+      Then { player.time_to_play(100) == 100 }
+      Then { player.time_to_play(50)  == 0 }
+      Then { player.time_to_play(101) == 100 }
+      Then { player.time_to_play(199) == 100 }
+      Then { player.time_to_play(1000) == 200 }
+    end
   end
 end

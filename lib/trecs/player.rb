@@ -39,12 +39,23 @@ module TRecs
     end
 
     def timestamps
-      reader.timestamps
+      @timestamps ||= reader.timestamps
+    end
+
+    def time_to_play(time)
+      time = time.to_i
+      return time if timestamps.include? time
+      result = timestamps.each_cons(2).select do |min, max|
+        time > min && time < max
+      end
+      result = result.first
+      result ? result.first : timestamps.last
     end
 
     private
     attr_writer :current_time
     attr_reader :testing
     attr_accessor :prev_content
+
   end
 end

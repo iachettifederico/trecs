@@ -84,6 +84,10 @@ class CustomReader
   def frame_at(n)
     @frames[n]
   end
+
+  def timestamps
+    @frames.keys
+  end
   def setup
   end
 end
