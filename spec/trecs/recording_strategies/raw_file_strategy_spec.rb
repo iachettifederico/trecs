@@ -31,8 +31,11 @@ module TRecs
     end
 
     context "recorder" do
+      Given(:input_file)   { "tmp/input_file.txt" }
+      Given { FileUtils.touch(input_file) }
+
       Given(:strategy) {
-        RawFileStrategy.new(file: "tmp/input_file.txt")
+        RawFileStrategy.new(file: input_file)
       }
       Given(:recorder) { Object.new }
       When { strategy.recorder = recorder }
