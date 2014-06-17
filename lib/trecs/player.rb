@@ -38,6 +38,10 @@ module TRecs
       end
     end
 
+    def timestamps
+      reader.timestamps
+    end
+    
     private
     attr_writer :current_time
     attr_reader   :testing

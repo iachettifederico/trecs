@@ -13,6 +13,10 @@ options = Trollop::options do
 end
 
 if options[:file_name]
+
+  recorder = Recorder.new(
+    persistence_strategy: ZipFileRecorder.new(file_name: file_name),
+    recording_strategy: IncrementalRecordingStrategy.new(message: message)
   recorder = TRecs::MessageRecorder.new(options)
   recorder.record
 else

@@ -7,11 +7,12 @@ require "players/zip_file_player"
 module TRecs
   describe ZipFileRecorder do
     class DummyRecordingStrategy
-      attr_reader :recorder
+      attr_accessor :recorder
 
       def initialize(options={})
-        @recorder = options.fetch(:recorder)
+        #@recorder = options.fetch(:recorder)
       end
+
       def perform
         recorder.current_frame(time: 0, content: "zero")
         recorder.current_frame(time: 1, content: "one")
@@ -27,12 +28,15 @@ module TRecs
     end
 
     it "expects a file name" do
-      expect { ZipFileRecorder.new }.to raise_error
+      expect {
+        Recorder.new( persistence_strategy: ZipFileRecorder.new, recording_strategy: DummyRecordingStrategy.new) }.to raise_error
     end
 
     it "generates a .trecs compressed file" do
       file_name = "tmp/i_should_exist.trecs"
-      recorder  = DummyZipFileRecorder.new(file_name: file_name)
+      recorder = Recorder.new(
+        persistence_strategy: ZipFileRecorder.new(file_name: file_name),
+        recording_strategy: DummyRecordingStrategy.new)
 
       recorder.record
 
@@ -42,7 +46,9 @@ module TRecs
 
     it "has the correct frames" do
       file_name = "tmp/zero_one_two.trecs"
-      recorder  = DummyZipFileRecorder.new(file_name: file_name)
+      recorder = Recorder.new(
+        persistence_strategy: ZipFileRecorder.new(file_name: file_name),
+        recording_strategy: DummyRecordingStrategy.new)
 
       recorder.record
 
