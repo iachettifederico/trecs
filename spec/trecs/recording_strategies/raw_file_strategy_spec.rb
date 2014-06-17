@@ -4,8 +4,12 @@ require "recording_strategies/raw_file_strategy"
 module TRecs
   describe RawFileStrategy do
     context "initialization" do
-      When(:strategy) { RawFileStrategy.new(file: "tmp/input_file.txt") }
-      Then { Pathname(strategy.file).to_s == "tmp/input_file.txt" }
+      context "file" do
+        Given(:input_file) { "tmp/input_file.txt" }
+        Given { FileUtils.touch(input_file) }
+        When(:strategy) { RawFileStrategy.new(file: input_file) }
+        Then { Pathname(strategy.file).to_s == input_file }
+      end
 
       context "file keyword" do
         When(:strategy) { RawFileStrategy.new }
