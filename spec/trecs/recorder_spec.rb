@@ -27,8 +27,8 @@ module TRecs
 
     context "Recording" do
       Given { Spy.clear }
-      Given(:writer)   { Spy.new("writer").skip(:recorder=) }
-      Given(:strategy) { Spy.new("strategy").skip(:recorder=) }
+      Given(:writer)   { Spy.new("writer").ignore(:recorder=) }
+      Given(:strategy) { Spy.new("strategy").ignore(:recorder=) }
       Given(:recorder) {
         Recorder.new(writer: writer, strategy: strategy)
       }
@@ -71,7 +71,7 @@ module TRecs
 
     context "#current_frame" do
       Given   { Spy.clear }
-      Given(:writer)   { Spy.new("Writer").skip(:recorder=, :setup, :render) }
+      Given(:writer)   { Spy.new("Writer").ignore(:recorder=, :setup, :render) }
       Given(:strategy) { CustomStrategy.new }
 
       Given(:recorder) {
@@ -120,7 +120,7 @@ module TRecs
 
     context "#current_frame" do
       Given   { Spy.clear }
-      Given(:writer)   { Spy.new("Writer").skip(:recorder=, :setup, :render) }
+      Given(:writer)   { Spy.new("Writer").ignore(:recorder=, :setup, :render) }
       Given(:strategy) { CustomStrategy.new }
 
       Given(:recorder) {
@@ -210,7 +210,7 @@ module TRecs
     context "#next_timestamp" do
       Given { Spy.clear }
       Given(:writer)   { OpenStruct.new }
-      Given(:strategy) { Spy.new("strategy").skip(:recorder=) }
+      Given(:strategy) { Spy.new("strategy").ignore(:recorder=) }
 
       Given(:recorder) {
         Recorder.new(

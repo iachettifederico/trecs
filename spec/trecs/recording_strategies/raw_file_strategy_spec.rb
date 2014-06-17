@@ -37,7 +37,7 @@ module TRecs
 
     # context "perform" do
     #   Given { Spy.clear }
-    #   Given(:recorder) { Spy.new("recorder").skip }
+    #   Given(:recorder) { Spy.new("recorder").ignore }
 
     #   Given(:input_file)   { "tmp/input_file.txt" }
     #   Given(:clock) { DummyClock.new }

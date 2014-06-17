@@ -38,12 +38,13 @@ class Spy
     end
   end
 
-  def skip(*methods)
+  def ignore(*methods)
     methods.each do |method|
       @skips << method
     end
     self
   end
+  alias :skip :ignore
 
   def self.inc_index
     @index = @index + 1
@@ -59,6 +60,31 @@ class Spy
 
   def self.calls
     @calls
+  end
+end
+
+
+class CustomTicker
+  attr_accessor :player
+  def initialize(*ticks)
+    @ticks = ticks
+  end
+  def start
+    @ticks.each do |time|
+      player.tick(time)
+    end
+  end
+end
+
+class CustomReader
+  attr_accessor :player
+  def initialize(frames={})
+    @frames = frames
+  end
+  def frame_at(n)
+    @frames[n]
+  end
+  def setup
   end
 end
 
