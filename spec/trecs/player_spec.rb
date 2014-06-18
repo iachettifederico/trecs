@@ -74,7 +74,7 @@ module TRecs
     end
 
     context "content at time" do
-      Given(:screen) { OpenStruct.new }
+      Given(:screen) { double.as_null_object }
       Given(:ticker) { OpenStruct.new }
       Given(:reader) { CustomReader.new(0 => "a", 100 => "b", 200 => "c") }
 
@@ -83,13 +83,28 @@ module TRecs
       }
 
       Then { player.timestamps == [0, 100, 200] }
-      Then { player.time_to_play(nil)   == 0 }
-      Then { player.time_to_play(0)   == 0 }
-      Then { player.time_to_play(100) == 100 }
-      Then { player.time_to_play(50)  == 0 }
-      Then { player.time_to_play(101) == 100 }
-      Then { player.time_to_play(199) == 100 }
+
+      Then { player.time_to_play(nil)  == 0 }
+      Then { player.tick(nil)          == "a" }
+
+      Then { player.time_to_play(0)    == 0 }
+      Then { player.tick(0)            == "a" }
+
+      Then { player.time_to_play(100)  == 100 }
+      Then { player.tick(100)          == "b" }
+
+      Then { player.time_to_play(50)   == 0 }
+      Then { player.tick(50)           == "a" }
+
+      Then { player.time_to_play(101)  == 100 }
+      Then { player.tick(101)          == "b" }
+
+      Then { player.time_to_play(199)  == 100 }
+      Then { player.tick(199)          == "b" }
+
       Then { player.time_to_play(1000) == 200 }
+      Then { player.tick(1000)         == "c" }
+
     end
   end
 end

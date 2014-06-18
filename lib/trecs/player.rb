@@ -36,6 +36,7 @@ module TRecs
         screen.puts(content)
         self.prev_content = content
       end
+      content
     end
 
     def timestamps
