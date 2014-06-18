@@ -1,6 +1,8 @@
 module TRecs
   class Ticker
     attr_accessor :player
+    def initialize(*)
+    end
 
     def start
       prev_time = 0
@@ -11,5 +13,9 @@ module TRecs
       end
       true
     end
+    def to_s
+      "<#{self.class}>"
+    end
+    alias :inspect :to_s
   end
 end
