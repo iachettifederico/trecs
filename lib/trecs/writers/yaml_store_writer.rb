@@ -1,4 +1,5 @@
 require 'yaml/store'
+require "fileutils"
 
 module TRecs
   class YamlStoreWriter

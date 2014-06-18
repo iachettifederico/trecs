@@ -41,7 +41,5 @@ player_options = {
   step:   opts[:step],
 }
 
-#p opts
-#p player_options
 player = TRecs::Player.new(player_options)
 player.play
