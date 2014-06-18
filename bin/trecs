@@ -1,33 +1,47 @@
 #!/usr/bin/env ruby
 
 $:.unshift(File.expand_path("../../lib", __FILE__))
-
+require "trecs"
+require "player"
 require "trollop"
 
-require "timestamps"
-require "players/zip_file_player"
 
-options = Trollop::options do
-  opt :file_name,    "File to process",                   short: 'f', type: String
-  opt :time,         "Frame at time",                     short: 't', type: String
-  opt :current_time, "Returns the current playback time", short: 'c'
-  opt :step,         "Time im ms between frames",         short: 's', default: 100
+opts = Trollop::options do
+  opt :step, "Time in ms between frames", short: 's', default: 100
+  opt :format, "File format", type: String, default: "yaml_store"
+  opt :ticker, "Ticker", type: String, default: ""
 
-  opt :timestamps,   "Returns the list of existing frame timestamps"
-
-  opt :testing,      "Ticks without waiting. Use this option only for testing purpuses"
+  opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
 end
+opts[:trecs_file] = ARGV[0]
 
-file_name = options[:file_name]
-if file_name
-  if File.exist?(file_name)
-    player = TRecs::ZipFilePlayer.new(options)
-    if options[:timestamps]
-      p player.timestamps
-    else
-      player.play
-    end
-  else
-    puts "File #{file_name} does not exist."
-  end
-end
+reader_file = "readers/#{opts[:format]}_reader"
+require reader_file
+reader_class = Kernel.const_get([
+    "TRecs::",
+    opts[:format].split(/[-_\s]/).map(&:capitalize),
+    "Reader"
+  ].join
+  )
+
+
+ticker_separator = '_' unless opts[:ticker] == ''
+ticker_file = "tickers/#{opts[:ticker]}#{ticker_separator}ticker"
+require ticker_file
+ticker_class = Kernel.const_get([
+    "TRecs::",
+    opts[:ticker].split(/[-_\s]/).map(&:capitalize),
+    "Ticker"
+  ].join
+  )
+
+player_options = {
+  reader: reader_class.new(opts),
+  ticker: ticker_class.new(opts),
+  step:   opts[:step],
+}
+
+#p opts
+#p player_options
+player = TRecs::Player.new(player_options)
+player.play
