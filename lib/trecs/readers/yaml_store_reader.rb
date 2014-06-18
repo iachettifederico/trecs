@@ -8,7 +8,8 @@ module TRecs
     attr_reader :timestamps
 
     def initialize(options={})
-      @file = options.fetch(:file)
+      # trecs_file -> output file by convention
+      @file = options.fetch(:trecs_file)
       File.open(@file)
 
       store = YAML::Store.new "/tmp/hola.trecs"

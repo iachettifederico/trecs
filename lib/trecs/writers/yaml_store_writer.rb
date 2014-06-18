@@ -8,7 +8,7 @@ module TRecs
 
 
     def initialize(options={})
-      @file = options.fetch(:file)
+      @file = options.fetch(:trecs_file)
       FileUtils.rm(@file, force: true)
     end
 
