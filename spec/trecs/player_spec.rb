@@ -82,8 +82,6 @@ module TRecs
         Player.new(reader: reader, ticker: ticker, screen: screen)
       }
 
-      #When { player.play }
-
       Then { player.timestamps == [0, 100, 200] }
       Then { player.time_to_play(nil)   == 0 }
       Then { player.time_to_play(0)   == 0 }

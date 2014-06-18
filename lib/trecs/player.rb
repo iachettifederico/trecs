@@ -44,12 +44,7 @@ module TRecs
 
     def time_to_play(time)
       time = time.to_i
-      return time if timestamps.include? time
-      result = timestamps.each_cons(2).select do |min, max|
-        time > min && time < max
-      end
-      result = result.first
-      result ? result.first : timestamps.last
+      timestamps.reverse.detect { |t| t <= time  }
     end
 
     private
