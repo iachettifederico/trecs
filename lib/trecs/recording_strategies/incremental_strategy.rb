@@ -9,6 +9,7 @@ module TRecs
     end
 
     def perform
+      recorder.current_frame(time: 0, content: "")
       message.each_char.each_with_object("") do |current_char, current_msg|
         current_msg << current_char
 
@@ -20,7 +21,7 @@ module TRecs
     private
 
     def timestamp_for(message)
-      (message.size - 1) * recorder.step
+      message.size * recorder.step
     end
   end
 end
