@@ -30,7 +30,7 @@ module TRecs
     end
 
     def tick(time=current_time)
-      content = reader.frame_at(time)
+      content = reader.frame_at(time_to_play(time))
       if content != prev_content
         screen.clear
         screen.puts(content)
