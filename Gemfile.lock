@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trecs (0.0.9)
+    trecs (0.1.0)
       rubyzip (~> 1.1.4)
       trollop (~> 2.0)
 
