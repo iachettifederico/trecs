@@ -5,7 +5,7 @@ module TRecs
     attr_reader :file
 
     def initialize(options={})
-      file  = options.fetch(:file)
+      file  = options.fetch(:input_file)
       @file = File.open(file)
 
       @clock   = options.fetch(:clock) { Time }

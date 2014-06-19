@@ -1,13 +1,14 @@
-require "recording_strategy"
 module TRecs
-  class TtyrecRecordingStrategy < RecordingStrategy
-    def initialize(file:, height: 24, width: 80, **options)
+  class TtyrecStrategy
+    attr_accessor :recorder
+
+    def initialize(options={})
+      file = options.fetch(:input_file)
       @file = File.new(file)
       @frames = []
       @full_output = ""
-      @height = height
-      @width = width
-      super
+      @height = options.fetch(:height) { 24 }
+      @width = options.fetch(:width) { 80 }
     end
 
     def perform

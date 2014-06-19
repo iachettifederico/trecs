@@ -43,3 +43,7 @@ player_options = {
 
 player = TRecs::Player.new(player_options)
 player.play
+
+puts "Finished"
+puts "Replay with:"
+puts "  bin/trecs #{opts[:trecs_file]}"

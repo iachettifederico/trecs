@@ -9,9 +9,11 @@ require "trollop"
 opts = Trollop::options do
   opt :step, "Time in ms between frames", short: 's', default: 100
   opt :format, "File format", type: String, default: "yaml_store"
-  opt :strategy, "Ticker", type: String, default: "incremental"
+  opt :strategy, "Strategy", type: String, default: "incremental"
 
   opt :message, "Message to record", type: String, default: "TRecs!"
+  opt :input_file, "File to record", type: String, default: ""
+
 end
 opts[:trecs_file] = ARGV[0]
 
@@ -34,15 +36,30 @@ strategy_class = Kernel.const_get([
   ].join
   )
 
+
+
+puts "Recording ..."
+
+p strategy_class
+if strategy_class == TRecs::TtyrecStrategy
+  opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
+  system "ttyrec #{opts[:input_file]}"
+end
+
 recorder_options = {
   writer: writer_class.new(opts),
   strategy: strategy_class.new(opts),
   step:   opts[:step],
 }
 
-puts "Recording ..."
-recorder = TRecs::Recorder.new(recorder_options)
-recorder.record
+
+RECORDER = TRecs::Recorder.new(recorder_options)
+
+trap "SIGINT" do
+  RECORDER.stop
+end
+
+RECORDER.record
 
 puts "Recording finished"
 puts "Play with:"
