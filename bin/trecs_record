@@ -13,6 +13,7 @@ opts = Trollop::options do
 
   opt :message, "Message to record", type: String, default: "TRecs!"
   opt :input_file, "File to record", type: String, default: ""
+  opt :terminal, "Launch terminal",                default: true
 
 end
 opts[:trecs_file] = ARGV[0]
@@ -40,10 +41,9 @@ strategy_class = Kernel.const_get([
 
 puts "Recording ..."
 
-p strategy_class
 if strategy_class == TRecs::TtyrecStrategy
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
-  system "ttyrec #{opts[:input_file]}"
+  system "ttyrec #{opts[:input_file]}" if opts[:terminal]
 end
 
 recorder_options = {
