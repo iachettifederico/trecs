@@ -19,9 +19,9 @@ module TRecs
         curr_data = @file.read(len)
         @full_output << curr_data
 
-        #data_array  = @full_output.each_line.to_a
-        #height     = data_array.size > @height ? @height : 0
-        #frame      = data_array[-height..-1].join
+        data_array  = @full_output.each_line.to_a
+        height     = data_array.size > @height ? @height : 0
+        frame      = data_array[-height..-1].join
 
         frame = @prev_frame + curr_data
         
