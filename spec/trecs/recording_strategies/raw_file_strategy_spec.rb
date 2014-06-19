@@ -7,7 +7,7 @@ module TRecs
       context "file" do
         Given(:input_file) { "tmp/input_file.txt" }
         Given { FileUtils.touch(input_file) }
-        When(:strategy) { RawFileStrategy.new(file: input_file) }
+        When(:strategy) { RawFileStrategy.new(input_file: input_file) }
         Then { Pathname(strategy.file).to_s == input_file }
       end
 
@@ -22,10 +22,10 @@ module TRecs
         Given { FileUtils.touch(existent) }
         Given { FileUtils.rm(inexistent, force: true) }
 
-        When(:strategy1) { RawFileStrategy.new(file: existent) }
+        When(:strategy1) { RawFileStrategy.new(input_file: existent) }
         Then { expect(strategy1).not_to have_failed }
 
-        When(:strategy2) { RawFileStrategy.new(file: inexistent) }
+        When(:strategy2) { RawFileStrategy.new(input_file: inexistent) }
         Then { expect(strategy2).to have_failed(Errno::ENOENT, /No such file or directory/) }
       end
     end
@@ -35,7 +35,7 @@ module TRecs
       Given { FileUtils.touch(input_file) }
 
       Given(:strategy) {
-        RawFileStrategy.new(file: input_file)
+        RawFileStrategy.new(input_file: input_file)
       }
       Given(:recorder) { Object.new }
       When { strategy.recorder = recorder }
