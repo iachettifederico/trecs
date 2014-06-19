@@ -7,6 +7,8 @@ require "trollop"
 
 
 opts = Trollop::options do
+  version TRecs::VERSION
+
   opt :step, "Time in ms between frames", short: 's', default: 100
   opt :format, "File format", type: String, default: "yaml_store"
   opt :ticker, "Ticker", type: String, default: ""
