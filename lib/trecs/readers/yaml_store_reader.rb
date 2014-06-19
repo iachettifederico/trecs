@@ -1,4 +1,5 @@
 require 'yaml/store'
+require "pathname"
 
 module TRecs
   class YamlStoreReader
@@ -12,7 +13,7 @@ module TRecs
       @file = options.fetch(:trecs_file)
       File.open(@file)
 
-      store = YAML::Store.new "/tmp/hola.trecs"
+      store = YAML::Store.new Pathname(@file)
       @frames = store.transaction do
         store["frames"]
       end
