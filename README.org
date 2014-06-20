@@ -36,7 +36,7 @@ gem install trecs
 
 ** Usage
 *** Reproduce a TRecs
-You have a TRecs file and want to reproduce it?. You can do it on a terminal using the =trecs= command.
+You have a TRecs file and want to reproduce it? You can do it on a terminal using the =trecs= command.
 
 Like this:
 #+BEGIN_SRC bash
@@ -59,8 +59,11 @@ There are several recording plugins available for use
 Each options has a set of available flags (NOTE: the =--help= argument don't explain each one in detail yet)
 
 The main option to select the recording alternative is the Recording Strategy, passed to TRecs via the =--strategy= (=-s=) argument.
+
+Here it's also available the =--step= option, which will define the time between frames in milliseconds.
+
 **** Terminal session
-The most ovbious use for this gem is recording a terminal session. This feature will be the default in the future, but it's not fully implemented yet.
+The most obvious use for this gem is recording a terminal session. This feature will be the default in the future, but it's not fully implemented yet.
 
 To record a terminal session, use the =--strategy=ttyrec= option:
 #+BEGIN_SRC bash
@@ -69,10 +72,39 @@ trecs_record playing_with_bash.trecs --strategy=ttyrec
 
 This will open a new terminal session to record. You can finish the recording typing =exit= or pressing =C-d=, then the session will be saved to =playing_with_bash.trecs= and will be ready for replaying.
 
-**** TODO Record a file's changes
-**** TODO Incremental message TRecs
+**** Record a file's changes
+You can record the changes that occur on a file by using =--strategy=raw-file=.
 
-** TODO Extending TRecs
-*** TODO Formats (strategies)
-*** TODO Tickers
-*** TODO Recording Strategies
+What this does is sample a file every =step= milliseconds and create a frame with that file's contents.
+
+To use it:
+#+BEGIN_SRC bash
+trecs_record my_changes.trecs --strategy=raw_file
+#+END_SRC
+
+**** Incremental message TRecs
+Another possibility is to record a text message that will appear on screen character by character with an interval of =step= milliseconds. This is currently the default functionality of the command =trecs_record=
+
+#+BEGIN_SRC bash
+trecs_record my_banner.trecs --strategy=incremental --step=50 --message="TRecs"
+#+END_SRC
+
+This will create 6 frames:
+
+- 0 millis :: ""
+- 50 millis :: "T"
+- 100 millis :: "TR"
+- 150 millis :: "TRe"
+- 200 millis :: "TRec"
+- 250 millis :: "TRecs"
+
+** Extending TRecs
+Right now, you can extend TRecs in three possible ways
+
+- Recording Strategies :: This is the object that defines what to record and how to process the input to be converted into frames. To give an example, the IncrementalStrategy (provided by TRecs), will take an input string, make an array with each of it's characters and, for each char, append it to an output string and save the frame.
+- Formats :: The format corresponds to the way the frames are stored. For example, using YamlStore, a tar file or a database.
+- Tickers :: The Ticker is the way the user tells TRecs to advance frames. 
+
+# *** TODO Recording Strategies
+# *** TODO Formats
+# *** TODO Tickers
