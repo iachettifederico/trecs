@@ -25,14 +25,54 @@ Text Recordings.
 
 Record screencasts in plain text.
 
-** Just an Idea
-The idea is to create a tool that allows to record text somehow and then reproduce it just as you would reproduce a video.
+** Still under development
+This project is still under development. It's not yet ready for use.
 
-** Some specifications
+** Installing TRecs
+To install TRecs, just run
+#+BEGIN_SRC bash
+gem install trecs
+#+END_SRC
 
-- It should have controls (play, pause, ffw, rew, stop, rec)
-- It should have some kind of timestamp, so it can be synchronized with other resources
-- The other resources:
-  + Audio track
-  + Video track
-  + Browser extension (so, if you are recording the development of a web page, you could see in a browser the current snapshot of the page)
+** Usage
+*** Reproduce a TRecs
+You have a TRecs file and want to reproduce it?. You can do it on a terminal using the =trecs= command.
+
+Like this:
+#+BEGIN_SRC bash
+trecs <file>
+#+END_SRC
+
+You can also specify the refresh interval for the screen (terminal), using the =--step= argument.
+The value has to be an integer representing the amount of milliseconds between each screen refresh.
+
+#+BEGIN_SRC bash
+trecs <file> --step=800
+trecs <file> -s 800
+#+END_SRC
+
+*** Recording a TRecs
+Wanna record a TRecs? Do it using the =trecs_record= command.
+
+There are several recording plugins available for use
+
+Each options has a set of available flags (NOTE: the =--help= argument don't explain each one in detail yet)
+
+The main option to select the recording alternative is the Recording Strategy, passed to TRecs via the =--strategy= (=-s=) argument.
+**** Terminal session
+The most ovbious use for this gem is recording a terminal session. This feature will be the default in the future, but it's not fully implemented yet.
+
+To record a terminal session, use the =--strategy=ttyrec= option:
+#+BEGIN_SRC bash
+trecs_record playing_with_bash.trecs --strategy=ttyrec
+#+END_SRC
+
+This will open a new terminal session to record. You can finish the recording typing =exit= or pressing =C-d=, then the session will be saved to =playing_with_bash.trecs= and will be ready for replaying.
+
+**** TODO Record a file's changes
+**** TODO Incremental message TRecs
+
+** TODO Extending TRecs
+*** TODO Formats (strategies)
+*** TODO Tickers
+*** TODO Recording Strategies
