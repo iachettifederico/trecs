@@ -9,13 +9,14 @@ require "trollop"
 opts = Trollop::options do
   version TRecs::VERSION
 
-  opt :step, "Time in ms between frames", short: 's', default: 100
-  opt :format, "File format", type: String, default: "yaml_store"
-  opt :strategy, "Strategy", type: String, default: "incremental"
+  opt :step, "Time in ms between frames", short: 's',                default: 100
+  opt :format, "File format",                         type: String,  default: "yaml_store"
+  opt :strategy, "Strategy",                          type: String,  default: "incremental"
 
-  opt :message, "Message to record", type: String, default: "TRecs!"
-  opt :input_file, "File to record", type: String, default: ""
-  opt :terminal, "Launch terminal",                default: true
+  opt :message, "Message to record",                  type: String,  default: "TRecs!"
+  opt :width, "With",                                 type: Integer, default: 10
+  opt :input_file, "File to record",                  type: String,  default: ""
+  opt :terminal, "Launch terminal",                                  default: true
 
 end
 opts[:trecs_file] = ARGV[0]
