@@ -28,6 +28,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec",       "~> 2.12"
   spec.add_development_dependency "rspec-given", "~> 3.5.4"
 
-  spec.add_development_dependency "pry"
-  spec.add_development_dependency "pry-nav"
 end

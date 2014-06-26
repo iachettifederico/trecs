@@ -1,4 +1,3 @@
-require "pry"
 require "recording_strategies/strategy"
 
 module TRecs
