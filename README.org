@@ -98,6 +98,73 @@ This will create 6 frames:
 - 200 millis :: "TRec"
 - 250 millis :: "TRecs"
 
+**** Fly from right
+Insert a message and se it fly from the right side of the screen
+
+#+BEGIN_SRC bash
+trecs_record my_banner.trecs --strategy=fly_from_right --step=50 --message="TRecs"
+#+END_SRC
+
+**** Shell command for message
+On some recording strategies, there's also the posibility to run a custom shell command for each frame.
+
+For example, you can use the =figlet= command (if you have it installed) to make a banner that, for example appears one char at the time
+
+#+BEGIN_SRC bash
+trecs_record my_banner.trecs --strategy=incremental --step=50 --message="TRecs" --command="figlet"
+#+END_SRC
+
+This will run the command =figlet <frame content>= for each of the 6 created frames:
+
+- 0 millis :: 
+#+BEGIN_EXAMPLE
+
+#+END_EXAMPLE
+- 50 millis :: 
+#+BEGIN_EXAMPLE
+ _____ 
+|_   _|
+  | |  
+  | |  
+  |_|  
+#+END_EXAMPLE
+- 100 millis ::
+#+BEGIN_EXAMPLE
+ _____ ____  
+|_   _|  _ \ 
+  | | | |_) |
+  | | |  _ < 
+  |_| |_| \_\  
+#+END_EXAMPLE
+- 150 millis ::
+#+BEGIN_EXAMPLE
+ _____ ____      
+|_   _|  _ \ ___ 
+  | | | |_) / _ \
+  | | |  _ <  __/
+  |_| |_| \_\___| 
+#+END_EXAMPLE
+- 200 millis :: 
+#+BEGIN_EXAMPLE
+ _____ ____           
+|_   _|  _ \ ___  ___ 
+  | | | |_) / _ \/ __|
+  | | |  _ <  __/ (__ 
+  |_| |_| \_\___|\___| 
+#+END_EXAMPLE
+- 250 millis ::
+#+BEGIN_EXAMPLE
+ _____ ____               
+|_   _|  _ \ ___  ___ ___ 
+  | | | |_) / _ \/ __/ __|
+  | | |  _ <  __/ (__\__ \
+  |_| |_| \_\___|\___|___/ 
+#+END_EXAMPLE
+
+Currently applies to:
+- Incremental Strategy
+- Fly from right Strategy
+
 ** Extending TRecs
 Right now, you can extend TRecs in three possible ways
 
