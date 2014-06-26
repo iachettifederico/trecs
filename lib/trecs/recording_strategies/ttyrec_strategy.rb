@@ -1,6 +1,7 @@
+require "recording_strategies/strategy"
 module TRecs
   class TtyrecStrategy
-    attr_accessor :recorder
+    include Strategy
 
     def initialize(options={})
       file = options.fetch(:input_file)
@@ -30,7 +31,9 @@ module TRecs
         offset = ((curr_timestamp - @first_timestamp)*1000).to_i
 
         if curr_timestamp > @prev_timestamp
-          recorder.current_frame(time: offset, content: frame)
+          current_time(offset)
+          current_content(frame)
+          save_frame
           @prev_timestamp = curr_timestamp
           @prev_frame = frame
         end

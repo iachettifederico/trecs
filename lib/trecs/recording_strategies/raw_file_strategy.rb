@@ -1,7 +1,7 @@
-require "recording_strategy"
+require "recording_strategies/strategy"
 module TRecs
   class RawFileStrategy
-    attr_accessor :recorder
+    include Strategy
     attr_reader :file
 
     def initialize(options={})
@@ -21,9 +21,10 @@ module TRecs
       start_time = clock.now
 
       while @recording
-        time    = timestamp(clock.now - start_time)
-        content = File.read(@file)
-        recorder.current_frame(time: time, content: content)
+        current_time(timestamp(clock.now - start_time))
+        current_content(File.read(@file))
+        save_frame
+        
         custom_sleep(recorder.step)
       end
     end

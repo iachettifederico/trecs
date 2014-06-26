@@ -43,7 +43,7 @@ strategy_class = Kernel.const_get([
 
 puts "Recording ..."
 
-if strategy_class == TRecs::TtyrecStrategy
+if strategy_class.to_s == "TRecs::TtyrecStrategy"
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
   system "ttyrec #{opts[:input_file]}" if opts[:terminal]
 end

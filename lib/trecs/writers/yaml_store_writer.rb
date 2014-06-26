@@ -7,7 +7,6 @@ module TRecs
     attr_reader :frames
     attr_reader :file
 
-
     def initialize(options={})
       @file = options.fetch(:trecs_file)
       FileUtils.rm(@file, force: true)
