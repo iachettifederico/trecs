@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trecs (0.1.6)
+    trecs (0.1.7)
       trollop (~> 2.0)
 
 GEM
