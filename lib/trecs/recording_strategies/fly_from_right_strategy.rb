@@ -7,14 +7,12 @@ module TRecs
     include ShellCommandStrategy
     attr_reader :message
     attr_reader :width
-    attr_reader :command
 
     def initialize(options={})
       @message = options.fetch(:message)
       @width = options.fetch(:width) { 10 }
 
       @width = @message.size if @width < @message.size
-
       @command = options.fetch(:command) { nil }
     end
 

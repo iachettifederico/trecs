@@ -1,7 +1,9 @@
 module TRecs
   module ShellCommandStrategy
+    attr_reader :command
+   
     def current_content(str)
-      if command
+      if self.command
         comm_array = command.split(" ")
         str = IO.popen([*comm_array, "#{str}"]).read
       end

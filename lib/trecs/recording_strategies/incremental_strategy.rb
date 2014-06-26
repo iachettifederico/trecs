@@ -1,13 +1,16 @@
 require "recording_strategies/strategy"
+require "recording_strategies/shell_command_strategy"
 
 module TRecs
   class IncrementalStrategy
     include Strategy
+    include ShellCommandStrategy
 
     attr_reader :message
 
     def initialize(options={})
       @message = options.fetch(:message)
+      @command = options.fetch(:command) { nil }
     end
 
     def perform
