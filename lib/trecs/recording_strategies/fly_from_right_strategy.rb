@@ -1,9 +1,10 @@
 require "recording_strategies/strategy"
+require "recording_strategies/shell_command_strategy"
 
 module TRecs
   class FlyFromRightStrategy
     include Strategy
-
+    include ShellCommandStrategy
     attr_reader :message
     attr_reader :width
     attr_reader :command
@@ -47,14 +48,5 @@ module TRecs
         current_msg
       end
     end
-
-    def current_content(str)
-      if command
-        comm_array = command.split(" ")
-        str = IO.popen([*comm_array, "#{str}"]).read
-      end
-      super(str)
-    end
-
   end
 end

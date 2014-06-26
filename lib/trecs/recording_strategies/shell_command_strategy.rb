@@ -1,18 +1,11 @@
-require "recording_strategies/fly_from_right_strategy"
-
 module TRecs
-  class ShellCommandStrategy < FlyFromRightStrategy
-    attr_reader :command
-
-    def initialize(options={})
-      super
-      @command = options.fetch(:command)
-    end
-    
+  module ShellCommandStrategy
     def current_content(str)
-      comm_array = command.split(" ")
-      c = IO.popen([*comm_array, "#{str}"]).read
-      super(c)
+      if command
+        comm_array = command.split(" ")
+        str = IO.popen([*comm_array, "#{str}"]).read
+      end
+      super(str)
     end
   end
 end
