@@ -60,5 +60,9 @@ module TRecs
       Then { recorder.calls[12] == [:current_frame, [ {time: 1100, content: "abc"  } ] ] }
 
     end
+
+    context "shell command" do
+      Then { skip("Test shell command") }
+    end
   end
 end

@@ -14,7 +14,8 @@ opts = Trollop::options do
   opt :strategy, "Strategy",                          type: String,  default: "incremental"
 
   opt :message, "Message to record",                  type: String,  default: "TRecs!"
-  opt :width, "With",                                 type: Integer, default: 10
+  opt :width, "Width",                                type: Integer, default: 10
+  opt :command, "Command"          ,                  type: String
   opt :input_file, "File to record",                  type: String,  default: ""
   opt :terminal, "Launch terminal",                                  default: true
 

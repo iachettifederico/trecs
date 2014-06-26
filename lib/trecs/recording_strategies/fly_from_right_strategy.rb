@@ -6,12 +6,15 @@ module TRecs
 
     attr_reader :message
     attr_reader :width
+    attr_reader :command
 
     def initialize(options={})
       @message = options.fetch(:message)
       @width = options.fetch(:width) { 10 }
 
       @width = @message.size if @width < @message.size
+
+      @command = options.fetch(:command) { nil }
     end
 
     def perform
@@ -43,6 +46,14 @@ module TRecs
 
         current_msg
       end
+    end
+
+    def current_content(str)
+      if command
+        comm_array = command.split(" ")
+        str = IO.popen([*comm_array, "#{str}"]).read
+      end
+      super(str)
     end
 
   end

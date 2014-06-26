@@ -2,6 +2,9 @@ module TRecs
   module Strategy
     attr_accessor :recorder
 
+    def stop
+    end
+    
     private
 
     attr_accessor :__time
