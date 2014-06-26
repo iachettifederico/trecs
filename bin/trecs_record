@@ -67,4 +67,4 @@ RECORDER.record
 
 puts "Recording finished"
 puts "Play with:"
-puts "  bin/trecs #{opts[:trecs_file]}"
+puts "  trecs #{opts[:trecs_file]}"
