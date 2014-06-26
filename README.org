@@ -20,13 +20,7 @@
   |_| |_| \_\___|\___|___/
 
 #+END_EXAMPLE
-
-Text Recordings.
-
 Record screencasts in plain text.
-
-** Still under development
-This project is still under development. It's not yet ready for use.
 
 ** Installing TRecs
 To install TRecs, just run
@@ -108,58 +102,72 @@ trecs_record my_banner.trecs --strategy=fly_from_right --step=50 --message="TRec
 **** Shell command for message
 On some recording strategies, there's also the posibility to run a custom shell command for each frame.
 
-For example, you can use the =figlet= command (if you have it installed) to make a banner that, for example appears one char at the time
+For example, you can use the =wc= shell command to count the characters (or lines or words) of a banner that, for example appears one char at the time
 
 #+BEGIN_SRC bash
-trecs_record my_banner.trecs --strategy=incremental --step=50 --message="TRecs" --command="figlet"
+trecs_record my_banner.trecs --strategy=incremental --step=50 --message="TRecs" --command="echo <frame> | wc -c"
 #+END_SRC
 
-This will run the command =figlet <frame content>= for each of the 6 created frames:
+This will run, for each frame the command =<frame> | wc -c=
+
+Where =<frame>= will be eplaced by the frame contents inside double quotes
+
+And these are the generated frames with its corresponding commands:
 
 - 0 millis :: 
-#+BEGIN_EXAMPLE
-
-#+END_EXAMPLE
-- 50 millis :: 
-#+BEGIN_EXAMPLE
- _____ 
-|_   _|
-  | |  
-  | |  
-  |_|  
-#+END_EXAMPLE
+  - frame ::
+    #+BEGIN_SRC bash
+    0
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "" | wc -c
+    #+END_EXAMPLE
+- 50 millis ::
+  - frame ::
+    #+BEGIN_SRC bash
+    1
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "T" | wc -c
+    #+END_EXAMPLE
 - 100 millis ::
-#+BEGIN_EXAMPLE
- _____ ____  
-|_   _|  _ \ 
-  | | | |_) |
-  | | |  _ < 
-  |_| |_| \_\  
-#+END_EXAMPLE
+  - frame ::
+    #+BEGIN_SRC bash
+    2
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "TR" | wc -c
+    #+END_EXAMPLE
 - 150 millis ::
-#+BEGIN_EXAMPLE
- _____ ____      
-|_   _|  _ \ ___ 
-  | | | |_) / _ \
-  | | |  _ <  __/
-  |_| |_| \_\___| 
-#+END_EXAMPLE
+  - frame ::
+    #+BEGIN_SRC bash
+    3
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "TRe" | wc -c
+    #+END_EXAMPLE
 - 200 millis :: 
-#+BEGIN_EXAMPLE
- _____ ____           
-|_   _|  _ \ ___  ___ 
-  | | | |_) / _ \/ __|
-  | | |  _ <  __/ (__ 
-  |_| |_| \_\___|\___| 
-#+END_EXAMPLE
+  - frame ::
+    #+BEGIN_SRC bash
+    4
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "TRec" | wc -c
+    #+END_EXAMPLE
 - 250 millis ::
-#+BEGIN_EXAMPLE
- _____ ____               
-|_   _|  _ \ ___  ___ ___ 
-  | | | |_) / _ \/ __/ __|
-  | | |  _ <  __/ (__\__ \
-  |_| |_| \_\___|\___|___/ 
-#+END_EXAMPLE
+  - frame ::
+    #+BEGIN_SRC bash
+    5
+    #+END_SRC
+  - command ::
+    #+BEGIN_EXAMPLE
+    echo "TRecs" | wc -c
+    #+END_EXAMPLE
 
 Currently applies to:
 - Incremental Strategy
