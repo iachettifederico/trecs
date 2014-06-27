@@ -14,6 +14,8 @@ opts = Trollop::options do
   opt :ticker, "Ticker", type: String, default: ""
 
   opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
+
+  opt :audio, "Play with audio",                         type: String
 end
 opts[:trecs_file] = ARGV[0]
 
@@ -37,6 +39,24 @@ ticker_class = Kernel.const_get([
   ].join
   )
 
+########## AUDIO ##########
+def start_sound_player(file_name='sound.ogg')
+  return unless File.exist?(file_name)
+  # at_exit { system('stty echo') }
+  STDOUT.puts "=> Starting sound player..."
+  @sox_pid = fork do
+    `play #{file_name} 2>&1`
+  end
+end
+
+def stop_sound_player
+  return unless File.exist?(file_name)
+  STDOUT.puts "=> Stopping sound player..."
+  Process.waitpid(@sox_pid)
+end
+######## END AUDIO ########
+
+
 player_options = {
   reader: reader_class.new(opts),
   ticker: ticker_class.new(opts),
@@ -44,8 +64,10 @@ player_options = {
 }
 
 player = TRecs::Player.new(player_options)
+
+opts[:audio] && start_sound_player(opts[:audio])
 player.play
 
 puts "Finished"
 puts "Replay with:"
-puts "  bin/trecs #{opts[:trecs_file]}"
+puts "trecs #{opts[:trecs_file]}"

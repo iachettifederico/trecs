@@ -19,6 +19,8 @@ opts = Trollop::options do
   opt :input_file, "File to record",                  type: String,  default: ""
   opt :terminal, "Launch terminal",                                  default: true
 
+  opt :audio, "Record audio",                         type: String
+
 end
 opts[:trecs_file] = ARGV[0]
 
@@ -41,27 +43,51 @@ strategy_class = Kernel.const_get([
   ].join
   )
 
+########## AUDIO ##########
+def start_sound_recording(file_name='sound.ogg')
+  puts "Sound file stored in #{file_name}"
+  @sox_pid = fork do
+    Signal.trap("SIGINT") {
+      puts "=> Sound recording finished!"
+      exit
+    }
+    sleep 0.5
+    `rec -C 1 --channels 1 --rate 16k --comment 'TRecs' #{file_name} 2>&1`
+  end
+end
+
+def stop_sound_recording
+  puts "=> Stopping sound recorder"
+  sleep 2 # otherwise record will be cropped for some reason
+  Process.kill("SIGINT", @sox_pid)
+  Process.waitpid(@sox_pid)
+end
+
+######## END AUDIO ########
 
 
 puts "Recording ..."
 
+
 if strategy_class.to_s == "TRecs::TtyrecStrategy"
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
+  opts[:audio] && start_sound_recording(opts[:audio])
   system "ttyrec #{opts[:input_file]}" if opts[:terminal]
 end
 
 recorder_options = {
-  writer: writer_class.new(opts),
+  writer:   writer_class.new(opts),
   strategy: strategy_class.new(opts),
-  step:   opts[:step],
+  step:     opts[:step],
 }
 
-
+opts[:audio] && stop_sound_recording
 RECORDER = TRecs::Recorder.new(recorder_options)
 
 trap "SIGINT" do
   RECORDER.stop
 end
+
 
 RECORDER.record
 
