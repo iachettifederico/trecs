@@ -23,7 +23,7 @@ module TRecs
       Then { player.ticker == ticker }
       Then { ticker.player == player}
 
-      Then { player.step == 100}
+      Then { player.step   == 100}
       Then { player.screen == screen}
     end
 
@@ -37,7 +37,7 @@ module TRecs
 
       When { player.play }
 
-      Then { Spy.calls[1] == ["reader", :setup,   []] }
+      Then { Spy.calls[1] == ["reader", :setup, []] }
       Then { Spy.calls[2] == ["ticker", :start, []] }
     end
 
@@ -104,7 +104,6 @@ module TRecs
 
       Then { player.time_to_play(1000) == 200 }
       Then { player.tick(1000)         == "c" }
-
     end
   end
 end

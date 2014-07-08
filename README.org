@@ -1,5 +1,5 @@
 * T-Recs
-  
+
 [[https://travis-ci.org/iachettifederico/trecs][Build State]] [[https://travis-ci.org/iachettifederico/trecs.svg]]
 
 #+BEGIN_EXAMPLE
@@ -13,8 +13,8 @@
    /\     _|       ===E
    \ \___|         |
     \___          /
- _____ ____     _/              
-|_   _|  _ \ ___  ___ ___ 
+ _____ ____     _/
+|_   _|  _ \ ___  ___ ___
   | | | |_) / _ \/ __/ __|
   | | |  _ <  __/ (__\__ \
   |_| |_| \_\___|\___|___/
@@ -114,7 +114,7 @@ Where =<frame>= will be eplaced by the frame contents inside double quotes
 
 And these are the generated frames with its corresponding commands:
 
-- 0 millis :: 
+- 0 millis ::
   - frame ::
     #+BEGIN_SRC bash
     0
@@ -150,7 +150,7 @@ And these are the generated frames with its corresponding commands:
     #+BEGIN_EXAMPLE
     echo "TRe" | wc -c
     #+END_EXAMPLE
-- 200 millis :: 
+- 200 millis ::
   - frame ::
     #+BEGIN_SRC bash
     4
@@ -178,7 +178,7 @@ Right now, you can extend TRecs in three possible ways
 
 - Recording Strategies :: This is the object that defines what to record and how to process the input to be converted into frames. To give an example, the IncrementalStrategy (provided by TRecs), will take an input string, make an array with each of it's characters and, for each char, append it to an output string and save the frame.
 - Formats :: The format corresponds to the way the frames are stored. For example, using YamlStore, a tar file or a database.
-- Tickers :: The Ticker is the way the user tells TRecs to advance frames. 
+- Tickers :: The Ticker is the way the user tells TRecs to advance frames.
 
 # *** TODO Recording Strategies
 # *** TODO Formats

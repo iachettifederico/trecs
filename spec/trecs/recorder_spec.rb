@@ -207,7 +207,7 @@ module TRecs
       end
     end
 
-    context "#next_timestamp" do
+    context "#stop" do
       Given { Spy.clear }
       Given(:writer)   { OpenStruct.new }
       Given(:strategy) { Spy.new("strategy").ignore(:recorder=) }
