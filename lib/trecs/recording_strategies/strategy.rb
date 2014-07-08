@@ -4,7 +4,7 @@ module TRecs
 
     def stop
     end
-    
+
     private
 
     attr_accessor :__time
