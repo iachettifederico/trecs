@@ -128,32 +128,14 @@ module TRecs
       }
 
       context "setting current frame and time with content duplicates" do
-        When(:result) {
-          result = []
+        When {
           strategy.action = -> {
             recorder.current_frame(time: 10, content: "CONTENT")
-            result << {
-              time: recorder.current_time,
-              content: recorder.current_content,
-            }
             recorder.current_frame(time: 15, content: "CONTENT 2")
-            result << {
-              time: recorder.current_time,
-              content: recorder.current_content,
-            }
             recorder.current_frame(time: 20, content: "CONTENT 2")
-            result << {
-              time: recorder.current_time,
-              content: recorder.current_content,
-            }
             recorder.current_frame(time: 25, content: "CONTENT 3")
-            result << {
-              time: recorder.current_time,
-              content: recorder.current_content,
-            }
           }
           recorder.record
-          result
         }
 
         Then {
@@ -222,6 +204,47 @@ module TRecs
       When { recorder.stop }
 
       Then { strategy.calls[1] == [:stop, []] }
+    end
+
+    context "Offset" do
+      Given   { Spy.clear }
+      Given(:writer)   { Spy.new("Writer").ignore(:recorder=, :setup, :render) }
+      Given(:strategy) { CustomStrategy.new }
+
+      Given(:recorder) {
+        Recorder.new(writer: writer, strategy: strategy, offset: 7)
+      }
+
+      context "setting current frame and time with content duplicates" do
+        When {
+          strategy.action = -> {
+            recorder.current_frame(time: 0,   content: "CONTENT")
+            recorder.current_frame(time: 10, content: "CONTENT 2")
+            recorder.current_frame(time: 12, content: "CONTENT 3")
+          }
+          recorder.record
+        }
+
+        Then {
+          writer.calls[1] == [
+            :create_frame,
+            [ { time: 7, content: "CONTENT" } ]
+          ]
+        }
+        Then {
+          writer.calls[2] == [
+            :create_frame,
+            [ { time: 17, content: "CONTENT 2" } ]
+          ]
+        }
+        Then {
+          writer.calls[3] == [
+            :create_frame,
+            [ { time: 19, content: "CONTENT 3" } ]
+          ]
+        }
+      end
+
     end
   end
 end

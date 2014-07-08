@@ -3,6 +3,7 @@ module TRecs
     attr_reader :writer
     attr_reader :strategy
     attr_reader :step
+    attr_reader :offset
     attr_reader :recording
     attr_reader :current_time
     attr_reader :current_content
@@ -16,6 +17,7 @@ module TRecs
       @strategy.recorder = self
 
       @step = options.fetch(:step) { 100 }
+      @offset = options.fetch(:offset) { 0 }
       @recording = false
       @current_time = nil
     end
@@ -36,7 +38,8 @@ module TRecs
       @current_content = content
 
       if @previous_content != content
-        writer.create_frame(time: current_time, content: current_content)
+        new_current_time = current_time + offset
+        writer.create_frame(time: new_current_time, content: current_content)
         @previous_content = content
       end
     end
