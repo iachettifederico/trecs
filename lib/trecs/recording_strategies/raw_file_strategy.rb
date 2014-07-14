@@ -24,7 +24,7 @@ module TRecs
         current_time(timestamp(clock.now - start_time))
         current_content(File.read(@file))
         save_frame
-        
+
         custom_sleep(recorder.step)
       end
     end
