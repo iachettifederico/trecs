@@ -28,7 +28,7 @@ module TRecs
         @timestamps = @timestamps.select { |t| t > from }
         @timestamps.unshift(from)
       end
-      if to
+      if to && to > 0
         @timestamps = @timestamps.select { |t| t < to }
         @timestamps.push(to)
       end

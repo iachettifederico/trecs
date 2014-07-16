@@ -108,6 +108,11 @@ module TRecs
           Then { ticker.timestamps == [0, 10, 20]  }
         end
 
+        context "zero" do
+          Given(:ticker)  { ClockTicker.new(to: 0, timestamps: [0, 10, 20, 30, 40]) }
+          Then { ticker.timestamps == [0, 10, 20, 30, 40]  }
+        end
+
         context "not exact" do
           Given(:ticker)  { ClockTicker.new(to: 23, timestamps: [0, 10, 20, 30, 40]) }
           Then { ticker.timestamps == [0, 10, 20, 23]  }
