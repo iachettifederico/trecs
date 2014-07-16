@@ -13,7 +13,7 @@ module TRecs
     end
 
     def start
-      prev_time = 0
+      prev_time = timestamps.first
       timestamps.each do |time|
         player.tick(time)
         delayer.sleep((time - prev_time)/1000.0)

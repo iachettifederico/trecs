@@ -120,8 +120,34 @@ module TRecs
       end
 
       context "full example" do
-        Given(:ticker)  { ClockTicker.new(from: 3, to: 28, timestamps: [0, 10, 20, 30, 40]) }
+        Given(:delayer) { Spy.new(:delayer) }
+        Given(:delayer) { Spy.new(:delayer) }
+        Given(:player)  { Spy.new(:player) }
+        Given(:ticker)  {
+          ClockTicker.new(
+            from:       3,
+            to:         28,
+            timestamps: [0, 10, 20, 30, 40],
+            delayer:    delayer)
+        }
+
+        When { ticker.start }
+
         Then { ticker.timestamps == [3, 10, 20, 28]  }
+
+        context "player" do
+          Then { player.calls[1] == [:tick, [3]]  }
+          Then { player.calls[2] == [:tick, [10]] }
+          Then { player.calls[3] == [:tick, [20]] }
+          Then { player.calls[4] == [:tick, [28]] }
+        end
+
+        context "delayer" do
+          Then { delayer.calls[1] == [:sleep, [0]] }
+          Then { delayer.calls[2] == [:sleep, [0.007]] }
+          Then { delayer.calls[3] == [:sleep, [0.01]] }
+          Then { delayer.calls[4] == [:sleep, [0.008]] }
+        end
       end
     end
   end
