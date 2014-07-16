@@ -16,7 +16,7 @@ module TRecs
       parsed_json.each do |time, content|
         @frames[Integer(time)] = content
       end
-      
+
       @timestamps = @frames.keys
     end
 

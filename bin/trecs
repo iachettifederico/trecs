@@ -11,7 +11,7 @@ opts = Trollop::options do
 
   opt :step, "Time in ms between frames", short: 's', default: 100
   opt :format, "File format", type: String, default: "json"
-  opt :ticker, "Ticker", type: String, default: ""
+  opt :ticker, "Ticker", type: String, default: "clock"
 
   opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
 
