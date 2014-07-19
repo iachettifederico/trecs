@@ -15,9 +15,10 @@ opts = Trollop::options do
 
   opt :message, "Message to record",                  type: String,  default: "TRecs!"
   opt :width, "Width",                                type: Integer, default: 10
-  opt :command, "Command"          ,                  type: String
+  opt :command, "Command"          ,      short: "c", type: String
   opt :input_file, "File to record",                  type: String,  default: ""
   opt :terminal, "Launch terminal",                                  default: true
+  opt :color, "Record colors",                                       default: true
 
   opt :audio, "Record audio",                         type: String
 
