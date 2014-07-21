@@ -42,12 +42,8 @@ module TRecs
     end
 
     def set_command
-      command = %W[tmux capture-pane -F "#{cursor_flag}"]
+      command = %W[tmux capture-pane]
       command << @color if @color
-
-      curpos = `col=\`tput col\` && line=\`tput line\` && echo col, line`
-      `notify-send #{curpos}`
-
       command
     end
 
