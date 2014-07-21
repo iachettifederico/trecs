@@ -15,24 +15,17 @@ module TRecs
     def perform
       start_recording
       while(recording)
-        command
-        system *command
-        IO.popen(%W[tmux show-buffer]) do |out|
-          recorder.current_frame(content: out.read)
+        get_frames do |frame|
+          recorder.current_frame(content: frame)
         end
         sleep(step)
       end
     end
 
+
     def command
       @command ||=
         set_command
-    end
-
-    def set_command
-      command = %W[tmux capture-pane]
-      command << @color if @color
-      command
     end
 
     def stop
@@ -45,7 +38,24 @@ module TRecs
     end
 
     def set_color_or_bw
-      @color = @color ? "-e" : nil
+      @color = @color ? "-e" : "-C"
+    end
+
+    def set_command
+      command = %W[tmux capture-pane -F "#{cursor_flag}"]
+      command << @color if @color
+
+      curpos = `col=\`tput col\` && line=\`tput line\` && echo col, line`
+      `notify-send #{curpos}`
+
+      command
+    end
+
+    def get_frames
+      system *command
+      IO.popen(%W[tmux show-buffer]) do |out|
+        yield out.read
+      end
     end
   end
 end
