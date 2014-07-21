@@ -15,7 +15,7 @@ opts = Trollop::options do
 
   opt :from,  "Play from",     type: Integer, default: 0
   opt :to,    "Play to",       type: Integer, default: 0
-  opt :speed, "Playinx speed", type: Integer, default: 1
+  opt :speed, "Playinx speed", type: Float, default: 1.0
 
   opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
 
