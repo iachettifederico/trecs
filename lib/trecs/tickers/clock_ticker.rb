@@ -4,19 +4,21 @@ module TRecs
     attr_reader :delayer
     attr_reader :from
     attr_reader :to
+    attr_reader :speed
 
     def initialize(options={})
       @delayer = options.fetch(:delayer) { Kernel }
       @timestamps = options.fetch(:timestamps) { nil }
-      @from = options.fetch(:from) { nil }
-      @to   = options.fetch(:to)   { nil }
+      @from  = options.fetch(:from)  { nil }
+      @to    = options.fetch(:to)    { nil }
+      @speed = options.fetch(:speed) { 1 }
     end
 
     def start
       prev_time = timestamps.first
       timestamps.each do |time|
         player.tick(time)
-        delayer.sleep((time - prev_time)/1000.0)
+        sleep(time - prev_time)
         prev_time = time
       end
       true
@@ -39,5 +41,12 @@ module TRecs
       "<#{self.class}>"
     end
     alias :inspect :to_s
+
+    private
+
+    def sleep(time)
+      sleep_time =  time / (1000.0 * speed)
+      delayer.sleep(sleep_time)
+    end
   end
 end

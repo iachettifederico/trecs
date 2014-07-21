@@ -13,8 +13,9 @@ opts = Trollop::options do
   opt :format, "File format", type: String, default: "json"
   opt :ticker, "Ticker", type: String, default: "clock"
 
-  opt :from, "Play from", type: Integer, default: 0
-  opt :to,   "Play to",   type: Integer, default: 0
+  opt :from,  "Play from",     type: Integer, default: 0
+  opt :to,    "Play to",       type: Integer, default: 0
+  opt :speed, "Playinx speed", type: Integer, default: 1
 
   opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
 

@@ -150,5 +150,55 @@ module TRecs
         end
       end
     end
+
+    context "#speed" do
+      Given { Spy.clear }
+
+      Given(:player)  { Spy.new(:player) }
+      Given(:delayer) { Spy.new(:delayer) }
+
+      When { ticker.player = player }
+      When { ticker.start }
+
+      context "2x" do
+        Given(:ticker)  {
+          ClockTicker.new(
+            speed: 2,
+            delayer: delayer,
+            timestamps: [0, 100, 300]
+            )
+        }
+        Then { player.calls[1]  == [:tick,  [0]] }
+        Then { delayer.calls[1] == [:sleep, [0]] }
+
+        Then { player.calls[2]  == [:tick,  [100]] }
+        Then { delayer.calls[2] == [:sleep, [0.05]] }
+
+        Then { player.calls[3]  == [:tick,  [300]] }
+        Then { delayer.calls[3] == [:sleep, [0.1]] }
+      end
+
+      context "1.5x" do
+        Given(:ticker)  {
+          ClockTicker.new(
+            speed: 1.5,
+            delayer: delayer,
+            timestamps: [0, 100, 300]
+            )
+        }
+        Then { player.calls[1]  == [:tick,  [0]] }
+        Then { delayer.calls[1] == [:sleep, [0]] }
+
+        Then { player.calls[2]  == [:tick,  [100]] }
+        Then { delayer.calls[2] == [:sleep, [0.06666666666666667]] }
+
+        Then { player.calls[3]  == [:tick,  [300]] }
+        Then { delayer.calls[3] == [:sleep, [0.13333333333333333]] }
+      end
+
+      context "negative" do
+        skip("Test negtive speeds")
+      end
+    end
   end
 end
