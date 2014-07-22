@@ -66,9 +66,12 @@ end
 
 ######## END AUDIO ########
 
+if strategy_class.to_s == "TRecs::TmuxSessionStrategy" && !ENV['TMUX']
+  puts "You need to be inside a tmux session to use the Tmux Session Strategy"
+  exit(0)
+end
 
 puts "Recording ..."
-
 
 if strategy_class.to_s == "TRecs::TtyrecStrategy"
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
@@ -88,7 +91,6 @@ RECORDER = TRecs::Recorder.new(recorder_options)
 trap "SIGINT" do
   RECORDER.stop
 end
-
 
 RECORDER.record
 
