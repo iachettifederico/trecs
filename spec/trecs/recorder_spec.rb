@@ -212,15 +212,16 @@ module TRecs
       Given(:strategy) { CustomStrategy.new }
 
       Given(:recorder) {
-        Recorder.new(writer: writer, strategy: strategy, offset: 7)
+        Recorder.new(offset: 7, writer: writer, strategy: strategy, step: 10)
       }
 
       context "setting current frame and time with content duplicates" do
         When {
           strategy.action = -> {
-            recorder.current_frame(time: 0,   content: "CONTENT")
+            recorder.current_frame(time: 0,  content: "CONTENT")
             recorder.current_frame(time: 10, content: "CONTENT 2")
             recorder.current_frame(time: 12, content: "CONTENT 3")
+            recorder.current_frame(          content: "CONTENT 4")
           }
           recorder.record
         }
@@ -241,6 +242,13 @@ module TRecs
           writer.calls[3] == [
             :create_frame,
             [ { time: 19, content: "CONTENT 3" } ]
+          ]
+        }
+        Then { recorder.current_time == 22 }
+        Then {
+          writer.calls[4] == [
+            :create_frame,
+            [ { time: 29, content: "CONTENT 4" } ]
           ]
         }
       end
