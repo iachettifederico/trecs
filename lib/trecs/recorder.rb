@@ -3,11 +3,11 @@ module TRecs
     attr_reader :writer
     attr_reader :strategy
     attr_reader :step
-    attr_reader :offset
     attr_reader :recording
     attr_reader :current_time
     attr_reader :current_content
 
+    attr_accessor :offset
 
     def initialize(options={})
       @writer   = options.fetch(:writer)
