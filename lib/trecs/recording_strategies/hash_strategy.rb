@@ -18,5 +18,9 @@ module TRecs
 
     def stop
     end
+
+    def inspect
+      "<#{self.class}: frames: #{frames}>"
+    end
   end
 end
