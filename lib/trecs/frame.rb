@@ -19,5 +19,11 @@ module TRecs
     def each
       content.each_line
     end
+
+    def to_s
+      content
+    end
+    alias :to_str :to_s
+  end
   end
 end

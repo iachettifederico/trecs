@@ -59,5 +59,10 @@ FRAME
       }
       Then { frame.is_a? Enumerable }
     end
+
+    context "#to_s" do
+      Given(:frame) { Frame.new("FRAME CONTENT") }
+      Then { frame.to_s == "FRAME CONTENT" }
+    end
   end
 end
