@@ -25,5 +25,13 @@ module TRecs
     end
     alias :to_str :to_s
   end
+
+  def Frame(value)
+    case value
+    when Frame then value
+    else
+      Frame.new(value.to_str)
+    end
   end
+  module_function :Frame
 end
