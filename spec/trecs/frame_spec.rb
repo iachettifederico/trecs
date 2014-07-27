@@ -47,5 +47,17 @@ FRAME
       end
     end
 
+    context "each" do
+      Given(:content) { "a\nb\nc\n" }
+      Given(:frame) { Frame.new(content) }
+      Then {
+        frame.each
+          .zip(content.each_line)
+          .all?{ |actual, expected|
+          actual == expected
+        }
+      }
+      Then { frame.is_a? Enumerable }
+    end
   end
 end

@@ -1,5 +1,6 @@
 module TRecs
   class Frame
+    include Enumerable
     attr_accessor :content
     def initialize(content="")
       @content = content
@@ -13,6 +14,10 @@ module TRecs
 
     def height
       content.lines.count
+    end
+
+    def each
+      content.each_line
     end
   end
 end
