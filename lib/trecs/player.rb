@@ -40,7 +40,7 @@ module TRecs
     end
 
     def timestamps
-      @timestamps ||= reader.timestamps
+      @timestamps ||= reader.timestamps.sort
     end
 
     def time_to_play(time)

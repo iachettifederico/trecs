@@ -76,7 +76,7 @@ module TRecs
     context "content at time" do
       Given(:screen) { double.as_null_object }
       Given(:ticker) { OpenStruct.new }
-      Given(:reader) { CustomReader.new(0 => "a", 100 => "b", 200 => "c") }
+      Given(:reader) { CustomReader.new(100 => "b", 0 => "a", 200 => "c") }
 
       Given(:player) {
         Player.new(reader: reader, ticker: ticker, screen: screen)
