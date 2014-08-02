@@ -1,8 +1,13 @@
 require 'json'
 require "fileutils"
+require "zlib"
+require 'archive/tar/minitar'
+
 
 module TRecs
   class JsonWriter
+    include Archive::Tar
+
     attr_accessor :recorder
     attr_reader :frames
     attr_reader :file
@@ -24,9 +29,14 @@ module TRecs
 
     def render
       json_string = frames.to_json
-      
-      File.open(file, File::CREAT|File::TRUNC|File::RDWR, 0644) do |f|
-        f.write(json_string)
+
+      Dir.chdir("/tmp/") do
+        tgz = Zlib::GzipWriter.new(File.open(file, 'wb'))
+        File.open("frames.json", File::CREAT|File::TRUNC|File::RDWR, 0644) do |f|
+          f.write json_string
+        end
+
+        Minitar.pack('frames.json', tgz)
       end
     end
   end

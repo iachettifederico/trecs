@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     trecs (0.1.11)
+      minitar (~> 0.5.4)
       trollop (~> 2.0)
 
 GEM
@@ -10,6 +11,7 @@ GEM
     diff-lcs (1.2.5)
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
+    minitar (0.5.4)
     rake (10.3.2)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
