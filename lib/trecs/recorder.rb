@@ -10,8 +10,8 @@ module TRecs
     attr_accessor :offset
 
     def initialize(options={})
-      @writer          = options.fetch(:writer)
-      @writer.recorder = self
+      @writer            = options.fetch(:writer)
+      @writer.recorder   = self
 
       @strategy          = options.fetch(:strategy)
       @strategy.recorder = self
