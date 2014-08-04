@@ -10,35 +10,36 @@ module TRecs
     attr_accessor :offset
 
     def initialize(options={})
-      @writer   = options.fetch(:writer)
+      @writer          = options.fetch(:writer)
       @writer.recorder = self
 
-      @strategy = options.fetch(:strategy)
+      @strategy          = options.fetch(:strategy)
       @strategy.recorder = self
 
-      @step = options.fetch(:step) { 100 }
+      @step   = options.fetch(:step)   { 100 }
       @offset = options.fetch(:offset) { 0 }
-      @recording = false
+
+      @recording    = false
       @current_time = nil
     end
 
     def record
-      self.current_time = nil
-      self.recording = true
-      writer.setup
-      strategy.perform
-      writer.render
-      self.recording = false
+      do_record do
+        writer.setup
+        strategy.perform
+        writer.render
+      end
     end
 
     def current_frame(options={})
-      time = options.fetch(:time) { next_timestamp }
+      time    = options.fetch(:time) { next_timestamp }
       content = options.fetch(:content)
-      @current_time = time
+      
+      @current_time    = time
       @current_content = content
 
       if @previous_content != content
-        new_current_time = current_time + offset
+        new_current_time  = current_time + offset
         writer.create_frame(time: new_current_time, content: current_content)
         @previous_content = content
       end
@@ -57,6 +58,13 @@ module TRecs
     attr_writer :recording
     attr_writer :current_time
     attr_writer :current_content
+
+    def do_record
+      self.current_time = nil
+      self.recording    = true
+      yield
+      self.recording    = false
+    end
 
   end
 end
