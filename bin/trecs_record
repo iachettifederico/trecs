@@ -9,31 +9,22 @@ require "trollop"
 opts = Trollop::options do
   version TRecs::VERSION
 
-  opt :step, "Time in ms between frames", short: 's',                default: 100
-  opt :format, "File format",                         type: String,  default: "json"
-  opt :strategy, "Strategy",                          type: String,  default: "incremental"
+  opt :step,       "Time in ms between frames", short: 's',                default: 100
+  opt :strategy,   "Strategy",                              type: String,  default: "incremental"
 
-  opt :message, "Message to record",                  type: String,  default: "TRecs!"
-  opt :width, "Width",                                type: Integer, default: 10
-  opt :command, "Command"          ,      short: "c", type: String
-  opt :input_file, "File to record",                  type: String,  default: ""
-  opt :terminal, "Launch terminal",                                  default: true
-  opt :color, "Record colors",                                       default: true
+  opt :message,    "Message to record",                     type: String,  default: "TRecs!"
+  opt :width,      "Width",                                 type: Integer, default: 10
+  opt :command,    "Command"          ,         short: "c", type: String
+  opt :input_file, "File to record",                        type: String,  default: ""
+  opt :terminal,   "Launch terminal",                                      default: true
+  opt :color,      "Record colors",                                        default: true
 
-  opt :audio, "Record audio",                         type: String
-
+  opt :audio,      "Record audio",                          type: String
 end
 opts[:trecs_file] = ARGV[0]
 
-writer_file = "writers/#{opts[:format]}_writer"
-require writer_file
-writer_class = Kernel.const_get([
-    "TRecs::",
-    opts[:format].split(/[-_\s]/).map(&:capitalize),
-    "Writer"
-  ].join
-  )
-
+require "writers/json_writer"
+writer_class = TRecs::JsonWriter
 
 strategy_file = "recording_strategies/#{opts[:strategy]}_strategy"
 require strategy_file
@@ -73,11 +64,14 @@ end
 
 puts "Recording ..."
 
-if strategy_class.to_s == "TRecs::TtyrecStrategy"
+if strategy_class.to_s == "TRecs::TtyrecStrategy" || strategy_class.to_s == "TRecs::TmuxSessionStrategy"
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
   opts[:audio] && start_sound_recording(opts[:audio])
+
   system "ttyrec #{opts[:input_file]}" if opts[:terminal]
 end
+
+opts[:audio_files] = [opts[:audio]] if opts[:audio]
 
 recorder_options = {
   writer:   writer_class.new(opts),
@@ -85,10 +79,10 @@ recorder_options = {
   step:     opts[:step],
 }
 
-opts[:audio] && stop_sound_recording
 RECORDER = TRecs::Recorder.new(recorder_options)
 
 trap "SIGINT" do
+  opts[:audio] && stop_sound_recording
   RECORDER.stop
 end
 
@@ -96,4 +90,4 @@ RECORDER.record
 
 puts "Recording finished"
 puts "Play with:"
-puts "  trecs #{opts[:trecs_file]}"
+puts "trecs #{opts[:trecs_file]}"

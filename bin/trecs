@@ -7,43 +7,6 @@ require "sources/tgz_source"
 
 require "trollop"
 
-opts = Trollop::options do
-  version TRecs::VERSION
-
-  opt :step, "Time in ms between frames", short: 's', default: 100
-  opt :format, "File format", type: String, default: "json"
-  opt :ticker, "Ticker", type: String, default: "clock"
-
-  opt :from,  "Play from",     type: Integer, default: 0
-  opt :to,    "Play to",       type: Integer, default: 0
-  opt :speed, "Playing speed", type: Float,   default: 1.0
-
-  opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
-end
-opts[:trecs_file] = ARGV[0]
-
-source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
-reader = source.reader(opts)
-p reader.frames
-
-ticker_separator = '_' unless opts[:ticker] == ''
-ticker_file = "tickers/#{opts[:ticker]}#{ticker_separator}ticker"
-require ticker_file
-ticker_class = Kernel.const_get([
-    "TRecs::",
-    opts[:ticker].split(/[-_\s]/).map(&:capitalize),
-    "Ticker"
-  ].join
-  )
-ticker = ticker_class.new(opts)
-p ticker
-
-player_options = {
-  reader: reader,
-  ticker: ticker,
-  step:   opts[:step],
-}
-
 def finish(opts)
   puts "Finished"
   puts "Replay with:"
@@ -54,6 +17,39 @@ trap "SIGINT" do
   finish(opts)
   exit rescue nil
 end
+
+opts = Trollop::options do
+  version TRecs::VERSION
+
+  opt :step,        "Time in ms between frames", short: 's',               default: 100
+  opt :ticker,      "Ticker",                                type: String, default: "clock"
+
+  opt :from,        "Play from",                             type: Integer, default: 0
+  opt :to,          "Play to",                               type: Integer, default: 0
+  opt :speed,       "Playing speed",                         type: Float,   default: 1.0
+
+  opt :ticker_file, "File to watch",                         type: String, default: "/tmp/ticker"
+end
+opts[:trecs_file] = ARGV[0]
+
+source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
+reader = source.reader(opts)
+
+ticker_file = "tickers/#{opts[:ticker]}_ticker"
+require ticker_file
+ticker_class = Kernel.const_get([
+    "TRecs::",
+    opts[:ticker].split(/[-_\s]/).map(&:capitalize),
+    "Ticker"
+  ].join
+  )
+ticker = ticker_class.new(opts)
+
+player_options = {
+  reader: reader,
+  ticker: ticker,
+  step:   opts[:step],
+}
 
 player = TRecs::Player.new(player_options)
 player.play
