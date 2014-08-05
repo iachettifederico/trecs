@@ -14,7 +14,6 @@ module TRecs
 
     def initialize(options={})
       @trecs_file = options.fetch(:trecs_file)
-      #FileUtils.rm(trecs_file, force: true)
     end
 
     def create_recording
@@ -31,26 +30,45 @@ module TRecs
       end
     end
 
-    def read_recording
-      frames = {}
+    def reader(options={})
+      reader = nil
+      options[:source] = self
+      read do |source|
+        @manifest = YAML.load(source.read_file("manifest.yaml"))
+
+        format = manifest["format"]
+        reader_file = "readers/#{format}_reader"
+        require reader_file
+        reader_class = Kernel.const_get(
+          [
+            "::TRecs::",
+            format.split(/[-_\s]/).map(&:capitalize),
+            "Reader"
+          ].join)
+        reader = reader_class.new(options)
+      end
+      reader
+    end
+
+    def read
       in_tmp_dir do
         tgz = Zlib::GzipReader.new(File.open(trecs_file, 'rb'))
         Minitar.unpack(tgz, "./")
-        json_string = File.read("frames.json")
-        parsed_json = JSON.parse(json_string)
-        parsed_json.each do |time, content|
-          frames[Integer(time)] = content
-        end
+
+        yield self
       end
-      frames
     end
-    
+
     def in_tmp_dir
       Dir.mktmpdir("trecs_record") do |dir|
         Dir.chdir(dir) do
           yield
         end
       end
+    end
+
+    def read_file(file_name)
+      File.read(file_name)
     end
 
     def create_file(file_name)
@@ -77,7 +95,7 @@ module TRecs
     def []=(key, value)
       manifest[key.to_s] = value
     end
-    
+
     private
 
     def manifest

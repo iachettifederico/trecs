@@ -5,13 +5,25 @@ module TRecs
     attr_accessor :player
     attr_reader :frames
     attr_reader :timestamps
+    attr_reader :source
 
     def initialize(options={})
       trecs_file = options.fetch(:trecs_file)
-      source  = TgzSource.new(trecs_file: trecs_file)
-      @frames = source.read_recording
-
+      @source  = options.fetch(:source)
+      @frames = get_frames
       @timestamps = @frames.keys
+    end
+
+    def get_frames
+      frames = {}
+      source.read do
+        json_string = source.read_file("frames.json")
+        parsed_json = JSON.parse(json_string)
+        parsed_json.each do |time, content|
+          frames[Integer(time)] = content
+        end
+      end
+      frames
     end
 
     def setup

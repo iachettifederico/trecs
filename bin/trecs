@@ -3,8 +3,9 @@
 $:.unshift(File.expand_path("../../lib", __FILE__))
 require "trecs"
 require "player"
-require "trollop"
+require "sources/tgz_source"
 
+require "trollop"
 
 opts = Trollop::options do
   version TRecs::VERSION
@@ -15,23 +16,15 @@ opts = Trollop::options do
 
   opt :from,  "Play from",     type: Integer, default: 0
   opt :to,    "Play to",       type: Integer, default: 0
-  opt :speed, "Playinx speed", type: Float, default: 1.0
+  opt :speed, "Playing speed", type: Float,   default: 1.0
 
   opt :ticker_file, "File to watch", type: String, default: "/tmp/ticker"
-
-  opt :audio, "Play with audio",                         type: String
 end
 opts[:trecs_file] = ARGV[0]
 
-reader_file = "readers/#{opts[:format]}_reader"
-require reader_file
-reader_class = Kernel.const_get([
-    "TRecs::",
-    opts[:format].split(/[-_\s]/).map(&:capitalize),
-    "Reader"
-  ].join
-  )
-
+source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
+reader = source.reader(opts)
+p reader.frames
 
 ticker_separator = '_' unless opts[:ticker] == ''
 ticker_file = "tickers/#{opts[:ticker]}#{ticker_separator}ticker"
@@ -42,36 +35,27 @@ ticker_class = Kernel.const_get([
     "Ticker"
   ].join
   )
-
-########## AUDIO ##########
-def start_sound_player(file_name='sound.ogg')
-  return unless File.exist?(file_name)
-  # at_exit { system('stty echo') }
-  STDOUT.puts "=> Starting sound player..."
-  @sox_pid = fork do
-    `play #{file_name} 2>&1`
-  end
-end
-
-def stop_sound_player
-  return unless File.exist?(file_name)
-  STDOUT.puts "=> Stopping sound player..."
-  Process.waitpid(@sox_pid)
-end
-######## END AUDIO ########
-
+ticker = ticker_class.new(opts)
+p ticker
 
 player_options = {
-  reader: reader_class.new(opts),
-  ticker: ticker_class.new(opts),
+  reader: reader,
+  ticker: ticker,
   step:   opts[:step],
 }
 
-player = TRecs::Player.new(player_options)
+def finish(opts)
+  puts "Finished"
+  puts "Replay with:"
+  puts "trecs #{opts[:trecs_file]}"
+end
 
-opts[:audio] && start_sound_player(opts[:audio])
+trap "SIGINT" do
+  finish(opts)
+  exit rescue nil
+end
+
+player = TRecs::Player.new(player_options)
 player.play
 
-puts "Finished"
-puts "Replay with:"
-puts "trecs #{opts[:trecs_file]}"
+finish(opts)
