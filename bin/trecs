@@ -13,11 +13,6 @@ def finish(opts)
   puts "trecs #{opts[:trecs_file]}"
 end
 
-trap "SIGINT" do
-  finish(opts)
-  exit rescue nil
-end
-
 opts = Trollop::options do
   version TRecs::VERSION
 
@@ -31,6 +26,11 @@ opts = Trollop::options do
   opt :ticker_file, "File to watch",                         type: String, default: "/tmp/ticker"
 end
 opts[:trecs_file] = ARGV[0]
+
+trap "SIGINT" do
+  finish(opts)
+  exit rescue nil
+end
 
 source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
 reader = source.reader(opts)
