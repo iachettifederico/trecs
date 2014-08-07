@@ -39,6 +39,9 @@ module TRecs
         audio_files.each do |file|
           source.add_audio_file(file)
         end
+        if audio_files.any?
+          source[:defailt_audio] = audio_files.first
+        end
       end
     end
 

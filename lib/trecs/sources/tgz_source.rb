@@ -39,12 +39,12 @@ module TRecs
         format = manifest["format"]
         reader_file = "readers/#{format}_reader"
         require reader_file
-        reader_class = Kernel.const_get(
-          [
-            "::TRecs::",
-            format.split(/[-_\s]/).map(&:capitalize),
-            "Reader"
-          ].join)
+        reader_class_name = [
+          "TRecs::",
+          format.split(/[-_\s]/).map(&:capitalize),
+          "Reader"
+        ].join
+        reader_class = reader_class_name.split("::").reduce(Object) { |a, e| a.const_get e }
         reader = reader_class.new(options)
       end
       reader

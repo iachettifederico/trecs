@@ -37,12 +37,12 @@ reader = source.reader(opts)
 
 ticker_file = "tickers/#{opts[:ticker]}_ticker"
 require ticker_file
-ticker_class = Kernel.const_get([
+ticker_class_name = [
     "TRecs::",
     opts[:ticker].split(/[-_\s]/).map(&:capitalize),
     "Ticker"
   ].join
-  )
+ticker_class = ticker_class_name.split("::").reduce(Object) { |a, e| a.const_get e }
 ticker = ticker_class.new(opts)
 
 player_options = {
