@@ -59,7 +59,7 @@ module TRecs
           end
 
           context "in bulk" do
-            When { strategy << [second_strategy, third_strategy] }
+            When { strategy.append(second_strategy, third_strategy) }
 
             Then { strategy.strategies == [
                 first_strategy,

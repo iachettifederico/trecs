@@ -13,12 +13,16 @@ module TRecs
       @strategies = options.fetch(:strategies) { [] }
     end
 
-    def <<(strategies)
-      Array(strategies).each do |strategy|
-        @strategies << strategy
-      end
+    def <<(strategy)
+      @strategies << strategy
     end
 
+    def append(*strategies)
+      strategies.each do |strategy|
+        self << strategy
+      end
+    end
+    
     def perform
       strategies.each do |strategy|
         strategy.recorder = recorder
