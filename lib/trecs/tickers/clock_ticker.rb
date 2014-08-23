@@ -17,8 +17,8 @@ module TRecs
     def start
       prev_time = timestamps.first
       timestamps.each do |time|
-        player.tick(time)
         sleep(time - prev_time)
+        player.tick(time)
         prev_time = time
       end
       true
