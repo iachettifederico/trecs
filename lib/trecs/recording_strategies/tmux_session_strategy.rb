@@ -22,7 +22,6 @@ module TRecs
       end
     end
 
-
     def command
       @command ||=
         set_command
