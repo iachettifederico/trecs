@@ -9,6 +9,7 @@ module TRecs
 
     def initialize(frames={})
       @frames = frames || Hash.new
+      @command = frames.fetch(:command) { nil }
     end
 
     def perform
