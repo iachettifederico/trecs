@@ -10,9 +10,11 @@ module TRecs
 
     def perform
       @frames.each do |time, content|
-        current_time(time)
-        current_content(content)
-        save_frame
+        if time.is_a?(Numeric) || /\A\d+\Z/ === time
+          current_time(time.to_i)
+          current_content(content)
+          save_frame
+        end
       end
     end
 

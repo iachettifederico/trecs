@@ -3,6 +3,6 @@ require "readers/json_reader"
 
 module TRecs
   describe JsonReader do
-    skip("Test JsonReader")
+    skip("JsonReader")
   end
 end

@@ -23,9 +23,11 @@ module TRecs
       Given(:recorder) { Spy.new("recorder") }
       Given(:strategy) { HashStrategy.new(
           {
-            0  => "A",
-            10 => "B",
-            15 => "C",
+            0         => "A",
+            10.0      => "B",
+            "15"      => "C",
+            "1a2b3C4" => "h",
+            20        => "D",
           }
           ) }
 
@@ -35,6 +37,7 @@ module TRecs
       Then { recorder.calls[1]  == [:current_frame, [ {time: 0,  content: "A"} ] ] }
       Then { recorder.calls[2]  == [:current_frame, [ {time: 10, content: "B"} ] ] }
       Then { recorder.calls[3]  == [:current_frame, [ {time: 15, content: "C"} ] ] }
+      Then { recorder.calls[4]  == [:current_frame, [ {time: 20, content: "D"} ] ] }
     end
   end
 end

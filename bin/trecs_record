@@ -21,7 +21,7 @@ opts = Trollop::options do
 
   opt :audio,      "Record audio",                          type: String
 end
-opts[:trecs_file] = ARGV[0]
+opts[:trecs_backend] = ARGV[0]
 
 require "writers/json_writer"
 writer_class = TRecs::JsonWriter
@@ -36,7 +36,7 @@ strategy_class_name = [
 strategy_class = strategy_class_name.split("::").reduce(Object) { |a, e| a.const_get e }
 
 ########## AUDIO ##########
-def start_sound_recording(file_name='sound.ogg')
+def start_sound_recording(file_name='/tmp/sound.ogg')
   puts "Sound file stored in #{file_name}"
   @sox_pid = fork do
     Signal.trap("SIGINT") {

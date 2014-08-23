@@ -9,8 +9,8 @@ module TRecs
     attr_reader :source
 
     def initialize(options={})
-      trecs_file = options.fetch(:trecs_file)
-      @source = TgzSource.new(trecs_file: trecs_file)
+      trecs_backend = options.fetch(:trecs_backend)
+      @source = TgzSource.new(trecs_backend: trecs_backend)
 
       @audio_files = options.fetch(:audio_files) { [] }
       @audio_files = Array(@audio_files)
@@ -40,7 +40,7 @@ module TRecs
           source.add_audio_file(file)
         end
         if audio_files.any?
-          source[:defailt_audio] = audio_files.first
+          source[:default_audio] = audio_files.first
         end
       end
     end

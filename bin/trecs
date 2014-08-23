@@ -16,32 +16,60 @@ end
 opts = Trollop::options do
   version TRecs::VERSION
 
-  opt :step,        "Time in ms between frames", short: 's',               default: 100
-  opt :ticker,      "Ticker",                                type: String, default: "clock"
+  opt :step,        "Time in ms between frames", short: 's',                default: 100
+  opt :ticker,      "Ticker",                                 type: String, default: "clock"
 
-  opt :from,        "Play from",                             type: Integer, default: 0
-  opt :to,          "Play to",                               type: Integer, default: 0
-  opt :speed,       "Playing speed",                         type: Float,   default: 1.0
+  opt :from,        "Play from",                              type: Integer, default: 0
+  opt :to,          "Play to",                                type: Integer, default: 0
+  opt :speed,       "Playing speed",                          type: Float,   default: 1.0
 
-  opt :ticker_file, "File to watch",                         type: String, default: "/tmp/ticker"
+  opt :ticker_file, "File to watch",                          type: String, default: "/tmp/ticker"
+
+  opt :audio,       "If there's an audio file, reproduce it",               default: true
+
+  opt :duration,    "Length of the recording",                              default: false
 end
 opts[:trecs_file] = ARGV[0]
 
 trap "SIGINT" do
   finish(opts)
+  if @sox_pid
+    Process.kill("SIGINT", @sox_pid)
+    Process.waitpid(@sox_pid)
+  end
   exit rescue nil
 end
 
+
+########## AUDIO ##########
+def start_sound_player(file_name='sound.ogg')
+  return unless File.exist?(file_name)
+  # at_exit { system('stty echo') }
+  STDOUT.puts "=> Starting sound player..."
+  @sox_pid = fork do
+    `play #{file_name} 2>&1`
+  end
+end
+
+def stop_sound_player
+  return unless File.exist?(file_name)
+  STDOUT.puts "=> Stopping sound player..."
+  Process.waitpid(@sox_pid)
+end
+######## END AUDIO ########
+
+
+
 source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
-reader = source.reader(opts)
+reader = source.build_reader(opts)
 
 ticker_file = "tickers/#{opts[:ticker]}_ticker"
 require ticker_file
 ticker_class_name = [
-    "TRecs::",
-    opts[:ticker].split(/[-_\s]/).map(&:capitalize),
-    "Ticker"
-  ].join
+  "TRecs::",
+  opts[:ticker].split(/[-_\s]/).map(&:capitalize),
+  "Ticker"
+].join
 ticker_class = ticker_class_name.split("::").reduce(Object) { |a, e| a.const_get e }
 ticker = ticker_class.new(opts)
 
@@ -51,7 +79,23 @@ player_options = {
   step:   opts[:step],
 }
 
+
+
 player = TRecs::Player.new(player_options)
+
+if opts[:duration]
+  last_timestamp = player.timestamps.last
+  hr = last_timestamp / (1000*60*60)
+  last_timestamp = last_timestamp % (1000*60*60)
+  min = last_timestamp / (1000*60)
+  last_timestamp = last_timestamp % (1000*60)
+  seg = last_timestamp / 1000
+  duration = "%d:%02d:%02d" % [hr, min, seg]
+
+  puts duration
+  exit 0
+end
+
 player.play
 
 finish(opts)

@@ -3,6 +3,6 @@ require "writers/json_writer"
 
 module TRecs
   describe JsonWriter do
-    skip("Test JsonWriter")
+    skip("JsonWriter")
   end
 end
