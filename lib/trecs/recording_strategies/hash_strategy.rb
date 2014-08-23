@@ -2,6 +2,7 @@ require "recording_strategies/strategy"
 module TRecs
   class HashStrategy
     include Strategy
+    include ShellCommandStrategy
     attr_accessor :frames
 
     def initialize(frames={})
