@@ -1,4 +1,6 @@
 require "recording_strategies/strategy"
+require "recording_strategies/shell_command_strategy"
+
 module TRecs
   class HashStrategy
     include Strategy
