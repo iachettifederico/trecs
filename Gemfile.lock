@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trecs (0.1.15)
+    trecs (0.1.16)
       minitar (~> 0.5.4)
       trollop (~> 2.0)
 
