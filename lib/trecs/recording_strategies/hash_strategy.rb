@@ -11,7 +11,7 @@ module TRecs
     def perform
       @frames.each do |time, content|
         if time.is_a?(Numeric) || /\A\d+\Z/ === time
-          current_time(time.to_i)
+          current_time(time.to_s.to_i)
           current_content(content)
           save_frame
         end

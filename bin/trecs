@@ -10,7 +10,7 @@ require "trollop"
 def finish(opts)
   puts "Finished"
   puts "Replay with:"
-  puts "trecs #{opts[:trecs_file]}"
+  puts "trecs #{opts[:trecs_backend]}"
 end
 
 opts = Trollop::options do
@@ -29,7 +29,7 @@ opts = Trollop::options do
 
   opt :duration,    "Length of the recording",                              default: false
 end
-opts[:trecs_file] = ARGV[0]
+opts[:trecs_backend] = ARGV[0]
 
 trap "SIGINT" do
   finish(opts)
@@ -60,7 +60,7 @@ end
 
 
 
-source = TRecs::TgzSource.new(trecs_file: opts.fetch(:trecs_file))
+source = TRecs::TgzSource.new(trecs_backend: opts.fetch(:trecs_backend))
 reader = source.build_reader(opts)
 
 ticker_file = "tickers/#{opts[:ticker]}_ticker"

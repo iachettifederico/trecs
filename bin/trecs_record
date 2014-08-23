@@ -90,4 +90,4 @@ RECORDER.record
 
 puts "Recording finished"
 puts "Play with:"
-puts "trecs #{opts[:trecs_file]}"
+puts "trecs #{opts[:trecs_backend]}"
