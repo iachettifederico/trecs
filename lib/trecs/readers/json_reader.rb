@@ -8,8 +8,10 @@ module TRecs
     attr_reader :source
 
     def initialize(options={})
-      trecs_backend = options.fetch(:trecs_backend)
-      @source  = options.fetch(:source)
+      @source = options.fetch(:source) {
+        trecs_backend = options.fetch(:trecs_backend)
+        TgzSource.new(trecs_backend: trecs_backend)
+      }
       @frames = get_frames
       @timestamps = @frames.keys
     end
