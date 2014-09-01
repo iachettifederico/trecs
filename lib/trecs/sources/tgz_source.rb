@@ -139,11 +139,42 @@ module TRecs
 
     # Investigar como hacer para descomprimir en memoria
     def in_tmp_dir
-      Dir.mktmpdir("trecs_record") do |dir|
-        Dir.chdir(dir) do
-          yield
-        end
+      unless tmpdir_exists?
+        p tmpdir
+        Pathname(tmpdir).mkdir
       end
+      Dir.chdir(tmpdir) do
+        yield
+      end
+    end
+
+    def tmpdir_exists?
+      tmpdir && Pathname(tmpdir).exist?
+    end
+
+    def finalize
+      Pathname(tmpdir).delete if tmpdir_exists?
+    end
+
+    def tmpdir
+      @tmpdir ||= generate_tmpdir_name
+    end
+
+    def generate_tmpdir_name
+      "#{Dir.tmpdir}/#{timestamp}-#{file_name}"
+    end
+
+    def timestamp
+      Time.now.strftime("%Y%M%d%H%m%s")
+    end
+
+    def file_name
+      filename = Pathname(trecs_backend)
+      filename.basename.to_s.delete(filename.extname)
+      name = filename.basename.to_s
+      ext = filename.extname
+      name[ext] = ""
+      name
     end
 
     def read_file(file_name)

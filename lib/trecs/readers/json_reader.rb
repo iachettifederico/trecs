@@ -19,7 +19,7 @@ module TRecs
     def get_frames
       frames = {}
       source.read do
-        json_string = source.read_file("frames.json")
+        json_string = source.read_entry("frames.json") || "{}"
         parsed_json = JSON.parse(json_string)
         parsed_json.each do |time, content|
           frames[Integer(time)] = content
