@@ -9,7 +9,7 @@ module TRecs
   describe AsteriskSwipeStrategy do
     context "initialization" do
       When(:strategy) { AsteriskSwipeStrategy.new }
-      Then { expect(strategy).to have_raised(/key not found: :message/) }
+      Then { expect(strategy).to have_raised(/key not found.*message/) }
     end
 
     context "performing" do
