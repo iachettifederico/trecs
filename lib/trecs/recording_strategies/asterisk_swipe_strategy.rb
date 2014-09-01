@@ -19,7 +19,7 @@ module TRecs
       message.each_line do |line|
         curr_message = " %-#{max_line_size}s  " % line.chomp
         (0..(curr_message.length-1)).each do |i|
-          current_time = step * i
+          current_time = step.to_i * i
 
           c = curr_message.dup
           c[i] = "|"
