@@ -7,88 +7,11 @@ require "tmpdir"
 require "pathname"
 require "yaml"
 
-#module TRecs
-#  class TgzSource
-#    include Archive::Tar
-#
-#    def initialize(options={})
-#      @trecs_backend = options.fetch(:trecs_backend)
-#    end
-#
-#    def create_recording
-#      in_tmp_dir do
-#        @tgz = Zlib::GzipWriter.new(trecs_backend)
-#
-#        yield self if block_given?
-#
-#        create_entry('manifest.yaml') do |f|
-#          f.write manifest.to_yaml
-#        end
-#
-#        Minitar.pack(@files_to_add.flatten, @tgz)
-#      end
-#    end
-#
-#    # TODO: Este es el punto de intersección entre read y create_recording
-#    def manifest
-#      @manifest ||= {}
-#    end
-#
-#    def []=(key, value)
-#      manifest[key] = value
-#    end
-#
-#    def [](key)
-#      manifest[key]
-#    end
-#
-#    def read_file(file_name)
-#      File.read(file_name)
-#    end
-#
-#    def create_entry(file_name)
-#      File.open(file_name, File::CREAT|File::TRUNC|File::RDWR, 0644) do |f|
-#        yield f
-#      end
-#      add_file(file_name)
-#    end
-#
-#    def add_file(file_name)
-#      @files_to_add ||= []
-#      @files_to_add << file_name
-#    end
-#
-#    def add_audio_file(file_name)
-#      Dir.mkdir("audio") unless File.exist? "audio"
-#
-#      orig_file = file_name
-#      file_name = "./audio/" + Pathname(file_name).basename.to_s
-#      FileUtils.symlink(orig_file, file_name)
-#      add_file(file_name)
-#    end
-#
-#    private
-#
-#    attr_reader :trecs_backend
-#
-#    #Investigar como hacer para descomprimir en memoria
-#    def in_tmp_dir
-#      Dir.mktmpdir("trecs_record") do |dir|
-#        Dir.chdir(dir) do
-#          yield
-#        end
-#      end
-#    end
-#  end
-#end
-#
-
 module TRecs
   class TgzSource
     include Archive::Tar
 
     attr_reader :trecs_backend
-    attr_reader :audio_files
 
     def initialize(options={})
       @trecs_backend = options.fetch(:trecs_backend)
@@ -121,7 +44,7 @@ module TRecs
       reader = nil
       options[:source] = self
       read do |source|
-        @manifest = YAML.load(source.read_file("manifest.yaml"))
+        @manifest = YAML.load(source.read_entry("manifest.yaml"))
 
         format = manifest["format"]
         reader_file = "readers/#{format}_reader"
@@ -177,7 +100,7 @@ module TRecs
       name
     end
 
-    def read_file(file_name)
+    def read_entry(file_name)
       File.read(file_name)
     end
 
@@ -206,6 +129,16 @@ module TRecs
       manifest[key.to_s] = value
     end
 
+    def audio_files
+      return @audio_files if @audio_files
+
+      in_tmp_dir do
+        (Dir.open(tmpdir + "/audio").entries - %w[. ..]).map { |file|
+          Pathname("./audio/" + file).expand_path
+        }
+
+      end
+    end
     private
 
     # TODO: Este es el punto de intersección entre read y create_recording

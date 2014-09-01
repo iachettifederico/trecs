@@ -80,7 +80,11 @@ player_options = {
 }
 
 
-
+audio_file = Array(source.audio_files).first
+if audio_file
+  `notify-send #{audio_file}`
+  start_sound_player(audio_file)
+end
 player = TRecs::Player.new(player_options)
 
 if opts[:duration]
@@ -99,3 +103,4 @@ end
 player.play
 
 finish(opts)
+Pathname(source.tmpdir).rmtree

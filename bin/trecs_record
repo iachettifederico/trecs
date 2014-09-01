@@ -19,7 +19,7 @@ opts = Trollop::options do
   opt :terminal,   "Launch terminal",                                      default: true
   opt :color,      "Record colors",                                        default: true
 
-  opt :audio,      "Record audio",                          type: String
+  opt :audio,      "Record audio"
 end
 opts[:trecs_backend] = ARGV[0]
 
@@ -66,12 +66,12 @@ puts "Recording ..."
 
 if strategy_class.to_s == "TRecs::TtyrecStrategy" || strategy_class.to_s == "TRecs::TmuxSessionStrategy"
   opts[:height], opts[:width] = `stty size`.split(" ").map(&:to_i)
-  opts[:audio] && start_sound_recording(opts[:audio])
+  opts[:audio] && start_sound_recording("/tmp/recording.ogg")
 
   system "ttyrec #{opts[:input_file]}" if opts[:terminal]
 end
 
-opts[:audio_files] = [opts[:audio]] if opts[:audio]
+opts[:audio_files] = ["/tmp/recording.ogg"] if opts[:audio]
 
 recorder_options = {
   writer:   writer_class.new(opts),
