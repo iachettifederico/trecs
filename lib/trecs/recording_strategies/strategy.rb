@@ -10,12 +10,18 @@ module TRecs
     attr_accessor :__time
     attr_accessor :__content
 
-    def current_time(time)
-      @__time = time
+    def current_time(time=nil)
+      if time
+        @__time = time
+      end
+      @__time
     end
 
-    def current_content(content)
-      @__content = content
+    def current_content(content=nil)
+      if content
+        @__content = content
+      end
+      @__content
     end
 
     def save_frame
