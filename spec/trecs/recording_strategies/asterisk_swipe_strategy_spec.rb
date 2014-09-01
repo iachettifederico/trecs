@@ -9,7 +9,7 @@ module TRecs
   describe AsteriskSwipeStrategy do
     context "initialization" do
       When(:strategy) { AsteriskSwipeStrategy.new }
-      Then { expect(strategy).to have_raised(/key not found: :text/) }
+      Then { expect(strategy).to have_raised(/key not found: :message/) }
     end
 
     context "performing" do
@@ -20,7 +20,7 @@ module TRecs
       When { recorder.record }
 
       context "one char" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(text: "a") }
+        Given(:strategy) { AsteriskSwipeStrategy.new(message: "a") }
         Then { writer.frames[0]   == "*" }
         Then { writer.frames[100] == "|" }
         Then { writer.frames[200] == "a|" }
@@ -28,7 +28,7 @@ module TRecs
       end
 
       context "two chars" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(text: "ab", step: 10) }
+        Given(:strategy) { AsteriskSwipeStrategy.new(message: "ab", step: 10) }
         Then { writer.frames[0]  == "**" }
         Then { writer.frames[10] == "|*" }
         Then { writer.frames[20] == "a|" }
@@ -37,7 +37,7 @@ module TRecs
       end
 
       context "multiple_lines" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(text: "FIRST\nSECOND") }
+        Given(:strategy) { AsteriskSwipeStrategy.new(message: "FIRST\nSECOND") }
         Then { writer.frames[0]   == "******\n******" }
         Then { writer.frames[100] == "|*****\n|*****" }
         Then { writer.frames[200] == "F|****\nS|****" }

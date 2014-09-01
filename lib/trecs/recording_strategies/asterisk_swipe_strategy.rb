@@ -4,24 +4,24 @@ require "recording_strategies/hash_strategy"
 module TRecs
   class AsteriskSwipeStrategy < HashStrategy
     include Strategy
-    attr_reader :text
+    attr_reader :message
     attr_reader :step
 
     def initialize(options={})
-      @text = options.fetch(:text)
+      @message = options.fetch(:message)
       @step = options.fetch(:step) { 100 }
       @frames = {}
     end
 
     def perform
-      max_line_size = text.each_line.inject(0) { |max, l| l.size > max ? l.size : max  }
+      max_line_size = message.each_line.inject(0) { |max, l| l.size > max ? l.size : max  }
 
-      text.each_line do |line|
-        curr_text = " %-#{max_line_size}s  " % line.chomp
-        (0..(curr_text.length-1)).each do |i|
+      message.each_line do |line|
+        curr_message = " %-#{max_line_size}s  " % line.chomp
+        (0..(curr_message.length-1)).each do |i|
           current_time = step * i
 
-          c = curr_text.dup
+          c = curr_message.dup
           c[i] = "|"
           (i+1..c.length-3).each do |j|
             c[j] = "*"
