@@ -133,10 +133,13 @@ module TRecs
       return @audio_files if @audio_files
 
       in_tmp_dir do
-        (Dir.open(tmpdir + "/audio").entries - %w[. ..]).map { |file|
-          Pathname("./audio/" + file).expand_path
-        }
+        audiodir = tmpdir + "/audio"
+        if Dir.exist?(audiodir)
+          (Dir.open(audiodir).entries - %w[. ..]).map { |file|
+            Pathname("./audio/" + file).expand_path
+          }
 
+        end
       end
     end
     private
