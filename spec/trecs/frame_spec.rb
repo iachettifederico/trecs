@@ -5,8 +5,9 @@ module TRecs
   describe Frame do
     context "content" do
       context "initializer" do
-        Given(:frame) { Frame.new("THE CONTENT") }
+        Given(:frame) { Frame.new(content: "THE CONTENT") }
         Then { frame.content == "THE CONTENT" }
+        Then { frame.format  == "raw" }
       end
       context "set aftewards" do
         Given(:frame) { Frame.new }
@@ -29,6 +30,11 @@ FRAME
             ) }
         Then { frame.width == 5 }
       end
+    end
+
+    context "equality" do
+      Then { Frame.new(content: "A") == Frame.new("A") }
+      Then { Frame.new(content: "B") == "B" }
     end
 
     context "height" do

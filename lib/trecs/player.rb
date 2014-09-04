@@ -33,7 +33,7 @@ module TRecs
       content = reader.frame_at(time_to_play(time))
       if content != prev_content
         screen.clear
-        screen.puts(content)
+        screen.puts(content.to_s)
         self.prev_content = content
       end
       content

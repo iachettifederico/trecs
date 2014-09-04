@@ -1,4 +1,5 @@
 require "sources/tgz_source"
+require "frame"
 
 module TRecs
   class JsonReader
@@ -20,9 +21,9 @@ module TRecs
       frames = {}
       source.read do
         json_string = source.read_entry("frames.json") || "{}"
-        parsed_json = JSON.parse(json_string)
-        parsed_json.each do |time, content|
-          frames[Integer(time)] = content
+        parsed_json = JSON.parse(json_string, symbolize_names: true)
+        parsed_json.each do |time, value|
+          frames[Integer(time.to_s)] = TRecs::Frame(value)
         end
       end
       frames
@@ -33,8 +34,7 @@ module TRecs
     end
 
     def frame_at(time)
-      frame = @frames[time]
-      frame.is_a?(Hash) ? frame["content"] : frame
+      @frames[time]
     end
 
     def to_s
