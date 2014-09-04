@@ -1,15 +1,18 @@
 require "recording_strategies/strategy"
 require "recording_strategies/hash_strategy"
+require "recording_strategies/shell_command_strategy"
 
 module TRecs
   class AsteriskSwipeStrategy < HashStrategy
     include Strategy
+    include ShellCommandStrategy
     attr_reader :message
     attr_reader :step
 
     def initialize(options={})
       @message = options.fetch(:message)
       @step = options.fetch(:step) { 100 }
+      @command = options.fetch(:command) { nil }
       @frames = {}
     end
 
