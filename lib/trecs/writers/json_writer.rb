@@ -25,7 +25,7 @@ module TRecs
     def create_frame(options={})
       time = options.fetch(:time)
       content = options.fetch(:content)
-      frames[time] = content
+      frames[time] = { content: content }
     end
 
     def render

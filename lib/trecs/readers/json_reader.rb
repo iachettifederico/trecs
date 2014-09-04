@@ -33,7 +33,8 @@ module TRecs
     end
 
     def frame_at(time)
-      @frames[time]
+      frame = @frames[time]
+      frame.is_a?(Hash) ? frame["content"] : frame
     end
 
     def to_s
