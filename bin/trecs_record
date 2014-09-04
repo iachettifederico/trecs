@@ -26,7 +26,7 @@ opts[:trecs_backend] = ARGV[0]
 require "writers/json_writer"
 writer_class = TRecs::JsonWriter
 
-strategy_file = "recording_strategies/#{opts[:strategy]}_strategy"
+strategy_file = "strategies/#{opts[:strategy]}_strategy"
 require strategy_file
 strategy_class_name = [
     "TRecs::",

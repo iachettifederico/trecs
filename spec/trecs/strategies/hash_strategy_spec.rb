@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/hash_strategy"
+require "strategies/hash_strategy"
 
 module TRecs
   describe HashStrategy do

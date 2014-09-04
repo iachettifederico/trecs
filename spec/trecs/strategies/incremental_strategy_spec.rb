@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/incremental_strategy"
+require "strategies/incremental_strategy"
 
 module TRecs
   describe IncrementalStrategy do

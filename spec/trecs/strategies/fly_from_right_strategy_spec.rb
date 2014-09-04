@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/fly_from_right_strategy"
+require "strategies/fly_from_right_strategy"
 
 module TRecs
   describe FlyFromRightStrategy do

@@ -1,7 +1,7 @@
 require "spec_helper"
 require "recorder"
-require "recording_strategies/hash_strategy"
-require "recording_strategies/custom_strategy"
+require "strategies/hash_strategy"
+require "strategies/custom_strategy"
 
 module TRecs
   describe Recorder do

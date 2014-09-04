@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/file_frames_strategy"
+require "strategies/file_frames_strategy"
 
 module TRecs
   describe FileFramesStrategy do

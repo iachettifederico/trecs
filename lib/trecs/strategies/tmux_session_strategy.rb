@@ -1,4 +1,5 @@
-require "recording_strategies/strategy"
+require "strategies/strategy"
+
 module TRecs
   class TmuxSessionStrategy
     include Strategy

@@ -1,7 +1,7 @@
 require "spec_helper"
-require "recording_strategies/config_strategy"
+require "strategies/config_strategy"
 require "recorder"
-require "recording_strategies/hash_strategy"
+require "strategies/hash_strategy"
 require "writers/in_memory_writer"
 
 module TRecs

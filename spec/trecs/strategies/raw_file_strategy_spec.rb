@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/raw_file_strategy"
+require "strategies/raw_file_strategy"
 
 module TRecs
   describe RawFileStrategy do

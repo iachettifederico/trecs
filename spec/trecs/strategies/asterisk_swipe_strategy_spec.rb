@@ -1,8 +1,8 @@
 require "spec_helper"
-require "recording_strategies/asterisk_swipe_strategy"
+require "strategies/asterisk_swipe_strategy"
 
 require "recorder"
-require "recording_strategies/hash_strategy"
+require "strategies/hash_strategy"
 require "writers/in_memory_writer"
 
 module TRecs

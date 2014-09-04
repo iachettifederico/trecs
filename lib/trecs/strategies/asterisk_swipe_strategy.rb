@@ -1,6 +1,6 @@
-require "recording_strategies/strategy"
-require "recording_strategies/hash_strategy"
-require "recording_strategies/shell_command_strategy"
+require "strategies/strategy"
+require "strategies/hash_strategy"
+require "strategies/shell_command_strategy"
 
 module TRecs
   class AsteriskSwipeStrategy < HashStrategy

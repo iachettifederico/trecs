@@ -1,5 +1,5 @@
 require "spec_helper"
-require "recording_strategies/shell_command_strategy"
+require "strategies/shell_command_strategy"
 
 module TRecs
   describe ShellCommandStrategy do
