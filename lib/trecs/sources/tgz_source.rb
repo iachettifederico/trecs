@@ -63,7 +63,6 @@ module TRecs
     # Investigar como hacer para descomprimir en memoria
     def in_tmp_dir
       unless tmpdir_exists?
-        p tmpdir
         Pathname(tmpdir).mkdir
       end
       Dir.chdir(tmpdir) do
