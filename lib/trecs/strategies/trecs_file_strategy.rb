@@ -25,8 +25,8 @@ module TRecs
       @to = options.fetch(:to) { nil }
       @to = @to.to_i if @to
 
-      @speed = options.fetch(:speed) { nil }
-      @speed &&= @speed.to_f
+      @speed = options.fetch(:speed) { 1.0 }
+      @speed = @speed.to_f
     end
 
     def perform
