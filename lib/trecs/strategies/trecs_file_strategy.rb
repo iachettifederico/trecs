@@ -19,12 +19,12 @@ module TRecs
       source = TRecs::TgzSource.new(trecs_backend: input_file)
       @frames = get_frames(source)
 
-      @from = options.fetch(:from) { nil }
+      @from = options.fetch(:from) { 0 }
       @from &&= @from.to_i
-      
+
       @to = options.fetch(:to) { nil }
       @to &&= @to.to_i
-      
+
       @speed = options.fetch(:speed) { nil }
       @speed &&= @speed.to_f
     end
@@ -41,10 +41,10 @@ module TRecs
 
     def timestamps
       @timestamps ||= frames.keys.sort
-      if from
-        @timestamps = @timestamps.select { |t| t > from }
-        @timestamps.unshift(from)
-      end
+
+      @timestamps = @timestamps.select { |t| t > from }
+      @timestamps.unshift(from)
+
       if to && to > 0
         @timestamps = @timestamps.select { |t| t < to }
         @timestamps.push(to)
