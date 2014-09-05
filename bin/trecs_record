@@ -20,6 +20,10 @@ opts = Trollop::options do
   opt :color,      "Record colors",                                        default: true
 
   opt :audio,      "Record audio"
+
+  opt :from,        "Play from",                              type: Integer, default: 0
+  opt :to,          "Play to",                                type: Integer, default: 0
+  opt :speed,       "Playing speed",                          type: Float,   default: 1.0
 end
 opts[:trecs_backend] = ARGV[0]
 
@@ -29,10 +33,10 @@ writer_class = TRecs::JsonWriter
 strategy_file = "strategies/#{opts[:strategy]}_strategy"
 require strategy_file
 strategy_class_name = [
-    "TRecs::",
-    opts[:strategy].split(/[-_\s]/).map(&:capitalize),
-    "Strategy"
-  ].join
+  "TRecs::",
+  opts[:strategy].split(/[-_\s]/).map(&:capitalize),
+  "Strategy"
+].join
 strategy_class = strategy_class_name.split("::").reduce(Object) { |a, e| a.const_get e }
 
 ########## AUDIO ##########

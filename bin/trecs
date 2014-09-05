@@ -58,8 +58,6 @@ def stop_sound_player
 end
 ######## END AUDIO ########
 
-
-
 source = TRecs::TgzSource.new(trecs_backend: opts.fetch(:trecs_backend))
 reader = source.build_reader(opts)
 
