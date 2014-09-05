@@ -19,9 +19,14 @@ module TRecs
       source = TRecs::TgzSource.new(trecs_backend: input_file)
       @frames = get_frames(source)
 
-      @from  = options.fetch(:from)  { nil }
-      @to    = options.fetch(:to)    { nil }
-      @speed = options.fetch(:speed)    { nil }
+      @from = options.fetch(:from) { nil }
+      @from &&= @from.to_i
+      
+      @to = options.fetch(:to) { nil }
+      @to &&= @to.to_i
+      
+      @speed = options.fetch(:speed) { nil }
+      @speed &&= @speed.to_f
     end
 
     def perform
@@ -32,11 +37,10 @@ module TRecs
       end
     end
 
-
     private
 
     def timestamps
-      @timestamps ||= frames.keys.map(&:to_i).sort
+      @timestamps ||= frames.keys.sort
       if from
         @timestamps = @timestamps.select { |t| t > from }
         @timestamps.unshift(from)
