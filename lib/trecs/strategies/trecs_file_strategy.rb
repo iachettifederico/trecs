@@ -20,10 +20,10 @@ module TRecs
       @frames = get_frames(source)
 
       @from = options.fetch(:from) { 0 }
-      @from &&= @from.to_i
+      @from &&= (@from || 0).to_i
 
       @to = options.fetch(:to) { nil }
-      @to &&= @to.to_i
+      @to &&= @to.to_i if @to
 
       @speed = options.fetch(:speed) { nil }
       @speed &&= @speed.to_f
