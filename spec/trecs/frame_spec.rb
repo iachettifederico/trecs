@@ -35,6 +35,7 @@ FRAME
     context "equality" do
       Then { Frame.new(content: "A") == Frame.new("A") }
       Then { Frame.new(content: "B") == "B" }
+      Then { Frame.new(content: "C", format: "raw") != Frame.new(content: "C", format: "html") }
     end
 
     context "height" do

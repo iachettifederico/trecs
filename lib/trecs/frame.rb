@@ -29,16 +29,17 @@ module TRecs
     alias :to_str :to_s
 
     def ==(other)
-      to_s == other.to_s
+      other = Frame(other)
+      to_s == other.to_s && format == other.format
     end
   end
 
-  def Frame(opts)
-    case opts
-    when Frame then opts
-    else
-      Frame.new(opts)
-    end
+end
+
+def Frame(opts)
+  case opts
+  when TRecs::Frame then opts
+  else
+    TRecs::Frame.new(opts)
   end
-  module_function :Frame
 end

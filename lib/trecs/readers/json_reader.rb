@@ -23,7 +23,7 @@ module TRecs
         json_string = source.read_entry("frames.json") || "{}"
         parsed_json = JSON.parse(json_string, symbolize_names: true)
         parsed_json.each do |time, value|
-          frames[Integer(time.to_s)] = TRecs::Frame(value)
+          frames[Integer(time.to_s)] = Frame(value)
         end
       end
       frames
