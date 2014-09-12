@@ -21,7 +21,7 @@ module TRecs
     def perform
       message.each_line do |line|
         curr_message = " %-#{max_line_size}s  " % line.chomp
-        (0..(curr_message.length-1)).each do |i|
+        curr_message.length.times do |i|
           current_time = step.to_i * i
 
           c = curr_message.dup
@@ -34,7 +34,7 @@ module TRecs
           @frames[current_time] = @frames[current_time] << c.strip + "\n"
         end
       end
-      
+
       cleanup_frames
       super
     end
@@ -48,7 +48,6 @@ module TRecs
         @frames[t] = @frames[t].chomp
       end
     end
-    
 
     def max_line_size
       message.each_line.inject(0) { |max, l| l.size > max ? l.size : max  }
