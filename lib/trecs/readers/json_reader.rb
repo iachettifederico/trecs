@@ -13,7 +13,7 @@ module TRecs
         trecs_backend = options.fetch(:trecs_backend)
         TgzSource.new(trecs_backend: trecs_backend)
       }
-      @frames = get_frames
+      @frames     = get_frames
       @timestamps = @frames.keys
     end
 

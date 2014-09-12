@@ -1,14 +1,14 @@
 require "spec_helper"
-require "strategies/asterisk_swipe_strategy"
+require "strategies/swipe_strategy"
 
 require "recorder"
 require "strategies/hash_strategy"
 require "writers/in_memory_writer"
 
 module TRecs
-  describe AsteriskSwipeStrategy do
+  describe SwipeStrategy do
     context "initialization" do
-      When(:strategy) { AsteriskSwipeStrategy.new }
+      When(:strategy) { SwipeStrategy.new }
       Then { expect(strategy).to have_raised(/key not found.*message/) }
     end
 
@@ -20,7 +20,7 @@ module TRecs
       When { recorder.record }
 
       context "one char" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(message: "a") }
+        Given(:strategy) { SwipeStrategy.new(message: "a") }
         Then { writer.frames[0]   == "*" }
         Then { writer.frames[100] == "|" }
         Then { writer.frames[200] == "a|" }
@@ -28,7 +28,7 @@ module TRecs
       end
 
       context "two chars" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(message: "ab", step: 10) }
+        Given(:strategy) { SwipeStrategy.new(message: "ab", step: 10) }
         Then { writer.frames[0]  == "**" }
         Then { writer.frames[10] == "|*" }
         Then { writer.frames[20] == "a|" }
@@ -37,7 +37,7 @@ module TRecs
       end
 
       context "multiple_lines" do
-        Given(:strategy) { AsteriskSwipeStrategy.new(message: "FIRST\nSECOND") }
+        Given(:strategy) { SwipeStrategy.new(message: "FIRST\nSECOND") }
         Then { writer.frames[0]   == "******\n******" }
         Then { writer.frames[100] == "|*****\n|*****" }
         Then { writer.frames[200] == "F|****\nS|****" }
@@ -48,7 +48,24 @@ module TRecs
         Then { writer.frames[700] == "FIRST |\nSECOND|" }
         Then { writer.frames[800] == "FIRST\nSECOND" }
       end
-    end
 
+      context "swiper and hider" do
+        context "swiper" do
+          Given(:strategy) { SwipeStrategy.new(message: "a", swiper: ">") }
+          Then { writer.frames[0]   == "*" }
+          Then { writer.frames[100] == ">" }
+          Then { writer.frames[200] == "a>" }
+          Then { writer.frames[300] == "a" }
+        end
+
+        context "hider" do
+          Given(:strategy) { SwipeStrategy.new(message: "a", hider: "#") }
+          Then { writer.frames[0]   == "#" }
+          Then { writer.frames[100] == "|" }
+          Then { writer.frames[200] == "a|" }
+          Then { writer.frames[300] == "a" }
+        end
+      end
+    end
   end
 end

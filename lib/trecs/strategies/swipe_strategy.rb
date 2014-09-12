@@ -3,7 +3,7 @@ require "strategies/hash_strategy"
 require "strategies/shell_command_strategy"
 
 module TRecs
-  class AsteriskSwipeStrategy < HashStrategy
+  class SwipeStrategy < HashStrategy
     include Strategy
     include ShellCommandStrategy
     attr_reader :message
@@ -13,6 +13,8 @@ module TRecs
       @message = options.fetch(:message)
       @step = options.fetch(:step) { 100 }
       @command = options.fetch(:command) { nil }
+      @swiper = options.fetch(:swiper) { "|" }
+      @hider = options.fetch(:hider)   { "*" }
       @frames = {}
     end
 
@@ -25,9 +27,9 @@ module TRecs
           current_time = step.to_i * i
 
           c = curr_message.dup
-          c[i] = "|"
+          c[i] = swiper
           (i+1..c.length-3).each do |j|
-            c[j] = "*"
+            c[j] = hider
           end
           c = c[1..-2]
           @frames[current_time] = "" unless @frames[current_time]
@@ -39,28 +41,8 @@ module TRecs
       end
       super
     end
+    private
+    attr_reader :swiper
+    attr_reader :hider
   end
 end
-
-
-# ****
-# ****
-#
-# |***
-# |***
-#
-#
-# h|**
-# c|**
-#
-# ho|*
-# ch|*
-#
-# hol|
-# cha|
-#
-# hola|
-# chau|
-#
-# hola|
-# chau|
