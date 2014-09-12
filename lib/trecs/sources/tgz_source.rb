@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 require 'json'
 require "fileutils"
 require "zlib"
 require 'archive/tar/minitar'
 require "tmpdir"
 require "pathname"
-require "yaml"
 
 module TRecs
   class TgzSource
@@ -23,8 +21,8 @@ module TRecs
 
         yield self
 
-        create_file('manifest.yaml') do |f|
-          f.write manifest.to_yaml
+        create_file('manifest.json') do |f|
+          f.write manifest.to_json
         end
 
         Minitar.pack(@files_to_add.flatten, @tgz)
@@ -45,9 +43,10 @@ module TRecs
       reader = nil
       options[:source] = self
       read do |source|
-        @manifest = YAML.load(source.read_entry("manifest.yaml"))
+        json_string = source.read_entry("manifest.json")
+        @manifest = JSON.parse(json_string, symbolize_names: true)
 
-        format = manifest["format"]
+        format = manifest[:format]
         reader_file = "readers/#{format}_reader"
         require reader_file
         reader_class_name = [
@@ -126,7 +125,7 @@ module TRecs
     end
 
     def []=(key, value)
-      manifest[key.to_s] = value
+      manifest[key.to_sym] = value
     end
 
     def audio_files
@@ -144,7 +143,7 @@ module TRecs
     end
     private
 
-    # TODO: Este es el punto de intersección entre read y create_recording
+    # TODO: Este es el punto de interseccion entre read y create_recording
     def manifest
       @manifest ||= {}
     end
