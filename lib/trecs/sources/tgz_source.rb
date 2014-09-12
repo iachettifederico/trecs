@@ -29,6 +29,7 @@ module TRecs
 
         Minitar.pack(@files_to_add.flatten, @tgz)
       end
+      FileUtils.rm_rf(tmpdir)
     end
 
     def read
