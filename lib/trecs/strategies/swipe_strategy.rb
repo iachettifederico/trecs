@@ -19,8 +19,6 @@ module TRecs
     end
 
     def perform
-      max_line_size = message.each_line.inject(0) { |max, l| l.size > max ? l.size : max  }
-
       message.each_line do |line|
         curr_message = " %-#{max_line_size}s  " % line.chomp
         (0..(curr_message.length-1)).each do |i|
@@ -51,5 +49,9 @@ module TRecs
       end
     end
     
+
+    def max_line_size
+      message.each_line.inject(0) { |max, l| l.size > max ? l.size : max  }
+    end
   end
 end
