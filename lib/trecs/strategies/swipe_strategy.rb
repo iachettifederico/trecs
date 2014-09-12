@@ -11,11 +11,11 @@ module TRecs
 
     def initialize(options={})
       @message = options.fetch(:message)
-      @step = options.fetch(:step) { 100 }
+      @step    = options.fetch(:step)    { 100 }
       @command = options.fetch(:command) { nil }
-      @swiper = options.fetch(:swiper) { "|" }
-      @hider = options.fetch(:hider)   { "*" }
-      @frames = {}
+      @swiper  = options.fetch(:swiper)  { "|" }
+      @hider   = options.fetch(:hider)   { "*" }
+      @frames  = {}
     end
 
     def perform
@@ -36,13 +36,20 @@ module TRecs
           @frames[current_time] = @frames[current_time] << c.strip + "\n"
         end
       end
-      @frames.each do |t, c|
-        @frames[t] = @frames[t].chomp
-      end
+      
+      cleanup_frames
       super
     end
+
     private
     attr_reader :swiper
     attr_reader :hider
+
+    def cleanup_frames
+      @frames.each do |t, c|
+        @frames[t] = @frames[t].chomp
+      end
+    end
+    
   end
 end
