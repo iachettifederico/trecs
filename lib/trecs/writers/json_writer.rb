@@ -21,11 +21,19 @@ module TRecs
     def setup
       @frames = {}
     end
-
+ 
     def create_frame(options={})
-      time = options.fetch(:time)
+      time    = options.fetch(:time)
       content = options.fetch(:content)
-      frames[time] = { content: content }
+      format  = options.fetch(:format) { nil }
+ 
+      frame = {
+        format: format,
+        content:  content,
+      }
+      frame.reject! {|k,v| v.nil?}
+      
+      frames[time] = frame
     end
 
     def render

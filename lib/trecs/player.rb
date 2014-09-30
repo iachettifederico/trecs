@@ -44,8 +44,7 @@ module TRecs
     end
 
     def time_to_play(time)
-      time = time.to_i
-      timestamps.reverse.detect { |t| t <= time  }
+      timestamps.reverse.detect { |t| t <= time.to_i  }
     end
 
     private
