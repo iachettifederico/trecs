@@ -9,6 +9,7 @@ module TRecs
 
     attr_accessor :__time
     attr_accessor :__content
+    attr_accessor :__format
 
     def current_time(time=nil)
       if time
@@ -23,9 +24,17 @@ module TRecs
       end
       @__content
     end
-
+ 
+    def current_format(format=nil)
+      if format
+        @__format = format
+      end
+      @__format
+    end
+    
     def save_frame
-      recorder.current_frame(time: __time, content: __content)
+      options = {time: __time, content: __content, format: __format}
+      recorder.current_frame(options)
     end
   end
 end
