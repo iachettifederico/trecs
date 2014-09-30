@@ -32,17 +32,14 @@ module TRecs
     end
 
     def current_frame(options={})
-      time     = options.fetch(:time) { next_timestamp }
-      content  = options.fetch(:content)
-      format   = options.fetch(:format)
-      
-      @current_time    = time
-      @current_content = content
+      @current_time    = options.fetch(:time) { next_timestamp }
+      @current_content = options.fetch(:content)
 
-      if @previous_content != content
+      if @previous_content != current_content
         new_current_time  = current_time + offset
-        writer.create_frame(time: new_current_time, content: current_content, format: format)
-        @previous_content = content
+        options[:time] = new_current_time
+        writer.create_frame(options)
+        @previous_content = current_content
       end
     end
 

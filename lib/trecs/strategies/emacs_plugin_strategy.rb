@@ -12,5 +12,10 @@ module TRecs
       current_format(:html)
     end
 
+
+    def current_content(content=nil)
+      content.gsub!(/body {\n/, "pre.trecs-code {\n")
+      super(content)
+    end
   end
 end

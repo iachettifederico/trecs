@@ -31,7 +31,6 @@ module TRecs
         format: format,
         content:  content,
       }
-      frame.reject! {|k,v| v.nil?}
       
       frames[time] = frame
     end
