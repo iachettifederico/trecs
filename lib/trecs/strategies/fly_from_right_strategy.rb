@@ -10,9 +10,10 @@ module TRecs
 
     def initialize(options={})
       @message = options.fetch(:message)
+      
       @width = options.fetch(:width) { 10 }
-
       @width = @message.size if @width < @message.size
+
       @command = options.fetch(:command) { nil }
     end
 

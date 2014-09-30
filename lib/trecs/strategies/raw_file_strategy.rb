@@ -47,7 +47,6 @@ module TRecs
     attr_reader :testing
 
 
-
     def timestamp(time)
       (time * 1000).to_i
     end
