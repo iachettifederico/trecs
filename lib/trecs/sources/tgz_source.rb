@@ -141,7 +141,6 @@ module TRecs
         end
       end
     end
-    private
 
     # TODO: Este es el punto de interseccion entre read y create_recording
     def manifest

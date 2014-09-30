@@ -17,6 +17,10 @@ module TRecs
       @timestamps = @frames.keys
     end
 
+    def manifest
+      source.manifest
+    end
+    
     def get_frames
       frames = {}
       source.read do
