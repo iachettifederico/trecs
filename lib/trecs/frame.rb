@@ -28,6 +28,13 @@ module TRecs
     end
     alias :to_str :to_s
 
+    def to_h
+      {
+        content: content,
+        format: format
+      }
+    end
+    
     def ==(other)
       other = Frame(other)
       to_s == other.to_s && format == other.format

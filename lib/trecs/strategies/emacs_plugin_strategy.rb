@@ -14,7 +14,7 @@ module TRecs
 
 
     def current_content(content=nil)
-      content.gsub!(/body {\n/, "pre.trecs-code {\n")
+      content.gsub!(/body {\n/, "div.trecs-code {\n")
       super(content)
     end
   end
