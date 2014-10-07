@@ -33,7 +33,7 @@ module TRecs
     end
     
     def save_frame
-      options = {time: __time, content: __content, format: __format}
+      options = {time: __time, format: __format, content: __content}
       options.reject! {|k,v| v.nil?}
 
       recorder.current_frame(options)
