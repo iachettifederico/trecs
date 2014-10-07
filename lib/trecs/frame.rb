@@ -6,17 +6,17 @@ module TRecs
     def initialize(opts={})
       opts = opts.is_a?(Hash) ? opts : {content: opts}
       @content = opts.fetch(:content) { "" }
-      @format  = opts.fetch(:format)  { "raw" }
+      @format  = opts[:format] || "raw"
     end
 
     def width
-      content.each_line.map { |line|
+      raw_text.each_line.map { |line|
         line.chomp.size
       }.max
     end
 
     def height
-      content.lines.count
+      raw_text.lines.count
     end
 
     def each
@@ -34,11 +34,21 @@ module TRecs
         format: format
       }
     end
-    
+
     def ==(other)
       other = Frame(other)
       to_s == other.to_s && format == other.format
     end
+
+
+    def raw_text
+      @raw_text = if format == "html"
+                    content.split("\n").join("\\n").gsub(/<style>.+<\/style>/, "").gsub("\\n", "\n").gsub(%r{</?[^>]+?>}, '')
+                  else
+                    content
+                  end
+    end
+    private
   end
 
 end
