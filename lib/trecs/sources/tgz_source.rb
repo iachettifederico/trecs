@@ -12,7 +12,9 @@ module TRecs
     attr_reader :trecs_backend
 
     def initialize(options={})
-      @trecs_backend = options.fetch(:trecs_backend)
+      backend = options.fetch(:trecs_backend)
+      file = Pathname(backend).expand_path.to_s
+      @trecs_backend = file
     end
 
     def create_recording
