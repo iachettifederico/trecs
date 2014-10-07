@@ -25,13 +25,13 @@ module TRecs
     def create_frame(options={})
       time    = options.fetch(:time)
       content = options.fetch(:content)
-      format  = options.fetch(:format) { nil }
+      format  = options[:format]
  
       frame = {
         format: format,
         content:  content,
       }
-      
+
       frames[time] = frame
     end
 

@@ -33,7 +33,8 @@ module TRecs
       timestamps.each do |time|
         current_time(((time-from)/speed.to_f).to_i)
         current_content(frames[time])
-        save_frame
+        current_format(frames[time].format)
+        save_frame if current_content
       end
     end
 
