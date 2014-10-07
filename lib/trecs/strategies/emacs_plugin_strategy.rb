@@ -26,8 +26,8 @@ module TRecs
       end
 
       frames.each do |_, content|
-        frame = Frame.new(content: content, format: "html")
-        @width = frame.width if frame.width > @width
+        frame   = Frame.new(content: content, format: "html")
+        @width  = frame.width  if frame.width  > @width
         @height = frame.height if frame.height > @height
       end
 
@@ -50,7 +50,7 @@ module TRecs
         .gsub(/\/\*.+\*\//, "")
       #.gsub!(/^\s/, "").gsub!(/^(<[^\/]\w+ (\w+=['"][^>]+['"])*>)+ /) {|m| m[-1]=""; m } # clean extra space at the begining of each line
 
-      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width}ex;height: #{@height}ex' class='emacs-code'>#{code}</pre>"
+      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width*1.2}ex;height: #{@height*1.25}ex' class='emacs-code'>#{code}</pre>"
 
       super(new_content)
     end
