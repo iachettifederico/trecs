@@ -7,10 +7,13 @@ module TRecs
     include ShellCommandStrategy
 
     attr_reader :message
+    attr_reader :step
 
     def initialize(options={})
       @message = options.fetch(:message)
       @command = options.fetch(:command) { nil }
+      @step = options.fetch(:step) { 100 }
+      
     end
 
     def perform
@@ -30,7 +33,7 @@ module TRecs
     private
 
     def timestamp_for(message)
-      message.size * recorder.step
+      message.size * step
     end
   end
 end

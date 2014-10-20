@@ -1,4 +1,5 @@
 require "strategies/strategy"
+require "writers/in_memory_writer"
 
 module TRecs
   class ConfigStrategy
@@ -11,6 +12,9 @@ module TRecs
       @step       = options.fetch(:step)       { 100 }
       @format     = options.fetch(:format)     { "json" }
       @strategies = options.fetch(:strategies) { [] }
+      @offset     = options.fetch(:offset)     { 0 }
+
+      @writer = InMemoryWriter.new
     end
 
     def <<(strategy)
@@ -22,13 +26,20 @@ module TRecs
         self << strategy
       end
     end
-    
+
     def perform
+      current_time(0)
       strategies.each do |strategy|
-        strategy.recorder = recorder
-        strategy.perform
-        recorder.offset = recorder.next_timestamp
+        strategy.write_frames_to(@writer)
+        strategy.frames.each do |time, frame|
+          current_content(frame.content)
+          current_format(frame.format)
+          current_time(time + offset)
+          save_frame
+        end
+        self.offset = current_time + self.step
       end
+      
     end
 
   end
