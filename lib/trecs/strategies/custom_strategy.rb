@@ -1,5 +1,17 @@
-CustomStrategy = Struct.new(:recorder, :action) do
-  def perform
-    self.action.call
+require "strategies/strategy"
+module TRecs
+  class CustomStrategy
+    include Strategy
+
+    attr_accessor :recorder
+    attr_accessor :action
+
+    def initialize(action = ->{})
+      @action = action
+    end
+    
+    def perform
+      self.action.call
+    end
   end
 end
