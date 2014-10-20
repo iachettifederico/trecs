@@ -41,33 +41,5 @@ module TRecs
       When { strategy.recorder = recorder }
       Then { strategy.recorder == recorder }
     end
-
-    # context "perform" do
-    #   Given { Spy.clear }
-    #   Given(:recorder) { Spy.new("recorder").ignore }
-
-    #   Given(:input_file)   { "tmp/input_file.txt" }
-    #   Given(:clock) { DummyClock.new }
-
-    #   Given(:strategy) {
-    #     RawFileStrategy.new(
-    #       file: input_file,
-    #       clock: clock)
-    #   }
-
-    #   When { recorder.stub(:step) { 100 } }
-    #   When { strategy.recorder = recorder }
-
-    #   When { strategy.perform }
-    #   When {
-    #     File.open(input_file, "rw") do |f|
-    #       f.write "A"
-    #       clock.sleep()
-    #     end
-    #   }
-
-    #   When { strategy.stop }
-    #   Then { recorder.calls[1]  == [:current_frame, [ {time: 0,    content: "A"}           ] ] }
-    # end
   end
 end

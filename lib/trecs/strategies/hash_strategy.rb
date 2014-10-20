@@ -2,8 +2,7 @@ require "strategies/strategy"
 require "strategies/shell_command_strategy"
 
 module TRecs
-  class HashStrategy
-    include Strategy
+  class HashStrategy < Strategy
     include ShellCommandStrategy
     attr_accessor :frames_to_save
 

@@ -1,7 +1,6 @@
 require "strategies/strategy"
 module TRecs
-  class TtyrecStrategy
-    include Strategy
+  class TtyrecStrategy < Strategy
 
     def initialize(options={})
       file = options.fetch(:input_file)

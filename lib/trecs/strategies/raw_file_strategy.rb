@@ -1,7 +1,6 @@
 require "strategies/strategy"
 module TRecs
-  class RawFileStrategy
-    include Strategy
+  class RawFileStrategy < Strategy
     attr_reader :file
 
     def initialize(options={})
@@ -10,10 +9,6 @@ module TRecs
 
       @clock   = options.fetch(:clock) { Time }
       @testing = options.fetch(:testing) { false }
-      #
-      #@height = options.fetch(:height) { 24  }
-      #@width  = options.fetch(:width)  { 80  }
-      #
     end
 
     def perform

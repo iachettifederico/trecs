@@ -4,8 +4,7 @@ require "player"
 require "frame"
 
 module TRecs
-  class TrecsFileStrategy
-    include Strategy
+  class TrecsFileStrategy < Strategy
     attr_reader :input_file
     attr_reader :frames
     attr_reader :from

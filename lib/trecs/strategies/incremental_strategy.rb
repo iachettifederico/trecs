@@ -2,8 +2,7 @@ require "strategies/strategy"
 require "strategies/shell_command_strategy"
 
 module TRecs
-  class IncrementalStrategy
-    include Strategy
+  class IncrementalStrategy < Strategy
     include ShellCommandStrategy
 
     attr_reader :message

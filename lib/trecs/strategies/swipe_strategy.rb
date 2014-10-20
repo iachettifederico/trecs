@@ -3,15 +3,13 @@ require "strategies/hash_strategy"
 require "strategies/shell_command_strategy"
 
 module TRecs
-  class SwipeStrategy < HashStrategy
-    include Strategy
+  class SwipeStrategy < Strategy
     include ShellCommandStrategy
     attr_reader :message
-    attr_reader :step
 
     def initialize(options={})
+      super(options)
       @message = options.fetch(:message)
-      @step    = options.fetch(:step)    { 100 }
       @command = options.fetch(:command) { nil }
       @swiper  = options.fetch(:swiper)  { "|" }
       @hider   = options.fetch(:hider)   { "*" }
@@ -36,7 +34,7 @@ module TRecs
       end
 
       cleanup_frames
-      super
+      #super
     end
 
     private

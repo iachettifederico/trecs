@@ -2,8 +2,7 @@ require "spec_helper"
 require "strategies/strategy"
 
 module TRecs
-  class MyStrategy
-    include Strategy
+  class MyStrategy < Strategy
     attr_accessor :action
 
     def perform

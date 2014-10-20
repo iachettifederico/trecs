@@ -1,14 +1,13 @@
 require "strategies/strategy"
 
 module TRecs
-  class TmuxSessionStrategy
-    include Strategy
+  class TmuxSessionStrategy < Strategy
     attr_reader :recording
-    attr_reader :step
 
     def initialize(options={})
+      super(options)
       @frames = []
-      @step = options.fetch(:step) { 100 } / 1000.0
+      @step = @step / 1000.0
       @color = options.fetch(:color) { true }
       set_color_or_bw
     end

@@ -36,28 +36,32 @@ module TRecs
     end
 
     context "perform" do
-      Given { Spy.clear }
-      Given(:recorder) { Spy.new("recorder") }
+      Given(:writer)   { InMemoryWriter.new }
       Given(:strategy) { FlyFromRightStrategy.new(message: "abc", width: 4) }
+      Given(:recorder) { Recorder.new(strategy: strategy, writer: writer) }
+
+      When { strategy.recorder = recorder }
+      When { recorder.record }
+      When { strategy.perform }
 
       When { recorder.stub(:step) { 100 } }
       When { strategy.recorder = recorder }
       When { strategy.perform }
 
-      Then { recorder.calls[1]  == [:current_frame, [ {time: 0,    content: ""                  } ] ] }
-      Then { recorder.calls[2]  == [:current_frame, [ {time: 100,  content: "   a" } ] ] }
-      Then { recorder.calls[3]  == [:current_frame, [ {time: 200,  content: "  a"  } ] ] }
-      Then { recorder.calls[4]  == [:current_frame, [ {time: 300,  content: " a"   } ] ] }
-      Then { recorder.calls[5]  == [:current_frame, [ {time: 400,  content: "a"    } ] ] }
+      Then { writer.frames[0]    ==  ""     }
+      Then { writer.frames[100]  ==  "   a" }
+      Then { writer.frames[200]  ==  "  a"  }
+      Then { writer.frames[300]  ==  " a"   }
+      Then { writer.frames[400]  ==  "a"    }
 
-      Then { recorder.calls[6]  == [:current_frame, [ {time: 500,  content: "a"    } ] ] }
-      Then { recorder.calls[7]  == [:current_frame, [ {time: 600,  content: "a  b" } ] ] }
-      Then { recorder.calls[8]  == [:current_frame, [ {time: 700,  content: "a b"  } ] ] }
-      Then { recorder.calls[9]  == [:current_frame, [ {time: 800,  content: "ab"   } ] ] }
+      Then { writer.frames[500]  ==  "a"    }
+      Then { writer.frames[600]  ==  "a  b" }
+      Then { writer.frames[700]  ==  "a b"  }
+      Then { writer.frames[800]  ==  "ab"   }
 
-      Then { recorder.calls[10] == [:current_frame, [ {time: 900,  content: "ab"    } ] ] }
-      Then { recorder.calls[11] == [:current_frame, [ {time: 1000, content: "ab c" } ] ] }
-      Then { recorder.calls[12] == [:current_frame, [ {time: 1100, content: "abc"  } ] ] }
+      Then { writer.frames[900]  ==  "ab"   }
+      Then { writer.frames[1000] ==  "ab c" }
+      Then { writer.frames[1100] ==  "abc"  }
 
     end
   end

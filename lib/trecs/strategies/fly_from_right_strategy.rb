@@ -2,8 +2,7 @@ require "strategies/strategy"
 require "strategies/shell_command_strategy"
 
 module TRecs
-  class FlyFromRightStrategy
-    include Strategy
+  class FlyFromRightStrategy < Strategy
     include ShellCommandStrategy
     attr_reader :message
     attr_reader :width

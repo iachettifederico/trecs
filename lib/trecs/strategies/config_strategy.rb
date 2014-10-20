@@ -2,19 +2,19 @@ require "strategies/strategy"
 require "writers/in_memory_writer"
 
 module TRecs
-  class ConfigStrategy
-    include Strategy
-    attr_reader :step
+  class ConfigStrategy < Strategy
     attr_reader :format
     attr_reader :strategies
 
     def initialize(options={})
-      @step       = options.fetch(:step)       { 100 }
+      super(options)
+      
       @format     = options.fetch(:format)     { "json" }
       @strategies = options.fetch(:strategies) { [] }
       @offset     = options.fetch(:offset)     { 0 }
 
       @writer = InMemoryWriter.new
+
     end
 
     def <<(strategy)

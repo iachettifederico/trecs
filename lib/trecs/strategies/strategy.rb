@@ -1,9 +1,14 @@
 require "frame"
 module TRecs
-  module Strategy
+  class Strategy
     attr_accessor :recorder
     attr_accessor :offset
+    attr_accessor :step
 
+    def initialize(options={})
+      @step = options.fetch(:step) { 100 }
+    end
+    
     def write_frames_to(writer)
       perform
       writer.render_frames(frames)

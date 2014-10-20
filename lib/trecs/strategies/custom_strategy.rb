@@ -1,7 +1,6 @@
 require "strategies/strategy"
 module TRecs
-  class CustomStrategy
-    include Strategy
+  class CustomStrategy < Strategy
 
     attr_accessor :recorder
     attr_accessor :action

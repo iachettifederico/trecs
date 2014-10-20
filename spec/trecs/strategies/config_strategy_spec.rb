@@ -1,11 +1,11 @@
 require "spec_helper"
 require "strategies/config_strategy"
+require "strategies/hash_strategy"
 require "recorder"
 
 module TRecs
   describe ConfigStrategy do
     context "options" do
-
       context "set values" do
         Given(:options) {
           {

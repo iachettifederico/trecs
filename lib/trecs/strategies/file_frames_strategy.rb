@@ -1,7 +1,6 @@
 require "strategies/strategy"
 module TRecs
-  class FileFramesStrategy
-    include Strategy
+  class FileFramesStrategy < Strategy
     attr_accessor :frames
 
     def initialize(dirname)

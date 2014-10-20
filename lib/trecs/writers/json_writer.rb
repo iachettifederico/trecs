@@ -18,10 +18,6 @@ module TRecs
       @audio_files = Array(@audio_files)
     end
 
-    def setup
-      @frames = {}
-    end
- 
     def create_frame(options={})
       time    = options.fetch(:time)
       content = options.fetch(:content)
@@ -35,7 +31,7 @@ module TRecs
       frames[time] = frame
     end
 
-    def render
+    def render_frames(frames)
       source.create_recording do |source|
         source[:format] = "json"
 
