@@ -13,7 +13,8 @@ module TRecs
       @frames[time] = content
     end
 
-    def render
+    def render_frames(frames)
+      @frames = frames
     end
   end
 end

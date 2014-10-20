@@ -38,8 +38,11 @@ module TRecs
       end
     end
 
-    context "render" do
-      Then { InMemoryWriter.new.respond_to?(:render) == true }
+    context "render_frames" do
+      Given(:strategy) { InMemoryWriter.new }
+      Given(:frames) { { 0 => "A", 100 => "B" } }
+      When(:result) { strategy.render_frames(frames) }
+      Then { result == frames }
     end
   end
 end
