@@ -10,9 +10,10 @@ module TRecs
     end
 
     def width
-      raw_text.each_line.map { |line|
+      widths = raw_text.each_line.map { |line|
         line.chomp.size
-      }.max
+      }
+      widths.max || 0
     end
 
     def height

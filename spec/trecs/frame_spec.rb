@@ -21,6 +21,7 @@ module TRecs
         Given(:frame) { Frame.new("123456") }
         Then { frame.width == 6 }
       end
+      
       context "multiple lines" do
         Given(:frame) { Frame.new(<<FRAME
 123
@@ -29,6 +30,11 @@ module TRecs
 FRAME
             ) }
         Then { frame.width == 5 }
+      end
+
+      context "empty frame" do
+        Given(:frame) { Frame.new("") }
+        Then { frame.width == 0 }
       end
     end
 
