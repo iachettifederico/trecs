@@ -5,15 +5,15 @@ module TRecs
   class HashStrategy
     include Strategy
     include ShellCommandStrategy
-    attr_accessor :frames
+    attr_accessor :frames_to_save
 
-    def initialize(frames={})
-      @frames = frames || Hash.new
-      @command = frames.fetch(:command) { nil }
+    def initialize(frames_to_save={})
+      @frames_to_save = frames_to_save || Hash.new
+      @command        = frames_to_save.fetch(:command) { nil }
     end
 
     def perform
-      @frames.each do |time, content|
+      @frames_to_save.each do |time, content|
         if time.is_a?(Numeric) || /\A\d+\Z/ === time
           current_time(time.to_s.to_i)
           current_content(content)
