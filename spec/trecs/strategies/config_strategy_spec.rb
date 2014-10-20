@@ -9,7 +9,6 @@ module TRecs
     context "options" do
 
       context "set values" do
-
         Given(:options) {
           {
             step: 40,

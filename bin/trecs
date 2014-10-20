@@ -16,18 +16,18 @@ end
 opts = Trollop::options do
   version TRecs::VERSION
 
-  opt :step,        "Time in ms between frames", short: 's',                default: 100
-  opt :ticker,      "Ticker",                                 type: String, default: "clock"
+  opt :step,        "Time in ms between frames", short: 's',                 default: 100
+  opt :ticker,      "Ticker",                                 type: String,  default: "clock"
 
   opt :from,        "Play from",                              type: Integer, default: 0
   opt :to,          "Play to",                                type: Integer, default: 0
   opt :speed,       "Playing speed",                          type: Float,   default: 1.0
 
-  opt :ticker_file, "File to watch",                          type: String, default: "/tmp/ticker"
+  opt :ticker_file, "File to watch",                          type: String,  default: "/tmp/ticker"
 
-  opt :audio,       "If there's an audio file, reproduce it",               default: true
+  opt :audio,       "If there's an audio file, reproduce it",                default: true
 
-  opt :duration,    "Length of the recording",                              default: false
+  opt :duration,    "Length of the recording",                               default: false
 end
 opts[:trecs_backend] = ARGV[0]
 

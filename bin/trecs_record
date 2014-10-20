@@ -13,7 +13,7 @@ opts = Trollop::options do
   opt :strategy,   "Strategy",                              type: String,  default: "incremental"
 
   opt :message,    "Message to record",                     type: String,  default: "TRecs!"
-  opt :width,      "Width",                                 type: Integer, default: 10
+  #opt :width,      "Width",                                 type: Integer, default: 10
   opt :command,    "Command"          ,         short: "c", type: String
   opt :input_file, "File to record",                        type: String,  default: ""
   opt :terminal,   "Launch terminal",                                      default: true
@@ -21,9 +21,12 @@ opts = Trollop::options do
 
   opt :audio,      "Record audio"
 
-  opt :from,        "Play from",                              type: Integer, default: 0
-  opt :to,          "Play to",                                type: Integer, default: 0
-  opt :speed,       "Playing speed",                          type: Float,   default: 1.0
+  opt :from,        "Play from",                            type: Integer, default: 0
+  opt :to,          "Play to",                              type: Integer, default: 0
+  opt :speed,       "Playing speed",                        type: Float,   default: 1.0
+
+  opt :height,      "Height",                               type: Integer, default: 0
+  opt :width,       "Width",                                type: Integer, default: 0
 end
 opts[:trecs_backend] = ARGV[0]
 
