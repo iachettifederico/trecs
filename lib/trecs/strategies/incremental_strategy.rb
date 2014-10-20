@@ -14,7 +14,10 @@ module TRecs
     end
 
     def perform
-      recorder.current_frame(time: 0, content: "")
+      current_time(0)
+      current_content("")
+      save_frame
+
       message.each_char.each_with_object("") do |current_char, current_msg|
         current_msg << current_char
 

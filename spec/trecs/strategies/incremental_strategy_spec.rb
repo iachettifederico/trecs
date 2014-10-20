@@ -6,7 +6,7 @@ module TRecs
     context "initialization" do
       When(:strategy1) { IncrementalStrategy.new(message: "HELLO") }
       Then { strategy1.message == "HELLO" }
-      
+
       When(:strategy2) { IncrementalStrategy.new }
       Then { expect(strategy2).to have_failed(KeyError, /message/) }
     end
@@ -17,28 +17,28 @@ module TRecs
       When { strategy.recorder = recorder }
       Then { strategy.recorder == recorder }
     end
-    
-    context "perform" do
-      Given { Spy.clear }
-      Given(:recorder) { Spy.new("recorder") }
-      Given(:strategy) { IncrementalStrategy.new(message: "Hello World") }
 
-      When { recorder.stub(:step) { 100 } }
+    context "perform" do
+      Given(:writer)   { InMemoryWriter.new }
+      Given(:strategy) { IncrementalStrategy.new(message: "Hello World") }
+      Given(:recorder) { Recorder.new(strategy: strategy, writer: writer) }
+
       When { strategy.recorder = recorder }
+      When { recorder.record }
       When { strategy.perform }
 
-      Then { recorder.calls[1]  == [:current_frame, [ {time: 0,    content: ""}           ] ] }
-      Then { recorder.calls[2]  == [:current_frame, [ {time: 100,  content: "H"}           ] ] }
-      Then { recorder.calls[3]  == [:current_frame, [ {time: 200,  content: "He"}          ] ] }
-      Then { recorder.calls[4]  == [:current_frame, [ {time: 300,  content: "Hel"}         ] ] }
-      Then { recorder.calls[5]  == [:current_frame, [ {time: 400,  content: "Hell"}        ] ] }
-      Then { recorder.calls[6]  == [:current_frame, [ {time: 500,  content: "Hello"}       ] ] }
-      Then { recorder.calls[7]  == [:current_frame, [ {time: 600,  content: "Hello "}      ] ] }
-      Then { recorder.calls[8]  == [:current_frame, [ {time: 700,  content: "Hello W"}     ] ] }
-      Then { recorder.calls[9]  == [:current_frame, [ {time: 800,  content: "Hello Wo"}    ] ] }
-      Then { recorder.calls[10] == [:current_frame, [ {time: 900,  content: "Hello Wor"}   ] ] }
-      Then { recorder.calls[11] == [:current_frame, [ {time: 1000, content: "Hello Worl"}  ] ] }
-      Then { recorder.calls[12] == [:current_frame, [ {time: 1100, content: "Hello World"} ] ] }
+      Then { writer.frames[0]    == ""            }
+      Then { writer.frames[100]  == "H"           }
+      Then { writer.frames[200]  == "He"          }
+      Then { writer.frames[300]  == "Hel"         }
+      Then { writer.frames[400]  == "Hell"        }
+      Then { writer.frames[500]  == "Hello"       }
+      Then { writer.frames[600]  == "Hello "      }
+      Then { writer.frames[700]  == "Hello W"     }
+      Then { writer.frames[800]  == "Hello Wo"    }
+      Then { writer.frames[900]  == "Hello Wor"   }
+      Then { writer.frames[1000] == "Hello Worl"  }
+      Then { writer.frames[1100] == "Hello World" }
     end
   end
 end
