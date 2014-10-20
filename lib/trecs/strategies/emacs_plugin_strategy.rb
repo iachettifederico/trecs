@@ -10,8 +10,8 @@ module TRecs
       @clock   = options.fetch(:clock) { Time }
       @testing = options.fetch(:testing) { false }
 
-      @width  = 0
-      @height = 0
+      @height = 20
+      @width  = 80
     end
 
     def perform
@@ -50,7 +50,7 @@ module TRecs
         .gsub(/\/\*.+\*\//, "")
       #.gsub!(/^\s/, "").gsub!(/^(<[^\/]\w+ (\w+=['"][^>]+['"])*>)+ /) {|m| m[-1]=""; m } # clean extra space at the begining of each line
 
-      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width*1.2}ex;height: #{@height*1.25}ex' class='emacs-code'>#{code}</pre>"
+      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width*1.3}ex;height: #{@height*1.31}ex' class='emacs-code'>#{code}</pre>"
 
       super(new_content)
     end
