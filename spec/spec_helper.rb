@@ -3,6 +3,9 @@ require File.expand_path("../../lib/trecs", __FILE__)
 require "rspec/given"
 require "ostruct"
 
+require "recorder"
+require "writers/in_memory_writer"
+
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
@@ -62,7 +65,6 @@ class Spy
     @calls
   end
 end
-
 
 class CustomTicker
   attr_accessor :player

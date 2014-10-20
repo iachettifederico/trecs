@@ -24,23 +24,10 @@ module TRecs
     end
 
     def record
-      do_record do
-        writer.setup
-        strategy.perform
-        writer.render
-      end
-    end
-
-    def current_frame(options={})
-      @current_time    = options.fetch(:time) { next_timestamp }
-      @current_content = options.fetch(:content)
-
-      if @previous_content != current_content
-        new_current_time  = current_time + offset
-        options[:time] = new_current_time
-        writer.create_frame(options)
-        @previous_content = current_content
-      end
+      self.current_time = nil
+      self.recording    = true
+      strategy.write_frames_to(writer)
+      self.recording    = false
     end
 
     def next_timestamp
@@ -56,13 +43,6 @@ module TRecs
     attr_writer :recording
     attr_writer :current_time
     attr_writer :current_content
-
-    def do_record
-      self.current_time = nil
-      self.recording    = true
-      yield
-      self.recording    = false
-    end
 
   end
 end
