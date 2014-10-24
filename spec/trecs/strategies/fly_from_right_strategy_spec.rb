@@ -42,11 +42,9 @@ module TRecs
 
       When { strategy.recorder = recorder }
       When { recorder.record }
-      When { strategy.perform }
 
       When { recorder.stub(:step) { 100 } }
       When { strategy.recorder = recorder }
-      When { strategy.perform }
 
       Then { writer.frames[0]    ==  ""     }
       Then { writer.frames[100]  ==  "   a" }

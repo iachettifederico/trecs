@@ -36,7 +36,6 @@ module TRecs
 
       When { strategy.recorder = recorder }
       When { recorder.record }
-      When { strategy.perform }
 
       Then { writer.frames[0]  ==  "A" }
       Then { writer.frames[10] ==  "B" }
