@@ -7,11 +7,10 @@ module TRecs
       file  = "/tmp/emacs-session-recording.html"
       @file = File.open(file)
 
-      @clock   = options.fetch(:clock) { Time }
-      @testing = options.fetch(:testing) { false }
+      @clock   = options.fetch(:clock)   { Time }
 
-      @height = 20
-      @width  = 80
+      @height = options.fetch(:height) { 0 }
+      @width  = options.fetch(:width)  { 0 }
     end
 
     def perform
@@ -48,9 +47,9 @@ module TRecs
         .split("\n").join("<do not compute>")[/\s+<pre>(.+)<\/pre>/, 1]
         .split("<do not compute>").join("\n")
         .gsub(/\/\*.+\*\//, "")
-      #.gsub!(/^\s/, "").gsub!(/^(<[^\/]\w+ (\w+=['"][^>]+['"])*>)+ /) {|m| m[-1]=""; m } # clean extra space at the begining of each line
+      # .gsub!(/^\s/, "").gsub!(/^(<[^\/]\w+ (\w+=['"][^>]+['"])*>)+ /) {|m| m[-1]=""; m } # clean extra space at the begining of each line
 
-      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width*1.3}ex;height: #{@height*1.31}ex' class='emacs-code'>#{code}</pre>"
+      new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width/1.5}em;height: #{@height/1.55}em' class='emacs-code'>#{code}</pre>"
 
       super(new_content)
     end
