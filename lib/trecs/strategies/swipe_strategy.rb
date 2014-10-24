@@ -28,7 +28,7 @@ module TRecs
             c[j] = hider
           end
           c = c[1..-2]
-          @frames[current_time] = "" unless @frames[current_time]   
+          @frames[current_time] ||= ""
           @frames[current_time] << c.strip + "\n"
         end
       end
