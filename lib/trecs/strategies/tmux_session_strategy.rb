@@ -3,10 +3,10 @@ require "strategies/strategy"
 module TRecs
   class TmuxSessionStrategy < Strategy
     attr_reader :recording
+    attr_reader :format
 
     def initialize(options={})
       super(options)
-      # @frames = []
       @step = options.fetch(:step) { 100 }
       @color = options.fetch(:color) { true }
       set_color_or_bw
@@ -19,6 +19,7 @@ module TRecs
         t += step
         current_time(t)
         current_content(get_current_frame)
+        current_format(format)
         save_frame
         sleep(step/1000.0)
       end
@@ -38,7 +39,13 @@ module TRecs
     end
 
     def set_color_or_bw
-      @color = @color ? "-e" : "-C"
+      if @color
+        @color = "-e"
+        @format = "ansi"
+      else
+        @color = "-C"
+        @format = "raw"
+      end
     end
 
     def set_capture_command
