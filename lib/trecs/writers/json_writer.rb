@@ -22,7 +22,7 @@ module TRecs
       time    = options.fetch(:time)
       content = options.fetch(:content)
       format  = options[:format]
- 
+
       frame = {
         format: format,
         content:  content,
@@ -35,8 +35,12 @@ module TRecs
       source.create_recording do |source|
         source[:format] = "json"
 
-        json_string = frames.to_json
-        
+        frames_hash = frames.each_with_object({}) { |frame, h|
+          h[frame.first] = frame.last.to_h
+        }
+
+        json_string = frames_hash.to_json
+
         source.create_file('frames.json') do |f|
           f.write json_string
         end
