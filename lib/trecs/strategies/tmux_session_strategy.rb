@@ -6,25 +6,26 @@ module TRecs
 
     def initialize(options={})
       super(options)
-      @frames = []
-      @step = @step / 1000.0
+      # @frames = []
+      @step = options.fetch(:step) { 100 }
       @color = options.fetch(:color) { true }
       set_color_or_bw
     end
 
     def perform
       start_recording
+      t = -step
       while(recording)
-        get_frames do |frame|
-          recorder.current_frame(content: frame)
-        end
-        sleep(step)
+        t += step
+        current_time(t)
+        current_content(get_current_frame)
+        save_frame
+        sleep(step/1000.0)
       end
     end
 
-    def command
-      @command ||=
-        set_command
+    def capture_command
+      @capture_command ||= set_capture_command
     end
 
     def stop
@@ -40,17 +41,15 @@ module TRecs
       @color = @color ? "-e" : "-C"
     end
 
-    def set_command
-      command = %W[tmux capture-pane]
-      command << @color if @color
-      command
+    def set_capture_command
+      capture_command = %W[tmux capture-pane]
+      capture_command << @color if @color
+      capture_command
     end
 
-    def get_frames
-      system *command
-      IO.popen(%W[tmux show-buffer]) do |out|
-        yield out.read
-      end
+    def get_current_frame
+      system *capture_command
+      IO.popen(%W[tmux show-buffer]).read
     end
   end
 end
