@@ -13,10 +13,10 @@ module TRecs
       @command = options.fetch(:command) { nil }
       @swiper  = options.fetch(:swiper)  { "|" }
       @hider   = options.fetch(:hider)   { "*" }
-      @frames  = {}
     end
 
     def perform
+      frames_hash  = {}
       message.each_line do |line|
         curr_message = " %-#{max_line_size}s  " % line.chomp
         curr_message.length.times do |i|
@@ -28,21 +28,29 @@ module TRecs
             c[j] = hider
           end
           c = c[1..-2]
-          @frames[current_time] ||= ""
-          @frames[current_time] << c.strip + "\n"
+          frames_hash[current_time] ||= ""
+          frames_hash[current_time] << c.strip + "\n"
+        end
+
+        cleanup_frames(frames_hash)
+
+        frames_hash.each do |time, content|
+          current_time(time)
+          current_content(content)
+          current_format("raw")
+          save_frame
         end
       end
 
-      cleanup_frames
     end
 
     private
     attr_reader :swiper
     attr_reader :hider
 
-    def cleanup_frames
-      @frames.each do |t, c|
-        @frames[t] = @frames[t].chomp
+    def cleanup_frames(frames_hash)
+      frames_hash.each do |t, c|
+        frames_hash[t] = frames_hash[t].chomp
       end
     end
 
