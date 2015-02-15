@@ -12,7 +12,7 @@ GEM
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
     minitar (0.5.4)
-    rake (10.3.2)
+    rake (10.4.2)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
@@ -23,9 +23,9 @@ GEM
     rspec-given (3.5.4)
       given_core (= 3.5.4)
       rspec (>= 2.12)
-    rspec-mocks (2.99.2)
+    rspec-mocks (2.99.3)
     sorcerer (1.0.2)
-    trollop (2.0)
+    trollop (2.1.1)
 
 PLATFORMS
   ruby

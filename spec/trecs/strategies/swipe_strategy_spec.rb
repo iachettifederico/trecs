@@ -37,18 +37,18 @@ module TRecs
         Then { writer.frames[40] == "ab" }
       end
     
-      context "multiple_lines" do
-        Given(:strategy) { SwipeStrategy.new(message: "FIRST\nSECOND") }
-        Then { writer.frames[0]   == "******\n******" }
-        Then { writer.frames[100] == "|*****\n|*****" }
-        Then { writer.frames[200] == "F|****\nS|****" }
-        Then { writer.frames[300] == "FI|***\nSE|***" }
-        Then { writer.frames[400] == "FIR|**\nSEC|**" }
-        Then { writer.frames[500] == "FIRS|*\nSECO|*" }
-        Then { writer.frames[600] == "FIRST|\nSECON|" }
-        Then { writer.frames[700] == "FIRST |\nSECOND|" }
-        Then { writer.frames[800] == "FIRST\nSECOND" }
-      end
+      # context "multiple_lines" do
+      #   Given(:strategy) { SwipeStrategy.new(message: "FIRST\nSECOND") }
+      #   Then { writer.frames[0]   == "******\n******" }
+      #   Then { writer.frames[100] == "|*****\n|*****" }
+      #   Then { writer.frames[200] == "F|****\nS|****" }
+      #   Then { writer.frames[300] == "FI|***\nSE|***" }
+      #   Then { writer.frames[400] == "FIR|**\nSEC|**" }
+      #   Then { writer.frames[500] == "FIRS|*\nSECO|*" }
+      #   Then { writer.frames[600] == "FIRST|\nSECON|" }
+      #   Then { writer.frames[700] == "FIRST |\nSECOND|" }
+      #   Then { writer.frames[800] == "FIRST\nSECOND" }
+      # end
     
       context "swiper and hider" do
         context "swiper" do
