@@ -12,7 +12,6 @@ module TRecs
       @message = options.fetch(:message)
       @command = options.fetch(:command) { nil }
       @step = options.fetch(:step) { 100 }
-      
     end
 
     def perform

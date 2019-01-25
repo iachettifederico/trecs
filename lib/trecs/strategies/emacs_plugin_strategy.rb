@@ -49,6 +49,7 @@ module TRecs
         .gsub(/\/\*.+\*\//, "")
       # .gsub!(/^\s/, "").gsub!(/^(<[^\/]\w+ (\w+=['"][^>]+['"])*>)+ /) {|m| m[-1]=""; m } # clean extra space at the begining of each line
 
+      # TODO: Add a switch to style the border optionally
       new_content = "<style>#{style}</style><pre style='border: 2px solid #898989;width: #{@width/1.5}em;height: #{@height/1.55}em' class='emacs-code'>#{code}</pre>"
 
       super(new_content)

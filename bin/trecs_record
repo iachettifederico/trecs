@@ -5,7 +5,6 @@ require "trecs"
 require "recorder"
 require "trollop"
 
-
 opts = Trollop::options do
   version TRecs::VERSION
 

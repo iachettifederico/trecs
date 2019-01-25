@@ -18,12 +18,12 @@ module TRecs
 
     context "width" do
       context "one line" do
-        Given(:frame) { Frame.new("123456") }
+        Given(:frame) { Frame.new(content: "123456") }
         Then { frame.width == 6 }
       end
       
       context "multiple lines" do
-        Given(:frame) { Frame.new(<<FRAME
+        Given(:frame) { Frame.new(content: <<FRAME
 123
 12345
 12
@@ -33,24 +33,24 @@ FRAME
       end
 
       context "empty frame" do
-        Given(:frame) { Frame.new("") }
+        Given(:frame) { Frame.new(content: "") }
         Then { frame.width == 0 }
       end
     end
 
     context "equality" do
-      Then { Frame.new(content: "A") == Frame.new("A") }
+      Then { Frame.new(content: "A") == Frame.new(content: "A") }
       Then { Frame.new(content: "B") == "B" }
       Then { Frame.new(content: "C", format: "raw") != Frame.new(content: "C", format: "html") }
     end
 
     context "height" do
       context "one line" do
-        Given(:frame) { Frame.new("LINE 1") }
+        Given(:frame) { Frame.new(content: "LINE 1") }
         Then { frame.height == 1 }
       end
       context "multiple lines" do
-        Given(:frame) { Frame.new(<<FRAME
+        Given(:frame) { Frame.new(content: <<FRAME
 LINE 1
 LINE 2
 LINE 3
@@ -62,7 +62,7 @@ FRAME
 
     context "each" do
       Given(:content) { "a\nb\nc\n" }
-      Given(:frame) { Frame.new(content) }
+      Given(:frame) { Frame.new(content: content) }
       Then {
         frame.each
           .zip(content.each_line)
@@ -74,7 +74,7 @@ FRAME
     end
 
     context "#to_s" do
-      Given(:frame) { Frame.new("FRAME CONTENT") }
+      Given(:frame) { Frame.new(content: "FRAME CONTENT") }
       Then { frame.to_s == "FRAME CONTENT" }
     end
   end

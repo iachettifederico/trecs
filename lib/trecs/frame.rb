@@ -3,10 +3,10 @@ module TRecs
     include Enumerable
     attr_accessor :content
     attr_accessor :format
-    def initialize(opts={})
-      opts = opts.is_a?(Hash) ? opts : {content: opts}
-      @content = opts.fetch(:content) { "" }
-      @format  = opts[:format] || "raw"
+
+    def initialize(content: "", **options)
+      @content = content
+      @format  = options[:format] || "raw"
     end
 
     def width
@@ -54,10 +54,11 @@ module TRecs
 
 end
 
-def Frame(opts)
-  case opts
-  when TRecs::Frame then opts
+def Frame(options)
+  case options
+  when String then TRecs::Frame.new(content: options)
+  when TRecs::Frame then options
   else
-    TRecs::Frame.new(opts)
+    TRecs::Frame.new(**options)
   end
 end

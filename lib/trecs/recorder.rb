@@ -7,7 +7,7 @@ module TRecs
     attr_reader :current_time
     attr_reader :current_content
 
-    attr_accessor :offset
+    attr_reader :offset
 
     def initialize(options={})
       @writer            = options.fetch(:writer)
@@ -40,9 +40,9 @@ module TRecs
     end
 
     private
+
     attr_writer :recording
     attr_writer :current_time
     attr_writer :current_content
-
   end
 end

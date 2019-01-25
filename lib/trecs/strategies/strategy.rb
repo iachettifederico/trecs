@@ -49,7 +49,7 @@ module TRecs
     end
 
     def save_frame
-      frames[__time] = Frame.new(format: __format, content: __content)
+      frames[__time] = Frame.new(content: __content, format: __format)
     end
   end
 end

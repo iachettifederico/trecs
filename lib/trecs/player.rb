@@ -48,9 +48,9 @@ module TRecs
     end
 
     private
+
     attr_writer :current_time
     attr_reader :testing
     attr_accessor :prev_content
-
   end
 end

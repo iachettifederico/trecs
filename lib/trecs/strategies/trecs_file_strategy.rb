@@ -30,9 +30,10 @@ module TRecs
 
     def perform
       timestamps.each do |time|
+        frame = frames[time]
         current_time(((time-from)/speed.to_f).to_i)
-        current_content(frames[time])
-        current_format(frames[time].format)
+        current_content(frame)
+        current_format(frame.format)
         save_frame if current_content
       end
     end
@@ -42,11 +43,11 @@ module TRecs
     def timestamps
       @timestamps ||= frames.keys.sort
 
-      @timestamps = @timestamps.select { |t| t > from }
+      @timestamps = @timestamps.select { |time| time > from }
       @timestamps.unshift(from)
 
       if to && to > 0
-        @timestamps = @timestamps.select { |t| t < to }
+        @timestamps = @timestamps.select { |time| time < to }
         @timestamps.push(to)
       end
       @timestamps
